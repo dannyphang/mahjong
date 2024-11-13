@@ -1,0 +1,6 @@
+<p-sidebar [(visible)]="visible" position="position">
+  <ng-template pTemplate="header">
+    <ng-content select="[side-panel-header]"></ng-content>
+  </ng-template>
+  <ng-content select="[side-panel-body]"></ng-content>
+</p-sidebar>

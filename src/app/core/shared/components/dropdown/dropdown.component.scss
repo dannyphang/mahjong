@@ -1,0 +1,71 @@
+@import "../../../../../assets/styles/variables";
+
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  label {
+    margin-bottom: 0.5rem;
+  }
+
+  .invalid {
+    border-color: $error-color;
+
+    .p-dropdown {
+      border-color: $error-color;
+    }
+  }
+
+  .p-dropdown {
+    width: 100%;
+    min-height: 40px;
+  }
+
+  .dropdown-item {
+    width: 100%;
+  }
+}
+
+.dropdow-spinner {
+  // position: fixed;
+  // z-index: 4000;
+  // top: 0;
+  // left: 0;
+  width: 100%;
+  height: 100%;
+
+  background-color: rgb(255, 255, 255);
+
+  p-progressspinner {
+    position: relative;
+    top: 50%;
+    left: 50%;
+
+    .p-progress-spinner {
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  @keyframes p-progress-spinner-color {
+    100%,
+    0% {
+      stroke: #d62d20;
+    }
+
+    40% {
+      stroke: #0057e7;
+    }
+
+    66% {
+      stroke: #008744;
+    }
+
+    80%,
+    90% {
+      stroke: #ffa700;
+    }
+  }
+}

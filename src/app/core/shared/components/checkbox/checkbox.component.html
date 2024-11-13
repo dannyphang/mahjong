@@ -1,0 +1,43 @@
+<div class="checkbox-container">
+  <app-base-label
+    class="mb-3"
+    *ngIf="!!label"
+    [required]="checkRequiredField()"
+    [label]="label"
+    [labelOneLine]="labelOneLine"
+    [iconLabelTooltip]="iconLabelTooltip"
+  >
+  </app-base-label>
+  <div
+    [class]="'flex flex-wrap' + optionsContainerClass"
+    [ngClass]="{ 'flex-column': direction === 'column' }"
+  >
+    <div *ngIf="switchInput">
+      <app-input-switch [fieldControl]="fieldControl"></app-input-switch>
+    </div>
+
+    <div *ngIf="!switchInput">
+      <div class="input-container mr-4" *ngFor="let item of options">
+        <p-checkbox
+          [name]="item.value"
+          [(ngModel)]="selected"
+          [value]="item.value"
+          [inputId]="item.value"
+          [disabled]="item?.disabled || disabled"
+          (onChange)="handleChange($event, item.value)"
+        >
+        </p-checkbox>
+        <label *ngIf="!!item.label" [for]="item.value" class="fz-14_lh-16"
+          >{{ item.label | translate }}
+          <span class="asterisk" *ngIf="item.required">*</span></label
+        >
+      </div>
+    </div>
+  </div>
+  <app-base-label
+    *ngIf="checkInvalidField()"
+    [label]="errorMessage"
+    mode="error"
+  >
+  </app-base-label>
+</div>

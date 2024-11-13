@@ -1,0 +1,62 @@
+<div class="multiselect-container">
+  <app-base-label
+    *ngIf="!!label"
+    [required]="checkRequiredField()"
+    [label]="label"
+    [labelOneLine]="labelOneLine"
+    [ngClass]="'mb-1'"
+  >
+  </app-base-label>
+  <div class="p-inputgroup">
+    <p-multiSelect
+      #multiselect
+      class="border-noround-left"
+      [options]="options"
+      [formControl]="fieldControl"
+      [ngClass]="{ invalid: checkInvalidField() }"
+      optionLabel="label"
+      optionValue="value"
+      appendTo="body"
+      (onFilter)="filterChange.next($event.filter)"
+      panelStyleClass="multiselect-panel-wrapper"
+      placeholder="{{ placeholder | translate }}"
+      [virtualScroll]="!!virtualScroll"
+      [virtualScrollItemSize]="lazyLoading ? 200 : 38"
+      [virtualScrollOptions]="{
+        showLoader: true,
+        loading: lazyLoading
+      }"
+      [lazy]="!!virtualScroll"
+      (onLazyLoad)="onLazyLoad($event)"
+      [showClear]="showClear"
+    >
+      <ng-template let-value pTemplate="selectedItems">
+        <div *ngIf="fieldControl.value?.length > 0">
+          {{ fieldControl.value?.length }} items selected
+        </div>
+        <div *ngIf="fieldControl.value?.length === 0 || !fieldControl.value">
+          {{ placeholder | translate }}
+        </div>
+      </ng-template>
+      <ng-template let-option pTemplate="item">
+        <div>{{ option.label }}</div>
+      </ng-template>
+    </p-multiSelect>
+  </div>
+
+  <div class="flex mt-2 flex-wrap">
+    <app-chip
+      class="mr-2 mb-2"
+      *ngFor="let item of fieldControl.value"
+      [label]="getChipLabel(item)"
+      [removable]="!checkDisabled()"
+      (remove)="handleRemove(item)"
+    ></app-chip>
+  </div>
+  <app-base-label
+    *ngIf="checkInvalidField()"
+    [label]="errorMessage"
+    mode="error"
+  >
+  </app-base-label>
+</div>

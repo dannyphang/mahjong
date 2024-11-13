@@ -1,0 +1,37 @@
+<div [ngClass]="['radio-container', containerClass]">
+  <app-base-label
+    [ngClass]="labelClass || 'mb-2'"
+    *ngIf="!!label"
+    [required]="checkRequiredField()"
+    [label]="label"
+    [labelOneLine]="labelOneLine"
+    [iconLabelTooltip]="iconLabelTooltip"
+  >
+  </app-base-label>
+  <div
+    class="flex flex-wrap"
+    [ngClass]="{ 'flex-column': direction === 'column' }"
+  >
+    <div
+      [class]="'input-container mr-4 ' + inputContainerClass"
+      [ngClass]="{ 'mr-4': direction === 'row' }"
+      *ngFor="let item of options; let i = index"
+    >
+      <p-radioButton
+        [name]="label"
+        [formControl]="fieldControl"
+        [value]="item.value"
+        [inputId]="label + i"
+      ></p-radioButton>
+      <label *ngIf="!!item.label" [for]="label + i" class="fz-14_lh-16">{{
+        item.label | translate
+      }}</label>
+    </div>
+  </div>
+  <app-base-label
+    *ngIf="checkInvalidField()"
+    [label]="errorMessage"
+    mode="error"
+  >
+  </app-base-label>
+</div>

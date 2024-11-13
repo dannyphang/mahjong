@@ -1,0 +1,15 @@
+:host ::ng-deep {
+  .acc-panel-box {
+    border-radius: 15px;
+    // border: 1px solid var(--primary-color);
+    //margin-top: 15px;
+  }
+
+  .p-accordion-toggle-icon .p-icon {
+    color: var(--primary-color);
+  }
+
+  .p-accordion .p-accordion-content {
+    padding: 15px;
+  }
+}

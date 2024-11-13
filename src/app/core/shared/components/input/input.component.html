@@ -1,0 +1,137 @@
+<div class="textbox-container">
+  <app-base-label
+    *ngIf="!!label"
+    [required]="checkRequiredField()"
+    [label]="label"
+    [labelOneLine]="labelOneLine"
+    [iconLabelTooltip]="iconLabelTooltip"
+  >
+  </app-base-label>
+
+  <p-iconField [iconPosition]="iconLeftStyle != '' ? 'left' : 'right'">
+    <p-inputIcon
+      [styleClass]="iconLeftStyle != '' ? iconLeftStyle : iconRightStyle"
+    />
+    <div
+      class="input-container"
+      *ngIf="
+        mode === 'text' ||
+        mode === 'email' ||
+        mode === 'url' ||
+        mode === 'phone'
+      "
+    >
+      <input
+        pInputText
+        pAutoFocus
+        [autofocus]="autoFocus"
+        [type]="mode"
+        placeholder="{{ placeholder | translate }}"
+        [ngClass]="{
+          invalid: checkInvalidField(),
+          'pr-30': !!iconUrl,
+          'pl-30': !!leftIconUrl,
+          disabled: disabled
+        }"
+        [readonly]="disabled"
+        [formControl]="fieldControl"
+        (blur)="onBlur()"
+        [maxLength]="maxLength"
+        [onlyNumber]="mode === 'phone'"
+      />
+
+      <img *ngIf="!!iconUrl" [src]="iconUrl" />
+      <img class="leftIcon" *ngIf="!!leftIconUrl" [src]="leftIconUrl" />
+      <div class="prefix" *ngIf="!!prefix">{{ prefix }}</div>
+      <div class="description-message" *ngIf="descriptionMessage">
+        {{ descriptionMessage | translate }}
+      </div>
+    </div>
+
+    <!-- password -->
+    <div class="input-container" *ngIf="mode === 'password'">
+      <input
+        pInputText
+        pAutoFocus
+        [autofocus]="autoFocus"
+        [type]="mode"
+        placeholder="{{ placeholder | translate }}"
+        [ngClass]="{
+          invalid: checkInvalidField(),
+          'pr-30': !!iconUrl,
+          'pl-30': !!leftIconUrl,
+          disabled: disabled
+        }"
+        [readonly]="disabled"
+        [formControl]="fieldControl"
+        (blur)="onBlur()"
+        [maxLength]="maxLength"
+        validatePassword
+      />
+
+      <img *ngIf="!!iconUrl" [src]="iconUrl" />
+      <img class="leftIcon" *ngIf="!!leftIconUrl" [src]="leftIconUrl" />
+      <div class="prefix" *ngIf="!!prefix">{{ prefix }}</div>
+      <div class="description-message" *ngIf="descriptionMessage">
+        {{ descriptionMessage | translate }}
+      </div>
+    </div>
+
+    <!-- switch -->
+    <div class="input-switch-container" *ngIf="mode === 'switch'">
+      <p-inputSwitch [formControl]="fieldControl"></p-inputSwitch>
+      <div class="inline-flex ml-2">{{ content | translate }}</div>
+    </div>
+
+    <!-- number -->
+    <div class="input-number-container" *ngIf="mode === 'number'">
+      <p-inputNumber
+        [readonly]="disabled"
+        [formControl]="fieldControl"
+        (blur)="onBlur()"
+        [maxlength]="maxLength"
+        placeholder="{{ placeholder | translate }}"
+        [ngClass]="{
+          invalid: checkInvalidField(),
+          'pr-30': !!iconUrl,
+          'pl-30': !!leftIconUrl || !!prefix,
+          disabled: disabled
+        }"
+        [inputStyle]="{ 'padding-left': paddingForPrefix + 'px' }"
+        [minFractionDigits]="minFractionDigits"
+        [maxFractionDigits]="maxFractionDigits"
+        [useGrouping]="useGrouping"
+        mode="decimal"
+        [allowEmpty]="true"
+        [min]="min"
+        [max]="max"
+        pAutoFocus
+        [autofocus]="autoFocus"
+        [onlyNumber]="true"
+      ></p-inputNumber>
+
+      <img *ngIf="!!iconUrl" [src]="iconUrl" />
+      <img class="leftIcon" *ngIf="!!leftIconUrl" [src]="leftIconUrl" />
+      <div #prefix_content class="prefix" *ngIf="!!prefix">{{ prefix }}</div>
+      <div *ngIf="suffix" class="suffix">{{ suffix }}</div>
+    </div>
+
+    <!-- label-text -->
+    <div class="input-number-container" *ngIf="mode === 'label-text'">
+      <app-base-label
+        [labelStyle]="'font-normal ' + labelTextStyle"
+        [label]="fieldControl.value"
+      >
+      </app-base-label>
+    </div>
+  </p-iconField>
+
+  <!-- error message -->
+  <app-base-label
+    ngClass="mt-2"
+    *ngIf="checkInvalidField()"
+    [label]="errorMessage"
+    mode="error"
+  >
+  </app-base-label>
+</div>

@@ -1,0 +1,17 @@
+.button-icon {
+  display: grid !important;
+}
+
+.user-menu-div {
+  display: grid;
+  grid-template-areas: "user-menu-avatar user-menu-info-div";
+  grid-template-columns: auto 1fr;
+  column-gap: var(--content-gap);
+  padding: 12px;
+}
+
+:host ::ng-deep {
+  .user-menu-container .p-menu {
+    width: 350px;
+  }
+}

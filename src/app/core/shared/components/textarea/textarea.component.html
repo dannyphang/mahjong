@@ -1,0 +1,34 @@
+<div class="textarea-container" [ngClass]="{ invalid: checkInvalidField() }">
+  <app-base-label
+    *ngIf="!!label"
+    [required]="checkRequiredField()"
+    [label]="label"
+    [labelOneLine]="labelOneLine"
+    [showOptionalText]="labelShowsOptional"
+  >
+  </app-base-label>
+  <div class="input-container">
+    <textarea
+      pInputTextarea
+      [rows]="lineNumber"
+      placeholder="{{ placeholder | translate }}"
+      [autoResize]="autoResize"
+      [attr.maxLength]="maxLength ? maxLength : null"
+      [formControl]="fieldControl"
+      [readonly]="disabled"
+      pTooltip="{{ tooltip | translate }}"
+      pAutoFocus
+      [autofocus]="autoFocus"
+    ></textarea>
+    <div class="count" *ngIf="maxLength > 0 && !hideLengthLimit">
+      ({{ currentLength }}/{{ maxLength }} characters)
+    </div>
+  </div>
+  <app-base-label
+    *ngIf="checkInvalidField()"
+    [label]="errorMessage"
+    mode="error"
+  >
+  </app-base-label>
+  <div class="text-color-secondary">{{ instructionText | translate }}</div>
+</div>

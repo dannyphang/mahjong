@@ -1,0 +1,34 @@
+<p-button
+  icon="pi pi-palette"
+  [rounded]="true"
+  [text]="true"
+  [raised]="true"
+  outlined="true"
+  (onClick)="togglePanel()"
+  [styleClass]="'tw-bg-[var(--primary-color-text)]'"
+/>
+<app-overlay-panel>
+  <div class="" overlay-panel-body>
+    <div class="theme-container tw-w-[200px]">
+      <div
+        *ngFor="let theme of themeList"
+        class="theme-item tw-w-full tw-mb-[15px]"
+      >
+        <app-base-button
+          [outlined]="true"
+          (onClick)="changeTheme(theme.file)"
+          styleClass="tw-w-full tw-bg-transparent tw-text-left tw-justify-around"
+          [iconName]="theme.icon"
+          [rightIcon]="true"
+          [label]="theme.name"
+        ></app-base-button>
+      </div>
+
+      <!-- <app-input-switch
+        [label]="'Blobity'"
+        [isChecked]="isBlobityOn"
+        (switchUpdate)="inputSwitchUpdate()"
+      ></app-input-switch> -->
+    </div>
+  </div>
+</app-overlay-panel>

@@ -1,0 +1,71 @@
+@import "../../../../../assets/styles/variables";
+
+:host ::ng-deep {
+  .button-container {
+    .button-item {
+      min-height: 40px;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 5px 10px;
+      min-width: 100px;
+
+      &.outlined {
+        background: var(--surface-card);
+        border-radius: var(--border-radius);
+        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
+      }
+
+      &.normal:not(.outlined) {
+        background-color: var(--primary-color);
+        color: var(--primary-color-text);
+        border: none;
+
+        &:not(:disabled):hover {
+          background-color: $base-teal-color-hover;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+        }
+      }
+    }
+
+    .p-splitbutton .p-button {
+      background-color: var(--primary-color);
+      color: var(--primary-color-text);
+      border: none;
+    }
+
+    .p-splitbutton .p-splitbutton-defaultbutton {
+      padding-right: 0;
+    }
+
+    .outlined {
+      .p-splitbutton .p-button {
+        background: var(--surface-card);
+        border-radius: 6px;
+        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
+
+        &.p-splitbutton-defaultbutton {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+          border-right: 0;
+        }
+
+        &.p-splitbutton-menubutton {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          border-left: 0;
+        }
+      }
+    }
+
+    // }
+    // }
+    .p-button-label {
+      font-weight: var(--font-weight-semibold);
+    }
+  }
+}

@@ -1,0 +1,77 @@
+@import "../../../../../assets/styles/variables";
+
+.checkbox-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+
+  label.main-label {
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-color);
+    display: inline-block;
+    margin-bottom: 8px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .invalid {
+    border-color: $error-color;
+  }
+
+  .disabled {
+    border: none;
+    cursor: default;
+  }
+
+  .error-message {
+    color: $error-color;
+  }
+
+  .input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    label {
+      color: var(--text-color);
+      margin-left: 10px;
+      display: inline-block;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+:host ::ng-deep {
+  p-checkbox {
+    .p-checkbox .p-checkbox-box {
+      &.p-highlight {
+        border: none;
+        background: var(--primary-color);
+
+        &:hover {
+          border-color: var(--primary-color);
+          background-color: var(--primary-color);
+        }
+      }
+
+      &.p-checkbox-focused {
+        box-shadow: none;
+      }
+
+      &:hover {
+        border-color: var(--primary-color);
+      }
+
+      &.p-focus {
+        border-color: var(--primary-color);
+        box-shadow: none;
+      }
+    }
+  }
+}

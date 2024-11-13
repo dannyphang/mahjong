@@ -1,0 +1,70 @@
+@import "../../../../../assets/styles/variables";
+
+.multiselect-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+
+  label.main-label {
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-color);
+    display: inline-block;
+    margin-bottom: 8px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .disabled {
+    border: none;
+    cursor: default;
+  }
+
+  .error-message {
+    color: $error-color;
+  }
+
+  .input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+
+    label {
+      color: var(--text-color);
+      margin-left: 10px;
+      display: inline-block;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+:host ::ng-deep {
+  .p-inputgroup-addon {
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    position: absolute;
+    height: 45px;
+    z-index: 2;
+  }
+  .multiselect-container {
+    .invalid {
+      .p-multiselect {
+        border-color: $error-color;
+      }
+
+      .p-inputgroup-addon {
+        border-color: $error-color;
+      }
+    }
+    .p-multiselect {
+      width: 100%;
+      min-height: 42px;
+    }
+  }
+}

@@ -1,0 +1,28 @@
+@import "../../../../../assets/styles/variables";
+
+.form-container {
+  display: flex;
+  padding: 15px;
+  flex-direction: column;
+  .row-layout-container {
+    display: flex;
+    flex-direction: row;
+    margin-left: -10px;
+    margin-right: -10px;
+
+    .item-layout-container {
+      padding: 10px;
+
+      &.hide {
+        padding: 0;
+        display: none;
+      }
+    }
+  }
+}
+
+:host ::ng-deep {
+  textarea {
+    resize: none;
+  }
+}

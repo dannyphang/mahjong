@@ -1,0 +1,142 @@
+@import "../../../../../assets/styles/variables";
+
+:host ::ng-deep {
+  .textbox-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+
+    label {
+      margin-bottom: 0.5rem;
+    }
+
+    .invalid {
+      border-color: $error-color;
+
+      input {
+        border-color: $error-color;
+      }
+    }
+
+    .disabled {
+      border-color: var(--surface-border);
+      cursor: default;
+      background-color: $readonly_background_color;
+    }
+
+    .error-message {
+      color: $error-color;
+    }
+
+    .input-container {
+      position: relative;
+
+      .description-message {
+        font-size: 12px;
+        line-height: 18px;
+        color: #9f9f9f;
+      }
+
+      input {
+        width: 100%;
+
+        &:focus {
+          box-shadow: none;
+          border-color: var(--primary-color);
+        }
+      }
+
+      input.leftIcon {
+        width: 100%;
+        padding-left: 40px;
+
+        &:focus {
+          box-shadow: none;
+          border-color: var(--primary-color);
+        }
+      }
+
+      img {
+        position: absolute;
+        right: 10px;
+        height: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+      }
+
+      img.leftIcon {
+        position: absolute;
+        left: 10px;
+        height: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+      }
+
+      .pr-30 {
+        padding-right: 30px;
+      }
+
+      .pl-30 {
+        padding-left: 30px;
+      }
+    }
+
+    .input-switch-container {
+      display: flex;
+      align-items: center;
+
+      p-inputswitch {
+        display: flex;
+      }
+    }
+
+    .input-number-container {
+      position: relative;
+      display: flex;
+
+      p-inputnumber,
+      .p-inputnumber {
+        width: 100%;
+
+        &.pl-30 {
+          input {
+            padding-left: 40px;
+          }
+        }
+
+        input {
+          width: 100%;
+        }
+      }
+
+      .disabled {
+        input {
+          border-color: var(--surface-border);
+          cursor: default;
+          background-color: $readonly_background_color;
+        }
+      }
+
+      .prefix {
+        position: absolute;
+        top: 50%;
+        left: 12px;
+        transform: translateY(-50%);
+      }
+
+      .suffix {
+        padding: 12px;
+      }
+    }
+  }
+
+  .p-input-icon::before {
+    position: relative;
+    z-index: 1;
+  }
+}

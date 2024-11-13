@@ -1,0 +1,19 @@
+@import "../../../../../assets/styles/variables";
+
+label {
+  color: var(--text-color);
+  display: inline-block;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 600;
+  min-height: 20px;
+}
+
+.error-message {
+  color: $error-color;
+  font-style: italic;
+}
+
+.asterisk {
+  color: red;
+}

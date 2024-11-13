@@ -1,0 +1,7 @@
+<div class="form-array-container">
+  <app-base-label [label]="label"></app-base-label>
+  <div class="form-item" *ngFor="let value of formArrayValue; let i = index">
+    #{{ i }}
+    <ng-container #form></ng-container>
+  </div>
+</div>

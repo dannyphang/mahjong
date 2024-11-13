@@ -1,0 +1,49 @@
+@import "../../../../../assets/styles/variables";
+
+.radio-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+
+  label.main-label {
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-color);
+    display: inline-block;
+    margin-bottom: 8px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .invalid {
+    border-color: $error-color;
+  }
+
+  .disabled {
+    border: none;
+    cursor: default;
+  }
+
+  .error-message {
+    color: $error-color;
+  }
+
+  .input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+
+    label {
+      color: var(--text-color);
+      margin-left: 10px;
+      display: inline-block;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}

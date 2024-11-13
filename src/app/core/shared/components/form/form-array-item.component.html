@@ -1,0 +1,10 @@
+<app-base-form [formConfig]="formConfig"></app-base-form>
+<app-base-button
+  [outlined]="true"
+  [label]="removeBtnLabel"
+  (click)="handleRemoveForm()"
+></app-base-button>
+<app-base-button
+  [label]="addBtnLabel"
+  (click)="handleAddForm()"
+></app-base-button>

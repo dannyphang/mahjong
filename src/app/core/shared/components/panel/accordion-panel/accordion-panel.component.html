@@ -1,0 +1,12 @@
+<p-accordion [multiple]="multiple" styleClass="acc-panel-box">
+  <p-accordionTab
+    [disabled]="disabled"
+    [selected]="isExpand"
+    [iconPos]="iconPos"
+  >
+    <ng-template pTemplate="header">
+      <ng-content select="[acc-panel-header]"></ng-content>
+    </ng-template>
+    <ng-content select="[acc-panel-body]"></ng-content>
+  </p-accordionTab>
+</p-accordion>

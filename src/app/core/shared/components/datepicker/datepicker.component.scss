@@ -1,0 +1,70 @@
+@import "../../../../../assets/styles/variables";
+
+.datepicker-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+
+  .datepicker-item {
+    span.p-calendar {
+      width: 100%;
+
+      input {
+        width: 100%;
+      }
+
+      button {
+        background-color: var(--primary-color);
+
+        &:hover {
+          background-color: $base-teal-color-hover;
+        }
+
+        // padding: 0;
+        // width: fit-content;
+
+        span.p-button-label {
+          display: none;
+        }
+      }
+    }
+  }
+
+  label {
+    color: var(--text-color);
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+
+  .input-container {
+    position: relative;
+
+    img {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+    }
+  }
+
+  .invalid {
+    border-color: $error-color;
+
+    span.p-calendar {
+      width: 100%;
+
+      input {
+        border-color: $error-color;
+      }
+    }
+  }
+
+  .error-message {
+    color: $error-color;
+  }
+
+  .date-range-picker {
+    width: 46.5%;
+  }
+}

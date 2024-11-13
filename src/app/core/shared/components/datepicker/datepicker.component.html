@@ -1,0 +1,113 @@
+<div class="datepicker-container">
+  <app-base-label
+    *ngIf="!IsArrayLabel(label) && !!label"
+    [required]="checkRequiredField()"
+    [label]="label"
+    [labelOneLine]="labelOneLine"
+  >
+  </app-base-label>
+
+  <div class="input-container">
+    <p-calendar
+      *ngIf="mode === 'range' || mode === 'single'"
+      class="datepicker-item"
+      [keepInvalid]="true"
+      iconPos="left"
+      [showIcon]="true"
+      icon="pi pi-calendar"
+      appendTo="body"
+      [dateFormat]="dateFormat || 'dd/mm/yy'"
+      [placeholder]="placeholder"
+      [ngClass]="{ invalid: checkInvalidField() }"
+      [formControl]="fieldControl"
+      [selectionMode]="mode"
+      [minDate]="minDate"
+      [maxDate]="maxDate"
+      [required]="required"
+      [showTime]="showTime"
+      tabindex="-1"
+      [showSeconds]="showTime"
+      [timeOnly]="timeOnly"
+      [showButtonBar]="true"
+    >
+    </p-calendar>
+
+    <!-- range 2 -->
+    <div
+      *ngIf="mode === 'range_2'"
+      class="flex flex-row flex-wrap align-items-center"
+    >
+      <div class="flex flex-column date-range-picker">
+        <app-base-label
+          *ngIf="IsArrayLabel(label)"
+          class="flex"
+          [label]="label[0]"
+        >
+        </app-base-label>
+        <p-calendar
+          class="datepicker-item date-from flex flex-1"
+          appendTo="body"
+          [dateFormat]="dateFormat || 'dd/mm/yy'"
+          [placeholder]="placeholder"
+          [ngClass]="{ invalid: checkInvalidField() }"
+          [formControl]="date_from"
+          [disabled]="disabled"
+          [showIcon]="true"
+          tabindex="-1"
+          [timeOnly]="timeOnly"
+          [showButtonBar]="true"
+        ></p-calendar>
+      </div>
+
+      <div
+        style="width: 7%"
+        [class]="'px-2 text-center' + (IsArrayLabel(label) ? ' mt-4 p-2' : '')"
+      >
+        to
+      </div>
+
+      <div class="flex flex-column date-range-picker">
+        <app-base-label
+          class="flex"
+          *ngIf="IsArrayLabel(label)"
+          class="flex"
+          [label]="label[1]"
+        >
+        </app-base-label>
+        <p-calendar
+          class="datepicker-item date-to flex-1"
+          appendTo="body"
+          [dateFormat]="dateFormat || 'dd/mm/yy'"
+          [placeholder]="placeholder"
+          [ngClass]="{ invalid: checkInvalidDateToField() }"
+          [formControl]="date_to"
+          [disabled]="disabled"
+          [showIcon]="true"
+          tabindex="-1"
+          [timeOnly]="timeOnly"
+          [showButtonBar]="true"
+        ></p-calendar>
+      </div>
+    </div>
+  </div>
+
+  <!-- error -->
+  <div class="w-full flex">
+    <div class="pl-0">
+      <app-base-label
+        *ngIf="checkInvalidField()"
+        [label]="errorMessage"
+        mode="error"
+      >
+      </app-base-label>
+    </div>
+
+    <app-base-label
+      class="pl-3"
+      *ngIf="mode === 'range_2' && checkInvalidDateToField()"
+      [label]="dateToErrorMessage"
+      mode="error"
+    >
+    </app-base-label>
+  </div>
+</div>

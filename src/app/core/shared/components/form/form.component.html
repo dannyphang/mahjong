@@ -1,0 +1,26 @@
+<div class="form-container">
+  <div
+    *ngFor="let row of formConfigSorted; trackBy: trackByRow"
+    class="row-layout-container"
+  >
+    <div
+      *ngFor="let item of row; trackBy: trackByCol"
+      class="item-layout-container"
+      [className]="item.cssContainer"
+      [style.width.%]="(100 * item.layoutDefine.colSpan) / 12 || 100"
+      [ngClass]="{ hide: item.visibility === 'hidden' }"
+      [id]="item.id"
+    >
+      <app-form-item
+        *ngIf="item.type !== 'html'"
+        [fieldConfig]="updateConfig(item)"
+        [parentFieldConfig]="formConfig"
+      >
+      </app-form-item>
+      <div
+        *ngIf="item.type === 'html'"
+        [innerHtml]="bypassSecurityTrustHtml(item.dynamicHTML)"
+      ></div>
+    </div>
+  </div>
+</div>

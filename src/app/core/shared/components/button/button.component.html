@@ -1,0 +1,46 @@
+<div class="button-container">
+  <ng-container [ngSwitch]="type">
+    <ng-template [ngSwitchDefault]>
+      <button
+        pButton
+        [type]="buttonType"
+        label="{{ label | translate }}"
+        [icon]="!!iconName ? iconName : ''"
+        [iconPos]="rightIcon ? 'right' : 'left'"
+        [class]="'button-item ' + buttonClass"
+        [ngClass]="{
+          outlined: outlined,
+          'border-none': !outlined,
+          normal: color === 'normal',
+          'bg-red-400': color === 'red',
+          oneline: labelOneLine
+        }"
+        [disabled]="disabled"
+        (click)="click($event)"
+      >
+        <img
+          class="h-1rem w-1rem"
+          alt="icon"
+          *ngIf="!!iconUrl && !rightIcon"
+          [src]="iconUrl"
+        />
+      </button>
+    </ng-template>
+    <ng-template [ngSwitchCase]="'split'">
+      <p-splitButton
+        label="{{ label | translate }}"
+        [icon]="!!iconName ? iconName : ''"
+        [iconPos]="rightIcon ? 'right' : 'left'"
+        class="split-button-item"
+        [ngClass]="{
+          outlined: outlined,
+          normal: color === 'normal',
+          'bg-red-400': color === 'red'
+        }"
+        [disabled]="disabled"
+        [model]="splitButtonItems"
+      >
+      </p-splitButton>
+    </ng-template>
+  </ng-container>
+</div>

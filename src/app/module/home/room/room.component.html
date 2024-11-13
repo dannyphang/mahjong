@@ -1,0 +1,13 @@
+<app-toast></app-toast>
+
+<!-- waiting room -->
+<!-- <app-waiting-room (updateRoom)="updateRoom($event)"></app-waiting-room> -->
+
+<!-- game start room -->
+<!-- <app-game-start-room (updateRoom)="updateRoom($event)"></app-game-start-room> -->
+
+<div class="tw-flex tw-gap-[var(--content-gap)] tw-p-[var(--content-gap)]">
+  <div *ngFor="let p of room.playerList">
+    <p-button [label]="p.playerName" [outlined]="true"></p-button>
+  </div>
+</div>

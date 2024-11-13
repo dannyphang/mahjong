@@ -1,0 +1,47 @@
+@import "../../../../../assets/styles/variables";
+
+:host ::ng-deep {
+  .textarea-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 21px;
+
+    label {
+      margin-bottom: 0.5rem;
+    }
+
+    .input-container {
+      position: relative;
+
+      textarea {
+        width: 100%;
+      }
+
+      .p-inputtext:enabled {
+        &:focus {
+          box-shadow: none;
+          border-color: var(--primary-color);
+        }
+      }
+
+      .count {
+        position: absolute;
+        right: 0px;
+        bottom: -18px;
+      }
+    }
+
+    &.invalid {
+      textarea {
+        border-color: $error-color;
+      }
+      margin-bottom: 0;
+    }
+
+    .error-message {
+      color: $error-color;
+    }
+  }
+}

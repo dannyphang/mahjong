@@ -1,0 +1,7 @@
+<p-editor
+  [(ngModel)]="editorModel"
+  [style]="{ height: '200px' }"
+  [readonly]="readOnly"
+  [formControl]="editorFormControl"
+  (onTextChange)="countTextLength($event)"
+/>
