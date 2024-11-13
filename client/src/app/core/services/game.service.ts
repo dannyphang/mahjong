@@ -26,10 +26,6 @@ export class GameService {
         return this.http.get<ResponseModel<RoomDto>>(apiConfig.baseUrl + '/room/' + roomId).pipe();
     }
 
-    createPlayer(player: CreatePlayerDto): Observable<ResponseModel<PlayerDto>> {
-        return this.http.post<ResponseModel<PlayerDto>>(apiConfig.baseUrl + '/player', { player }).pipe();
-    }
-
     getPlayerByName(name: string): Observable<ResponseModel<PlayerDto[]>> {
         let header: HttpHeaders = new HttpHeaders({
             name: name

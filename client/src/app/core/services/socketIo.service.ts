@@ -68,7 +68,6 @@ export class SocketioService {
     recieveRoomUpdate(roomId: string) {
         return new Observable<any>((observer) => {
             this.socket.on(roomId, (room) => {
-                console.log(room)
                 observer.next(room);
             });
         });
