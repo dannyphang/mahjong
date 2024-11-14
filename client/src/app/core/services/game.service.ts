@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import apiConfig from '../../../environments/apiConfig';
 import { ResponseModel } from './common.service';
+import { NumberValueAccessor } from '@angular/forms';
 
 @Injectable({
     providedIn: 'root',
@@ -14,8 +15,8 @@ export class GameService {
     ) {
     }
 
-    getAllCharacter(): Observable<ResponseModel<CharacterDto[]>> {
-        return this.http.get<ResponseModel<CharacterDto[]>>(apiConfig.baseUrl + '/character').pipe();
+    getAllMahjong(): Observable<ResponseModel<MahjongDto[]>> {
+        return this.http.get<ResponseModel<MahjongDto[]>>(apiConfig.baseUrl + '/mahjong').pipe();
     }
 
     createRoom(): Observable<ResponseModel<RoomDto>> {
@@ -26,6 +27,14 @@ export class GameService {
         return this.http.get<ResponseModel<RoomDto>>(apiConfig.baseUrl + '/room/' + roomId).pipe();
     }
 
+    createPlayer(player: PlayerDto): Observable<ResponseModel<PlayerDto>> {
+        return this.http.post<ResponseModel<PlayerDto>>(apiConfig.baseUrl + '/player', { player }).pipe();
+    }
+
+    updatePlayer(player: PlayerDto): Observable<ResponseModel<PlayerDto>> {
+        return this.http.put<ResponseModel<PlayerDto>>(apiConfig.baseUrl + '/player', { player }).pipe();
+    }
+
     getPlayerByName(name: string): Observable<ResponseModel<PlayerDto[]>> {
         let header: HttpHeaders = new HttpHeaders({
             name: name
@@ -34,12 +43,14 @@ export class GameService {
     }
 }
 
-export class CharacterDto {
-    characterId: string;
-    characterOrder: number;
-    characterDescription: string;
-    characterName: string;
-    characterSide: '神' | '狼' | '民';
+export class MahjongDto {
+    uid: string;
+    order: number;
+    type: string;
+    joker: boolean;
+    name: string;
+    code: string;
+    direction: number;
     statusId: number;
 }
 
@@ -51,22 +62,23 @@ export class RoomDto {
 }
 
 export class PlayerDto {
-    playerId: string;
+    playerId?: string;
     playerName: string;
     statusId: number;
-    characterId: string;
-    isOut: boolean;
+    direction: number;
+    mahjong: MahjongGroupDto;
 }
 
-export class CreatePlayerDto {
-    playerName: string;
-    statusId: number;
-    isOut: boolean;
-}
-
-export class RoomUpdateDto {
-    roomId: string;
-    playerList: PlayerDto[];
-    gameStarted: boolean;
+export class RoomUpdateDto extends RoomDto {
     updateMessage: string;
+}
+
+export class MahjongGroupDto {
+    handTiles: MahjongTileSetDto;
+    publicTiles: MahjongTileSetDto;
+}
+
+export class MahjongTileSetDto {
+    point: number;
+    mahjongTile: MahjongDto[];
 }

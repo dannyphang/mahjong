@@ -6,7 +6,7 @@ import responseModel from "../shared/function.js";
 
 router.use(express.json());
 
-const playerCollectionName = "Player";
+const playerCollectionName = "player";
 
 // create player
 router.post("/", async (req, res) => {
@@ -33,9 +33,7 @@ router.post("/", async (req, res) => {
 router.put("/", async (req, res) => {
   try {
     let player = req.body.player;
-    let newRef = db.default.db
-      .collection(playerCollectionName)
-      .doc(player.playerId);
+    let newRef = db.default.db.collection(playerCollectionName).doc(player.playerId);
     await newRef.update(player);
 
     res.status(200).json(responseModel({ data: player }));
@@ -66,7 +64,7 @@ router.get("/", async (req, res) => {
     if (list.length > 0) {
       res.status(200).json(responseModel({ data: list }));
     } else {
-      res.status(400).json(
+      res.status(200).json(
         responseModel({
           isSuccess: false,
           responseMessage: "Player is not found.",

@@ -9,6 +9,8 @@ const server = http.createServer(app);
 import * as socketIo from "socket.io";
 
 import mahjongRouter from "./util/mahjong.js";
+import roomRouter from "./util/room.js";
+import playerRouter from "./util/player.js";
 import * as games from "./util/game.js";
 
 const PORT = process.env.PORT || 3000;
@@ -28,6 +30,8 @@ app.all("/*", function (req, res, next) {
 app.use(cors());
 
 app.use("/mahjong", mahjongRouter);
+app.use("/room", roomRouter);
+app.use("/player", playerRouter);
 
 const io = new socketIo.Server(server, {
   cors: {
@@ -37,6 +41,13 @@ const io = new socketIo.Server(server, {
 
 io.on("connection", (socket) => {
   console.log("a user connected");
+
+  socket.on("startGame", ({ room }) => {
+    games.createGame(room).then((roomU) => {
+      io.in(roomU.roomId).emit("roomUpdate", roomU);
+    });
+  });
+
   socket.on("roomUpdate", ({ room }) => {
     games.updateRoom(room).then((roomU) => {
       io.in(roomU.roomId).emit("roomUpdate", roomU);

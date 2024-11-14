@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SocketioService } from '../../../core/services/socketIo.service';
-import { PlayerDto, RoomDto } from '../../../core/services/game.service';
+import { GameService, PlayerDto, RoomDto } from '../../../core/services/game.service';
 import { MessageService } from 'primeng/api';
 import { BaseCoreAbstract } from '../../../core/shared/base/base-core.abstract';
 
@@ -20,6 +20,7 @@ export class RoomComponent extends BaseCoreAbstract {
     private socketIoService: SocketioService,
     private route: ActivatedRoute,
     private router: Router,
+    private gameService: GameService,
     protected override messageService: MessageService
   ) {
     super(messageService);
@@ -30,10 +31,22 @@ export class RoomComponent extends BaseCoreAbstract {
       this.initRoom();
     }
     else {
-      console.log(this.socketIoService.currentPlayer)
-      // this.router.navigate(["/"]);
+      this.router.navigate(["/"]);
     }
   }
+
+  @HostListener('window:beforeunload')
+  ngOnDestroy() {
+    this.playerQuited(this.player);
+    this.socketIoService.disconnectSocket();
+
+  }
+
+  playerQuited(player: PlayerDto) {
+    this.room.playerList = this.room.playerList.filter(p => p.playerId !== player.playerId);
+    this.updateRoom(this.room);
+  }
+
 
   initRoom() {
     this.roomId = this.route.snapshot.paramMap.get('id') ?? 'undeficed';
@@ -73,11 +86,23 @@ export class RoomComponent extends BaseCoreAbstract {
 
   recieveGameUpdate() {
     this.socketIoService.recieveRoomUpdate(this.roomId).subscribe((room) => {
+      this.popMessage(room.updateMessage, 'Info', 'info');
       this.room = room;
     });
   }
 
-  updateRoom(event: any) {
+  startGame() {
+    this.socketIoService.startGame(this.room);
+  }
 
+  updateRoom(room: RoomDto) {
+    room.playerList.forEach(p => {
+      this.gameService.updatePlayer(p).subscribe(res => {
+        if (res.isSuccess) {
+        }
+      });
+    });
+
+    this.socketIoService.sendRoomUpdate(room);
   }
 }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SocketioService } from '../../core/services/socketIo.service';
-import { GameService } from '../../core/services/game.service';
+import { GameService, MahjongGroupDto, PlayerDto } from '../../core/services/game.service';
 import { BaseCoreAbstract } from '../../core/shared/base/base-core.abstract';
 import { MessageService } from 'primeng/api';
 
@@ -34,32 +34,33 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
         next: res => {
           if (res.isSuccess) {
             this.socketIoService.currentPlayer = res.data[0];
-            this.gameService.createRoom().subscribe(res2 => {
-              if (res2.isSuccess) {
-                this.socketIoService.room = res2.data;
-                this.router.navigate(['/room', res2.data.roomId]);
+
+            this.navigateToRoom(true);
+          }
+          else {
+            this.gameService.createPlayer({
+              playerName: this.usernameFormControl.value,
+              statusId: 1,
+              mahjong: {
+                handTiles: {
+                  mahjongTile: [],
+                  point: 0
+                },
+                publicTiles: {
+                  mahjongTile: [],
+                  point: 0
+                }
+              },
+              direction: 0
+            } as PlayerDto).subscribe(res3 => {
+              if (res3.isSuccess) {
+                this.socketIoService.player = res3.data;
+
+                this.navigateToRoom(true);
               }
-            })
+            });
           }
         },
-        error: error => {
-          this.gameService.createPlayer({
-            playerName: this.usernameFormControl.value,
-            statusId: 1,
-            isOut: false,
-          }).subscribe(res3 => {
-            if (res3.isSuccess) {
-              this.socketIoService.player = res3.data;
-
-              this.gameService.createRoom().subscribe(res2 => {
-                if (res2.isSuccess) {
-                  this.socketIoService.room = res2.data;
-                  this.router.navigate(['/room', res2.data.roomId]);
-                }
-              })
-            }
-          });
-        }
       });
     }
     else {
@@ -73,31 +74,32 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
         next: res => {
           if (res.isSuccess) {
             this.socketIoService.player = res.data[0];
-            this.gameService.getRoomById(this.roomIdFormControl.value).subscribe(res2 => {
-              if (res2.isSuccess) {
-                this.socketIoService.room = res2.data;
-                this.router.navigate(['/room', this.roomIdFormControl.value]);
-              }
-            })
-          }
-        },
-        error: error => {
-          this.gameService.createPlayer({
-            playerName: this.usernameFormControl.value,
-            statusId: 1,
-            isOut: false,
-          }).subscribe(res => {
-            if (res.isSuccess) {
-              this.socketIoService.player = res.data;
 
-              this.gameService.getRoomById(this.roomIdFormControl.value).subscribe(res2 => {
-                if (res2.isSuccess) {
-                  this.socketIoService.room = res2.data;
-                  this.router.navigate(['/room', this.roomIdFormControl.value]);
+            this.navigateToRoom();
+          }
+          else {
+            this.gameService.createPlayer({
+              playerName: this.usernameFormControl.value,
+              statusId: 1,
+              mahjong: {
+                handTiles: {
+                  mahjongTile: [],
+                  point: 0
+                },
+                publicTiles: {
+                  mahjongTile: [],
+                  point: 0
                 }
-              })
-            }
-          });
+              },
+              direction: 0
+            } as PlayerDto).subscribe(res => {
+              if (res.isSuccess) {
+                this.socketIoService.player = res.data;
+
+                this.navigateToRoom();
+              }
+            });
+          }
         }
       });
     }
@@ -108,5 +110,29 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
 
   character() {
     this.router.navigate(['/character']);
+  }
+
+  navigateToRoom(isCreateRoom = false) {
+    if (isCreateRoom) {
+      this.gameService.createRoom().subscribe(res2 => {
+        if (res2.isSuccess) {
+          this.socketIoService.room = res2.data;
+          this.router.navigate(['/room', res2.data.roomId]);
+        }
+      });
+    }
+    else {
+      this.gameService.getRoomById(this.roomIdFormControl.value).subscribe(res2 => {
+        if (res2.isSuccess) {
+          if (res2.data.playerList.length < 3 || res2.data.playerList.find(p => p.playerId === this.socketIoService.player.playerId)) {
+            this.socketIoService.room = res2.data;
+            this.router.navigate(['/room', this.roomIdFormControl.value]);
+          }
+          else {
+            this.popMessage('Room player cannot more than 3 players', "Error", "error")
+          }
+        }
+      });
+    }
   }
 }

@@ -6,7 +6,7 @@ import responseModel from "../shared/function.js";
 
 router.use(express.json());
 
-const roomCollectionName = "Room";
+const roomCollectionName = "room";
 
 // create new room
 router.post("/", async (req, res) => {

@@ -37,16 +37,15 @@ export class SocketioService {
     }
 
     playerJoinRoom(player: PlayerDto, room: RoomDto) {
-        console.log(room)
         this.socket.emit('joinRoom', { room: room, player: player });
     }
 
-    startGame(gameId: string) {
-        this.socket.emit('startGame', { gameId: gameId });
+    startGame(room: RoomDto) {
+        this.socket.emit('startGame', { room: room });
     }
 
-    sendRoomUpdate(roomId: string, room: RoomDto) {
-        this.socket.emit('roomUpdate', { roomId: roomId, room: room });
+    sendRoomUpdate(room: RoomDto) {
+        this.socket.emit('roomUpdate', { room: room });
     }
 
     recieveJoinedPlayers() {
@@ -58,18 +57,22 @@ export class SocketioService {
     }
 
     recieveStartGame() {
-        return new Observable<RoomDto>((observer) => {
-            this.socket.on('startGame', (room: RoomDto) => {
+        return new Observable<RoomUpdateDto>((observer) => {
+            this.socket.on('startGame', (room: RoomUpdateDto) => {
                 observer.next(room);
             });
         });
     }
 
     recieveRoomUpdate(roomId: string) {
-        return new Observable<any>((observer) => {
-            this.socket.on(roomId, (room) => {
+        return new Observable<RoomUpdateDto>((observer) => {
+            this.socket.on('roomUpdate', (room: RoomUpdateDto) => {
                 observer.next(room);
             });
         });
+    }
+
+    disconnectSocket() {
+        this.socket.disconnect();
     }
 }
