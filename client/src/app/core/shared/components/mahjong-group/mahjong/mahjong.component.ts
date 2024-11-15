@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { MahjongDto } from '../../../../services/game.service';
 
 @Component({
@@ -17,6 +17,12 @@ export class MahjongComponent {
     if (this.selectable) {
       this.mahjong.isSelected = true;
       this.selectedTile.emit(this.mahjong);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['mahjong'] && changes['mahjong'].currentValue) {
+      console.log(this.mahjong)
     }
   }
 }

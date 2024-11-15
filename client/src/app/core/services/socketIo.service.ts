@@ -87,4 +87,8 @@ export class SocketioService {
     sendNextTurn(room: RoomDto) {
         this.socket.emit('nextTurn', { room: room });
     }
+
+    sendDrawMahjong(room: RoomDto, player: PlayerDto) {
+        this.socket.emit('drawMahjong', { room: room, player: player });
+    }
 }

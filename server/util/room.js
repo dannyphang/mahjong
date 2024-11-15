@@ -17,6 +17,12 @@ router.post("/", async (req, res) => {
       statusId: 1,
       playerList: [],
       gameStarted: true,
+      gameOrder: 0,
+      roomOwnerId: "",
+      mahjong: {
+        discardTiles: [],
+        remainingTiles: [],
+      },
     };
 
     await newRef.set(room);

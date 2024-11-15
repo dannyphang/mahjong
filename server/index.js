@@ -80,6 +80,12 @@ io.on("connection", (socket) => {
       io.in(roomU.roomId).emit("roomUpdate", roomU);
     });
   });
+
+  socket.on("drawMahjong", ({ room, player }) => {
+    games.drawMahjong(room, player).then((roomU) => {
+      io.in(roomU.roomId).emit("roomUpdate", roomU);
+    });
+  });
 });
 
 server.listen(PORT, () => console.log("Server is running on port " + PORT));

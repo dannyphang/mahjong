@@ -12,7 +12,7 @@ import { MessageService } from 'primeng/api';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent extends BaseCoreAbstract implements OnInit {
-  roomIdFormControl: FormControl = new FormControl('TEnoKxQrDlLNHNgTBcde');
+  roomIdFormControl: FormControl = new FormControl('4XVPqIQ8BaTHw4ZvVgtn');
   usernameFormControl: FormControl = new FormControl('');
 
   constructor(

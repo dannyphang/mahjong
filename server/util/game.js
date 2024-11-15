@@ -16,6 +16,12 @@ function createGame(room) {
       return doc.data();
     });
 
+    // init default data
+    room.gameStarted = true;
+    room.gameOrder = 1;
+    room.mahjong.discardTiles = [];
+    room.mahjong.remainingTiles = [];
+
     // shuffle mahjong list
     const newMahjongList = shuffleArray(mahjongList);
 
@@ -39,23 +45,28 @@ function createGame(room) {
 
       for (let j = 0; j < handTileAmount; j++) {
         // set hand tile and flower tile
+        let newMahjong;
         do {
-          if (newMahjongList[0].type !== "Flower") {
-            room.playerList[i].mahjong.handTiles.mahjongTile.push(newMahjongList[0]);
+          newMahjong = newMahjongList[0];
+          if (newMahjong.type !== "Flower") {
+            room.playerList[i].mahjong.handTiles.mahjongTile.push(newMahjong);
           } else {
-            room.playerList[i].mahjong.flowerTiles.mahjongTile.push(newMahjongList[0]);
+            room.playerList[i].mahjong.flowerTiles.mahjongTile.push(newMahjong);
             room.playerList[i].mahjong.flowerTiles.point += calculateMahjongTilePoints(
-              newMahjongList[0],
+              newMahjong,
               room.playerList[i]
             );
           }
 
           newMahjongList.shift();
-        } while (newMahjongList[0].type === "Flower");
+        } while (newMahjong.type === "Flower");
 
         // sort the mahjong handtile list
         room.playerList[i].mahjong.handTiles.mahjongTile.sort((a, b) => a.order - b.order);
       }
+
+      // store the rest mahjong list to remaining mahjong set
+      room.mahjong.remainingTiles = newMahjongList;
 
       // check if the flower tile set got 'flower gang', then +1 more extra point (2 + 1 = 3)
       if (
@@ -77,10 +88,6 @@ function createGame(room) {
         room.playerList[i].mahjong.flowerTiles.point++;
       }
     }
-
-    room.gameStarted = true;
-    room.gameOrder = 1;
-    room.mahjongDiscardTiles = [];
 
     updateRoom(room).then((roomU) => {
       resolve({
@@ -135,7 +142,7 @@ function playerQuitRoom(room, player) {
 
 function discardMahjong(room, player, discardedMahjongTile) {
   return new Promise(async function (resolve, reject) {
-    room.mahjongDiscardTiles.push({
+    room.mahjong.discardTiles.push({
       ...discardedMahjongTile,
       isSelected: false,
     });
@@ -153,13 +160,44 @@ function discardMahjong(room, player, discardedMahjongTile) {
   });
 }
 
+function drawMahjong(room, player) {
+  return new Promise(async function (resolve, reject) {
+    let newMahjong;
+    do {
+      newMahjong = room.mahjong.remainingTiles[0];
+      room.mahjong.remainingTiles.shift();
+      if (newMahjong.type !== "Flower") {
+        room.playerList
+          .find((p) => p.playerId === player.playerId)
+          .mahjong.handTiles.mahjongTile.push(newMahjong);
+      } else {
+        room.playerList
+          .find((p) => p.playerId === player.playerId)
+          .mahjong.flowerTiles.mahjongTile.push(newMahjong);
+        room.playerList.find((p) => p.playerId === player.playerId).mahjong.flowerTiles.point +=
+          calculateMahjongTilePoints(
+            newMahjong,
+            room.playerList.find((p) => p.playerId === player.playerId)
+          );
+      }
+    } while (newMahjong.type === "Flower");
+
+    nextTurn(room).then((roomNU) => {
+      updateRoom(roomNU).then((roomU) => {
+        resolve(roomU);
+      });
+    });
+  });
+}
+
 function nextTurn(room) {
   return new Promise(async function (resolve, reject) {
+    console.log(room.gameOrder);
     room.gameOrder++;
     if (room.gameOrder > 3) {
       room.gameOrder = 1;
     }
-
+    console.log(room.gameOrder);
     updateRoom(room).then((roomU) => {
       resolve({
         ...roomU,
@@ -188,4 +226,12 @@ function calculateMahjongTilePoints(mahjong, player) {
   }
 }
 
-export { createGame, playerJoinRoom, updateRoom, playerQuitRoom, discardMahjong, nextTurn };
+export {
+  createGame,
+  playerJoinRoom,
+  updateRoom,
+  playerQuitRoom,
+  discardMahjong,
+  nextTurn,
+  drawMahjong,
+};

@@ -77,6 +77,7 @@ export class RoomComponent extends BaseCoreAbstract {
         gameStarted: roomU.gameStarted,
         roomOwnerId: roomU.roomOwnerId,
         gameOrder: roomU.gameOrder,
+        mahjong: roomU.mahjong
       }
 
       this.socketIoService.currentRoom = newRoom;
@@ -154,12 +155,11 @@ export class RoomComponent extends BaseCoreAbstract {
     }
   }
 
-  nextTurn() {
-    this.room.gameOrder++
-    if (this.room.gameOrder > 3) {
-      this.room.gameOrder = 1;
-    }
+  drawMahjong(player: PlayerDto) {
+    this.socketIoService.sendDrawMahjong(this.room, player);
+  }
 
+  nextTurn() {
     this.socketIoService.sendNextTurn(this.room);
   }
 }
