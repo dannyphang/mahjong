@@ -25,7 +25,7 @@
 
   <!-- display mahjong section -->
   <section class="display-mahjong-div">
-    <!-- title -->
+    <!-- title area -->
     <div
       class="tw-flex tw-gap-[var(--content-gap)] tw-p-[var(--content-gap)] tw-justify-center tw-items-center"
     >
@@ -35,7 +35,24 @@
       />
     </div>
 
-    <!-- mahjong, player -->
+    <!-- discard tile area -->
+    <div
+      class="tw-flex tw-flex-wrap tw-gap-[var(--content-gap)] tw-p-[var(--content-gap)] tw-justify-center tw-items-center tw-border-[thin] tw-border-l-zinc-400"
+      [ngClass]="{ 'tw-border-dashed': room.mahjongDiscardTiles!.length > 0 }"
+    >
+      <div
+        *ngFor="let mahjong of room.mahjongDiscardTiles; let i = index"
+        class="tw-mx-[-4px]"
+      >
+        <app-mahjong
+          [disabled]="false"
+          [mahjong]="mahjong"
+          [selectable]="false"
+        ></app-mahjong>
+      </div>
+    </div>
+
+    <!-- mahjong, player area -->
     <div
       *ngFor="let p of room.playerList"
       [ngClass]="{
@@ -64,22 +81,19 @@
           [label]="'Sort'"
           (onClick)="sortMahjongList(p)"
           [outlined]="true"
+          *ngIf="p.playerId === player.playerId"
         ></p-button>
         <p-button
           [label]="'Discard'"
           (onClick)="discardMahjong(p)"
           [outlined]="true"
           [disabled]="room.gameOrder !== p.direction"
+          *ngIf="p.playerId === player.playerId"
         ></p-button>
       </div>
 
       <!-- flower set -->
-      <div
-        class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap"
-        cdkDropList
-        cdkDropListOrientation="horizontal"
-        (cdkDropListDropped)="drop($event, p.mahjong.flowerTiles.mahjongTile)"
-      >
+      <div class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap">
         <div
           *ngFor="
             let mahjong of p.mahjong.flowerTiles.mahjongTile;

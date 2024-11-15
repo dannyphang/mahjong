@@ -83,4 +83,8 @@ export class SocketioService {
     sendDiscardMahjongTile(room: RoomDto, player: PlayerDto, discardedMahjongTile: MahjongDto) {
         this.socket.emit('discardMahjong', { room: room, player: player, discardedMahjongTile: discardedMahjongTile });
     }
+
+    sendNextTurn(room: RoomDto) {
+        this.socket.emit('nextTurn', { room: room });
+    }
 }

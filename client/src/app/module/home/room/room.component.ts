@@ -142,10 +142,7 @@ export class RoomComponent extends BaseCoreAbstract {
   }
 
   anyButton() {
-    this.room.gameOrder++
-    if (this.room.gameOrder > 3) {
-      this.room.gameOrder = 1;
-    }
+    this.nextTurn();
   }
 
   discardMahjong(player: PlayerDto) {
@@ -155,5 +152,14 @@ export class RoomComponent extends BaseCoreAbstract {
     else {
       this.popMessage("Please select a tile to discard.", 'Error', 'error');
     }
+  }
+
+  nextTurn() {
+    this.room.gameOrder++
+    if (this.room.gameOrder > 3) {
+      this.room.gameOrder = 1;
+    }
+
+    this.socketIoService.sendNextTurn(this.room);
   }
 }
