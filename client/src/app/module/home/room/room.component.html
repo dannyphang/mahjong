@@ -1,34 +1,101 @@
 <app-toast></app-toast>
 
 <div *ngIf="player">
-  <div class="tw-flex tw-gap-[var(--content-gap)] tw-p-[var(--content-gap)]">
-    <div *ngFor="let p of room.playerList">
-      <p-button [label]="p.playerName" [outlined]="true"></p-button>
+  <div class="tw-p-[var(--content-gap)] tw-grid tw-gap-[var(--content-gap)]">
+    <div class="tw-flex tw-gap-[var(--content-gap)]">
+      <div *ngFor="let p of room.playerList">
+        <p-button [label]="p.playerName" [outlined]="true"></p-button>
+      </div>
+    </div>
+
+    <div class="tw-flex tw-gap-[var(--content-gap)]">
+      <p-button
+        [label]="'Start Game'"
+        (onClick)="startGame()"
+        *ngIf="player.playerId === room.roomOwnerId"
+      ></p-button>
+
+      <p-button
+        [label]="'Any Button'"
+        [outlined]="true"
+        (onClick)="anyButton()"
+      ></p-button>
     </div>
   </div>
 
-  <p-button
-    [label]="'Start Game'"
-    (onClick)="startGame()"
-    *ngIf="player.playerId === room.roomOwnerId"
-  ></p-button>
+  <!-- display mahjong section -->
+  <section class="display-mahjong-div">
+    <!-- title -->
+    <div
+      class="tw-flex tw-gap-[var(--content-gap)] tw-p-[var(--content-gap)] tw-justify-center tw-items-center"
+    >
+      <app-base-label [label]="'Game Turn: '"></app-base-label>
+      <img
+        [src]="'../../../../assets/images/mahjong/' + room.gameOrder + '.png'"
+      />
+    </div>
 
-  <div class="display-mahjong-div">
-    <div *ngFor="let p of room.playerList">
+    <!-- mahjong, player -->
+    <div
+      *ngFor="let p of room.playerList"
+      [ngClass]="{
+        'tw-border-red-400 tw-border-solid': p.playerId === player.playerId
+      }"
+    >
+      <!-- player info, action -->
       <div
         class="tw-flex tw-p-[var(--content-gap)] tw-gap-[var(--content-gap)] tw-items-center"
       >
         <app-base-label [label]="p.playerName"></app-base-label>
+        <img
+          class="direction-icon"
+          [src]="'../../../../assets/images/mahjong/' + p.direction + '.png'"
+        />
         <app-base-label
-          [label]="'(' + p.mahjong.handTiles.point.toString() + ')'"
+          [label]="
+            '(' +
+            (
+              p.mahjong.flowerTiles.point + p.mahjong.publicTiles.point
+            ).toString() +
+            ')'
+          "
         ></app-base-label>
         <p-button
           [label]="'Sort'"
           (onClick)="sortMahjongList(p)"
           [outlined]="true"
         ></p-button>
+        <p-button
+          [label]="'Discard'"
+          (onClick)="discardMahjong(p)"
+          [outlined]="true"
+          [disabled]="room.gameOrder !== p.direction"
+        ></p-button>
       </div>
 
+      <!-- flower set -->
+      <div
+        class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap"
+        cdkDropList
+        cdkDropListOrientation="horizontal"
+        (cdkDropListDropped)="drop($event, p.mahjong.flowerTiles.mahjongTile)"
+      >
+        <div
+          *ngFor="
+            let mahjong of p.mahjong.flowerTiles.mahjongTile;
+            let i = index
+          "
+          class="tw-mx-[-4px]"
+        >
+          <app-mahjong
+            [disabled]="false"
+            [mahjong]="mahjong"
+            [selectable]="false"
+          ></app-mahjong>
+        </div>
+      </div>
+
+      <!-- hand set -->
       <div
         class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap"
         cdkDropList
@@ -45,14 +112,16 @@
             cdkDrag
             (click)="mahjong.isSelected = true"
             *ngIf="p.playerId === player.playerId"
+            (selectedTile)="selectedTileOutput($event, p)"
           ></app-mahjong>
 
           <app-mahjong
             *ngIf="p.playerId !== player.playerId"
             [isHide]="true"
+            (click)="clickOtherPlayerTile()"
           ></app-mahjong>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </div>

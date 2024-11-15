@@ -1,8 +1,11 @@
 <div class="tw-grid tw-justify-items-center">
   <div
-    class="tw-relative tile-div"
+    class="tw-relative"
     (click)="selectTile()"
-    [ngClass]="{ 'tw-top-[-10px]': mahjong.isSelected && !isHide }"
+    [ngClass]="{
+      'tw-top-[-10px]': mahjong.isSelected && !isHide,
+      'tile-div': selectable
+    }"
   >
     <img
       [src]="'../../../../assets/images/mahjong/' + mahjong.code + '.png'"

@@ -12,8 +12,8 @@ import { MessageService } from 'primeng/api';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent extends BaseCoreAbstract implements OnInit {
-  roomIdFormControl: FormControl = new FormControl('919UGhphCGTCC6GIiRFm');
-  usernameFormControl: FormControl = new FormControl('', Validators.required);
+  roomIdFormControl: FormControl = new FormControl('TEnoKxQrDlLNHNgTBcde');
+  usernameFormControl: FormControl = new FormControl('');
 
   constructor(
     private router: Router,
@@ -47,6 +47,10 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                   point: 0
                 },
                 publicTiles: {
+                  mahjongTile: [],
+                  point: 0
+                },
+                flowerTiles: {
                   mahjongTile: [],
                   point: 0
                 }
@@ -89,6 +93,10 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                 publicTiles: {
                   mahjongTile: [],
                   point: 0
+                },
+                flowerTiles: {
+                  mahjongTile: [],
+                  point: 0
                 }
               },
               direction: 0
@@ -117,6 +125,8 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
       this.gameService.createRoom().subscribe(res2 => {
         if (res2.isSuccess) {
           this.socketIoService.room = res2.data;
+          this.socketIoService.room.roomOwnerId = this.socketIoService.player.playerId;
+
           this.router.navigate(['/room', res2.data.roomId]);
         }
       });

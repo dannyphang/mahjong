@@ -63,6 +63,8 @@ export class RoomDto {
     playerList: PlayerDto[];
     gameStarted: boolean;
     roomOwnerId?: string;
+    mahjongDiscardTiles?: MahjongDto[];
+    gameOrder: number;
 }
 
 export class PlayerDto {
@@ -80,6 +82,7 @@ export class RoomUpdateDto extends RoomDto {
 export class MahjongGroupDto {
     handTiles: MahjongTileSetDto;
     publicTiles: MahjongTileSetDto;
+    flowerTiles: MahjongTileSetDto;
 }
 
 export class MahjongTileSetDto {

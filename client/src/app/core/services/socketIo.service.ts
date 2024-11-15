@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
 import apiConfig from '../../../environments/apiConfig';
-import { PlayerDto, RoomDto, RoomUpdateDto } from './game.service';
+import { MahjongDto, PlayerDto, RoomDto, RoomUpdateDto } from './game.service';
 
 @Injectable({
     providedIn: 'root',
@@ -78,5 +78,9 @@ export class SocketioService {
 
     disconnectSocket() {
         this.socket.disconnect();
+    }
+
+    sendDiscardMahjongTile(room: RoomDto, player: PlayerDto, discardedMahjongTile: MahjongDto) {
+        this.socket.emit('discardMahjong', { room: room, player: player, discardedMahjongTile: discardedMahjongTile });
     }
 }

@@ -14,7 +14,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 export class RoomComponent extends BaseCoreAbstract {
   roomId: string;
   role = 'operative';
-  room: RoomDto = new RoomDto();
+  room: RoomDto;
   player: PlayerDto;
 
   constructor(
@@ -26,7 +26,6 @@ export class RoomComponent extends BaseCoreAbstract {
   ) {
     super(messageService);
 
-    console.log(this.socketIoService.currentPlayer)
     if (this.socketIoService.currentPlayer) {
       this.initRoom();
     }
@@ -41,7 +40,6 @@ export class RoomComponent extends BaseCoreAbstract {
 
   @HostListener('window:beforeunload')
   ngOnDestroy() {
-    // console.log(this.player.playerId)
     if (this.player) {
       this.playerQuited(this.player);
       this.socketIoService.disconnectSocket();
@@ -50,8 +48,6 @@ export class RoomComponent extends BaseCoreAbstract {
 
   playerQuited(player: PlayerDto) {
     this.room.playerList = this.room.playerList.filter(p => p.playerId !== player.playerId);
-    // this.updateRoom(this.room);
-
     this.socketIoService.sendPlayerQuitRoom(this.room, player);
   }
 
@@ -78,7 +74,9 @@ export class RoomComponent extends BaseCoreAbstract {
         roomId: roomU.roomId,
         statusId: 1,
         playerList: roomU.playerList,
-        gameStarted: roomU.gameStarted
+        gameStarted: roomU.gameStarted,
+        roomOwnerId: roomU.roomOwnerId,
+        gameOrder: roomU.gameOrder,
       }
 
       this.socketIoService.currentRoom = newRoom;
@@ -94,8 +92,8 @@ export class RoomComponent extends BaseCoreAbstract {
 
   recieveGameUpdate() {
     this.socketIoService.recieveRoomUpdate(this.roomId).subscribe((room) => {
-      this.popMessage(room.updateMessage, 'Info', 'info');
       this.room = room;
+      this.popMessage(room.updateMessage, 'Info', 'info');
     });
   }
 
@@ -124,5 +122,38 @@ export class RoomComponent extends BaseCoreAbstract {
     newList.sort((a, b) => a.order - b.order);
 
     this.room.playerList.find(p => p.playerId === player.playerId)!.mahjong.handTiles.mahjongTile = newList;
+  }
+
+  clickOtherPlayerTile() {
+    this.popMessage("Don't touch other player's mahjong tile!!", 'Error', 'error');
+  }
+
+  selectedTileOutput(mahjong: MahjongDto, player: PlayerDto) {
+    player.mahjong.handTiles.mahjongTile.forEach(m => {
+      if (m.id !== mahjong.id) {
+        m.isSelected = false;
+      }
+      else {
+        m.isSelected = !m.isSelected;
+      }
+    });
+
+    this.room.playerList.find(p => p.playerId === player.playerId)!.mahjong = player.mahjong;
+  }
+
+  anyButton() {
+    this.room.gameOrder++
+    if (this.room.gameOrder > 3) {
+      this.room.gameOrder = 1;
+    }
+  }
+
+  discardMahjong(player: PlayerDto) {
+    if (player.mahjong.handTiles.mahjongTile.find(m => m.isSelected)) {
+      this.socketIoService.sendDiscardMahjongTile(this.room, player, player.mahjong.handTiles.mahjongTile.find(m => m.isSelected)!)
+    }
+    else {
+      this.popMessage("Please select a tile to discard.", 'Error', 'error');
+    }
   }
 }
