@@ -151,10 +151,12 @@ function discardMahjong(room, player, discardedMahjongTile) {
       .find((p) => p.id === player.id)
       .mahjong.handTiles.mahjongTile.filter((m) => m.id !== discardedMahjongTile.id);
 
-    updateRoom(room).then((roomU) => {
-      resolve({
-        ...roomU,
-        updateMessage: `${player.playerName} discarded ${discardedMahjongTile.name}.`,
+    nextTurn(room).then((roomNU) => {
+      updateRoom(roomNU).then((roomU) => {
+        resolve({
+          ...roomU,
+          updateMessage: `${player.playerName} discarded ${discardedMahjongTile.name}.`,
+        });
       });
     });
   });
@@ -182,10 +184,8 @@ function drawMahjong(room, player) {
       }
     } while (newMahjong.type === "Flower");
 
-    nextTurn(room).then((roomNU) => {
-      updateRoom(roomNU).then((roomU) => {
-        resolve(roomU);
-      });
+    updateRoom(room).then((roomU) => {
+      resolve(roomU);
     });
   });
 }
