@@ -15,7 +15,7 @@ export class RoomComponent extends BaseCoreAbstract {
   roomId: string;
   role = 'operative';
   room: RoomDto = new RoomDto();
-  player: PlayerDto = new PlayerDto();
+  player: PlayerDto;
 
   constructor(
     private socketIoService: SocketioService,
@@ -25,22 +25,27 @@ export class RoomComponent extends BaseCoreAbstract {
     protected override messageService: MessageService
   ) {
     super(messageService);
-  }
 
-  ngOnInit(): void {
+    console.log(this.socketIoService.currentPlayer)
     if (this.socketIoService.currentPlayer) {
       this.initRoom();
     }
     else {
       this.router.navigate(["/"]);
+
     }
+  }
+
+  ngOnInit(): void {
   }
 
   @HostListener('window:beforeunload')
   ngOnDestroy() {
-    this.playerQuited(this.player);
-    this.socketIoService.disconnectSocket();
-
+    // console.log(this.player.playerId)
+    if (this.player) {
+      this.playerQuited(this.player);
+      this.socketIoService.disconnectSocket();
+    }
   }
 
   playerQuited(player: PlayerDto) {
