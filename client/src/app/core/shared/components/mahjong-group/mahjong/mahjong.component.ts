@@ -15,14 +15,14 @@ export class MahjongComponent {
 
   selectTile() {
     if (this.selectable) {
-      this.mahjong.isSelected = true;
+      this.mahjong.isSelected = !this.mahjong.isSelected;
       this.selectedTile.emit(this.mahjong);
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['mahjong'] && changes['mahjong'].currentValue) {
-      console.log(this.mahjong)
+      // console.log(this.mahjong)
     }
   }
 }

@@ -134,9 +134,14 @@ export class RoomComponent extends BaseCoreAbstract {
       if (m.id !== mahjong.id) {
         m.isSelected = false;
       }
-      else {
-        m.isSelected = !m.isSelected;
-      }
+      // else {
+      //   if (m.isSelected) {
+      //     m.isSelected = false;
+      //   }
+      //   else {
+      //     m.isSelected = true;
+      //   }
+      // }
     });
 
     this.room.playerList.find(p => p.playerId === player.playerId)!.mahjong = player.mahjong;
