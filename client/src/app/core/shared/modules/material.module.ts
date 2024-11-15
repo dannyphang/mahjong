@@ -11,6 +11,7 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { CdkDropList, CdkDrag } from "@angular/cdk/drag-drop";
 
 @NgModule({
     imports: [
@@ -30,6 +31,8 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
         MatTabsModule,
         MatExpansionModule,
         ClipboardModule,
+        CdkDropList,
+        CdkDrag
     ],
     exports: [
         MatDialogContent,

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SocketioService } from '../../core/services/socketIo.service';
 import { GameService, MahjongGroupDto, PlayerDto } from '../../core/services/game.service';
@@ -12,8 +12,8 @@ import { MessageService } from 'primeng/api';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent extends BaseCoreAbstract implements OnInit {
-  roomIdFormControl: FormControl = new FormControl('');
-  usernameFormControl: FormControl = new FormControl('');
+  roomIdFormControl: FormControl = new FormControl('919UGhphCGTCC6GIiRFm');
+  usernameFormControl: FormControl = new FormControl('', Validators.required);
 
   constructor(
     private router: Router,
@@ -108,8 +108,8 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
     }
   }
 
-  character() {
-    this.router.navigate(['/character']);
+  tile() {
+    this.router.navigate(['/mahjong']);
   }
 
   navigateToRoom(isCreateRoom = false) {

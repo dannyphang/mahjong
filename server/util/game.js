@@ -30,10 +30,17 @@ function createGame(room) {
     for (let i = 0; i < room.playerList.length; i++) {
       // check is the player direction is East, if so 14 tiles, else 13 tiles
       let handTileAmount = room.playerList[i].direction === 1 ? 14 : 13;
-
+      room.playerList[i].mahjong.handTiles.mahjongTile = [];
       for (let j = 0; j < handTileAmount; j++) {
-        room.playerList[i].mahjong.handTiles.mahjongTile.push(newMahjongList[0]);
+        room.playerList[i].mahjong.handTiles.mahjongTile.push(
+          newMahjongList[0]
+        );
         newMahjongList.shift();
+
+        // sort the mahjong handtile list
+        room.playerList[i].mahjong.handTiles.mahjongTile.sort(
+          (a, b) => a.order - b.order
+        );
       }
     }
 
@@ -83,6 +90,18 @@ function updateRoom(room) {
   });
 }
 
+function playerQuitRoom(room, player) {
+  return new Promise(async function (resolve, reject) {
+    let newRef = db.default.db.collection(roomCollectionName).doc(room.roomId);
+    await newRef.update(room);
+
+    resolve({
+      ...room,
+      updateMessage: `${player.playerName} quited the room.`,
+    });
+  });
+}
+
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -92,4 +111,4 @@ function shuffleArray(array) {
   return array;
 }
 
-export { createGame, playerJoinRoom, updateRoom };
+export { createGame, playerJoinRoom, updateRoom, playerQuitRoom };

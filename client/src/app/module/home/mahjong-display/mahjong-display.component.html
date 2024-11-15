@@ -1,0 +1,15 @@
+<div
+  class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap"
+  cdkDropList
+  cdkDropListOrientation="horizontal"
+  (cdkDropListDropped)="drop($event)"
+>
+  <div *ngFor="let mahjong of tempArray; let i = index" class="tw-mx-[-4px]">
+    <app-mahjong
+      [disabled]="false"
+      [mahjong]="mahjong"
+      cdkDrag
+      (click)="mahjong.isSelected = true"
+    ></app-mahjong>
+  </div>
+</div>

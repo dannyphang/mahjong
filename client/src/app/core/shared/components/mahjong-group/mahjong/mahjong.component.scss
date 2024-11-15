@@ -1,0 +1,8 @@
+.tile {
+  width: var(--tile-width);
+  height: calc(var(--tile-width) * var(--tile-ratio));
+}
+
+.tile-div:hover {
+  top: -10px;
+}

@@ -1,0 +1,25 @@
+<div class="tw-grid tw-justify-items-center">
+  <div
+    class="tw-relative tile-div"
+    (click)="selectTile()"
+    [ngClass]="{ 'tw-top-[-10px]': mahjong.isSelected && !isHide }"
+  >
+    <img
+      [src]="'../../../../assets/images/mahjong/' + mahjong.code + '.png'"
+      [alt]="mahjong.name"
+      class="tile"
+      [ngClass]="{ 'brightness-50': mahjong.isTaken }"
+      *ngIf="!isHide"
+    />
+    <img
+      [src]="'../../../../assets/images/mahjong/hide.png'"
+      [alt]="'hide'"
+      class="tile"
+      *ngIf="isHide"
+    />
+  </div>
+  <!-- <i
+    class="pi pi-sort-up-fill tw-text-yellow-200"
+    *ngIf="mahjong.isSelected && !isHide"
+  ></i> -->
+</div>

@@ -1,9 +1,10 @@
 import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SocketioService } from '../../../core/services/socketIo.service';
-import { GameService, PlayerDto, RoomDto } from '../../../core/services/game.service';
+import { GameService, MahjongDto, PlayerDto, RoomDto } from '../../../core/services/game.service';
 import { MessageService } from 'primeng/api';
 import { BaseCoreAbstract } from '../../../core/shared/base/base-core.abstract';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-room',
@@ -44,12 +45,14 @@ export class RoomComponent extends BaseCoreAbstract {
 
   playerQuited(player: PlayerDto) {
     this.room.playerList = this.room.playerList.filter(p => p.playerId !== player.playerId);
-    this.updateRoom(this.room);
+    // this.updateRoom(this.room);
+
+    this.socketIoService.sendPlayerQuitRoom(this.room, player);
   }
 
 
   initRoom() {
-    this.roomId = this.route.snapshot.paramMap.get('id') ?? 'undeficed';
+    this.roomId = this.route.snapshot.paramMap.get('id') ?? 'undefined';
     this.player = this.socketIoService.currentPlayer;
     this.room = this.socketIoService.currentRoom;
 
@@ -104,5 +107,17 @@ export class RoomComponent extends BaseCoreAbstract {
     });
 
     this.socketIoService.sendRoomUpdate(room);
+  }
+
+  drop(event: CdkDragDrop<MahjongDto[]>, mahjongList: MahjongDto[]) {
+    moveItemInArray(mahjongList, event.previousIndex, event.currentIndex);
+  }
+
+  sortMahjongList(player: PlayerDto) {
+    let newList: MahjongDto[] = player.mahjong.handTiles.mahjongTile;
+
+    newList.sort((a, b) => a.order - b.order);
+
+    this.room.playerList.find(p => p.playerId === player.playerId)!.mahjong.handTiles.mahjongTile = newList;
   }
 }

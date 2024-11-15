@@ -33,6 +33,8 @@ import { InputSwitchComponent } from './input-switch/input-switch.component';
 import { EditorComponent } from './editor/editor.component';
 import { OnlyNumberDirective } from '../directives/only-number.directive';
 import { PasswordValidator } from '../directives/password.directive';
+import { MahjongComponent } from './mahjong-group/mahjong/mahjong.component';
+import { MahjongSetComponent } from './mahjong-group/mahjong-set/mahjong-set.component';
 
 const components = [
   BaseInputComponent,
@@ -61,6 +63,8 @@ const components = [
   BreadcrumbComponent,
   InputSwitchComponent,
   EditorComponent,
+  MahjongComponent,
+  MahjongSetComponent,
 ];
 
 @NgModule({

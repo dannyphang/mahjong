@@ -8,12 +8,14 @@ import { ComponentsModule } from '../../core/shared/components/components.module
 import { MaterialModule } from '../../core/shared/modules/material.module';
 import { PrimeNgModule } from '../../core/shared/modules/primeng.module';
 import { RoomComponent } from './room/room.component';
+import { MahjongDisplayComponent } from './mahjong-display/mahjong-display.component';
 
 
 @NgModule({
   declarations: [
     HomeComponent,
     RoomComponent,
+    MahjongDisplayComponent,
   ],
   imports: [
     CommonModule,

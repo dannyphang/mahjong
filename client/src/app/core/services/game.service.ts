@@ -52,6 +52,9 @@ export class MahjongDto {
     code: string;
     direction: number;
     statusId: number;
+    id: number;
+    isSelected?: boolean;
+    isTaken?: boolean;
 }
 
 export class RoomDto {
@@ -59,6 +62,7 @@ export class RoomDto {
     statusId: number;
     playerList: PlayerDto[];
     gameStarted: boolean;
+    roomOwnerId?: string;
 }
 
 export class PlayerDto {

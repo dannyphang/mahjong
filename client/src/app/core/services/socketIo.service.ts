@@ -72,6 +72,10 @@ export class SocketioService {
         });
     }
 
+    sendPlayerQuitRoom(room: RoomDto, player: PlayerDto) {
+        this.socket.emit('quitRoom', { room: room, player: player });
+    }
+
     disconnectSocket() {
         this.socket.disconnect();
     }

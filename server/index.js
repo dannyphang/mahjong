@@ -62,6 +62,12 @@ io.on("connection", (socket) => {
       });
     }
   });
+
+  socket.on("quitRoom", ({ room, player }) => {
+    games.playerQuitRoom(room, player).then((roomU) => {
+      io.in(roomU.roomId).emit("roomUpdate", roomU);
+    });
+  });
 });
 
 server.listen(PORT, () => console.log("Server is running on port " + PORT));

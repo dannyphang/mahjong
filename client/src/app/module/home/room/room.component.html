@@ -1,15 +1,56 @@
 <app-toast></app-toast>
 
-<!-- waiting room -->
-<!-- <app-waiting-room (updateRoom)="updateRoom($event)"></app-waiting-room> -->
-
-<!-- game start room -->
-<!-- <app-game-start-room (updateRoom)="updateRoom($event)"></app-game-start-room> -->
-
 <div class="tw-flex tw-gap-[var(--content-gap)] tw-p-[var(--content-gap)]">
   <div *ngFor="let p of room.playerList">
     <p-button [label]="p.playerName" [outlined]="true"></p-button>
   </div>
 </div>
 
-<p-button [label]="'Start Game'" (onClick)="startGame()"></p-button>
+<p-button
+  [label]="'Start Game'"
+  (onClick)="startGame()"
+  *ngIf="player.playerId === room.roomOwnerId"
+></p-button>
+
+<div class="display-mahjong-div">
+  <div *ngFor="let p of room.playerList">
+    <div
+      class="tw-flex tw-p-[var(--content-gap)] tw-gap-[var(--content-gap)] tw-items-center"
+    >
+      <app-base-label [label]="p.playerName"></app-base-label>
+      <app-base-label
+        [label]="'(' + p.mahjong.handTiles.point.toString() + ')'"
+      ></app-base-label>
+      <p-button
+        [label]="'Sort'"
+        (onClick)="sortMahjongList(p)"
+        [outlined]="true"
+      ></p-button>
+    </div>
+
+    <div
+      class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap"
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="drop($event, p.mahjong.handTiles.mahjongTile)"
+    >
+      <div
+        *ngFor="let mahjong of p.mahjong.handTiles.mahjongTile; let i = index"
+        class="tw-mx-[-4px]"
+      >
+        <app-mahjong
+          [disabled]="false"
+          [mahjong]="mahjong"
+          cdkDrag
+          (click)="mahjong.isSelected = true"
+          *ngIf="p.playerId === player.playerId"
+        ></app-mahjong>
+
+        <app-mahjong
+          *ngIf="p.playerId !== player.playerId"
+          [isHide]="true"
+        ></app-mahjong>
+      </div>
+    </div>
+  </div>
+</div>
