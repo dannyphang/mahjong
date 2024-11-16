@@ -8,7 +8,6 @@ import { MahjongDto } from '../../../../services/game.service';
 })
 export class MahjongComponent {
   @Input() mahjong: MahjongDto = new MahjongDto();
-  @Input() disabled: boolean = false;
   @Input() selectable: boolean = true;
   @Input() isHide: boolean = false;
   @Output() selectedTile: EventEmitter<MahjongDto> = new EventEmitter();

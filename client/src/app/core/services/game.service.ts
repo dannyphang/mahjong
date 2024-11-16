@@ -43,20 +43,6 @@ export class GameService {
     }
 }
 
-export class MahjongDto {
-    uid: string;
-    order: number;
-    type: string;
-    joker: boolean;
-    name: string;
-    code: string;
-    direction: number;
-    statusId: number;
-    id: number;
-    isSelected?: boolean;
-    isTaken?: boolean;
-}
-
 export class RoomDto {
     roomId: string;
     statusId: number;
@@ -73,6 +59,7 @@ export class PlayerDto {
     statusId: number;
     direction: number;
     mahjong: MahjongGroupDto;
+    action: MahjongActionDto;
 }
 
 export class RoomUpdateDto extends RoomDto {
@@ -93,4 +80,25 @@ export class RoomMahjongGroupDto {
 export class MahjongTileSetDto {
     point: number;
     mahjongTile: MahjongDto[];
+}
+
+export class MahjongDto {
+    uid: string;
+    order: number;
+    type: string;
+    joker: boolean;
+    name: string;
+    code: string;
+    direction: number;
+    statusId: number;
+    id: number;
+    isSelected?: boolean;
+    isTaken?: boolean;
+}
+
+export class MahjongActionDto {
+    isPongable: boolean;
+    isKongable: boolean;
+    isChowable: boolean;
+    isWinnable: boolean;
 }

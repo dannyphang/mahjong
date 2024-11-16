@@ -6,7 +6,6 @@
 >
   <div *ngFor="let mahjong of tempArray; let i = index" class="tw-mx-[-4px]">
     <app-mahjong
-      [disabled]="false"
       [mahjong]="mahjong"
       cdkDrag
       (click)="mahjong.isSelected = true"

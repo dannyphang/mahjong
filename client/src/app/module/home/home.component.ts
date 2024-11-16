@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SocketioService } from '../../core/services/socketIo.service';
-import { GameService, MahjongGroupDto, PlayerDto } from '../../core/services/game.service';
+import { GameService, MahjongActionDto, MahjongGroupDto, PlayerDto } from '../../core/services/game.service';
 import { BaseCoreAbstract } from '../../core/shared/base/base-core.abstract';
 import { MessageService } from 'primeng/api';
 
@@ -55,7 +55,13 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                   point: 0
                 }
               },
-              direction: 0
+              direction: 0,
+              action: {
+                isPongable: false,
+                isKongable: false,
+                isChowable: false,
+                isWinnable: false
+              }
             } as PlayerDto).subscribe(res3 => {
               if (res3.isSuccess) {
                 this.socketIoService.player = res3.data;
@@ -99,7 +105,13 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                   point: 0
                 }
               },
-              direction: 0
+              direction: 0,
+              action: {
+                isPongable: false,
+                isKongable: false,
+                isChowable: false,
+                isWinnable: false
+              }
             } as PlayerDto).subscribe(res => {
               if (res.isSuccess) {
                 this.socketIoService.player = res.data;

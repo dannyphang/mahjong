@@ -33,11 +33,7 @@
         *ngFor="let mahjong of room.mahjong.remainingTiles; let i = index"
         class="tw-mx-[-4px]"
       >
-        <app-mahjong
-          [disabled]="false"
-          [mahjong]="mahjong"
-          [selectable]="false"
-        ></app-mahjong>
+        <app-mahjong [mahjong]="mahjong" [selectable]="false"></app-mahjong>
       </div>
     </div>
 
@@ -60,11 +56,7 @@
         *ngFor="let mahjong of room.mahjong.discardTiles; let i = index"
         class="tw-mx-[-4px]"
       >
-        <app-mahjong
-          [disabled]="false"
-          [mahjong]="mahjong"
-          [selectable]="false"
-        ></app-mahjong>
+        <app-mahjong [mahjong]="mahjong" [selectable]="false"></app-mahjong>
       </div>
     </div>
 
@@ -119,6 +111,22 @@
           [disabled]="room.gameOrder !== p.direction"
           *ngIf="p.playerId === player.playerId"
         ></p-button>
+
+        <!-- pong -->
+        <p-button
+          [label]="'Pong'"
+          (onClick)="actionMahjong('pong')"
+          [outlined]="true"
+          *ngIf="p.action.isPongable"
+        ></p-button>
+
+        <!-- kong -->
+        <p-button
+          [label]="'Kong'"
+          (onClick)="actionMahjong('kong')"
+          [outlined]="true"
+          *ngIf="p.action.isKongable"
+        ></p-button>
       </div>
 
       <!-- flower set -->
@@ -130,39 +138,52 @@
           "
           class="tw-mx-[-4px]"
         >
-          <app-mahjong
-            [disabled]="false"
-            [mahjong]="mahjong"
-            [selectable]="false"
-          ></app-mahjong>
+          <app-mahjong [mahjong]="mahjong" [selectable]="false"></app-mahjong>
         </div>
       </div>
 
-      <!-- hand set -->
-      <div
-        class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap"
-        cdkDropList
-        cdkDropListOrientation="horizontal"
-        (cdkDropListDropped)="drop($event, p.mahjong.handTiles.mahjongTile)"
-      >
+      <div class="tw-flex tw-gap-[var(--content-gap-xl)]">
+        <!-- hand set -->
         <div
-          *ngFor="let mahjong of p.mahjong.handTiles.mahjongTile; let i = index"
-          class="tw-mx-[-4px]"
+          class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap"
+          cdkDropList
+          cdkDropListOrientation="horizontal"
+          (cdkDropListDropped)="drop($event, p.mahjong.handTiles.mahjongTile)"
         >
-          <app-mahjong
-            [disabled]="false"
-            [mahjong]="mahjong"
-            cdkDrag
-            (click)="mahjong.isSelected = true"
-            *ngIf="p.playerId === player.playerId"
-            (selectedTile)="selectedTileOutput($event, p)"
-          ></app-mahjong>
+          <div
+            *ngFor="
+              let mahjong of p.mahjong.handTiles.mahjongTile;
+              let i = index
+            "
+            class="tw-mx-[-4px]"
+          >
+            <app-mahjong
+              [mahjong]="mahjong"
+              cdkDrag
+              (click)="mahjong.isSelected = true"
+              *ngIf="p.playerId === player.playerId"
+              (selectedTile)="selectedTileOutput($event, p)"
+            ></app-mahjong>
 
-          <app-mahjong
-            *ngIf="p.playerId !== player.playerId"
-            [isHide]="true"
-            (click)="clickOtherPlayerTile()"
-          ></app-mahjong>
+            <app-mahjong
+              *ngIf="p.playerId !== player.playerId"
+              [isHide]="true"
+              (click)="clickOtherPlayerTile()"
+            ></app-mahjong>
+          </div>
+        </div>
+
+        <!-- public set -->
+        <div class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap">
+          <div
+            *ngFor="
+              let mahjong of p.mahjong.publicTiles.mahjongTile;
+              let i = index
+            "
+            class="tw-mx-[-4px]"
+          >
+            <app-mahjong [mahjong]="mahjong"></app-mahjong>
+          </div>
         </div>
       </div>
     </div>

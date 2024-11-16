@@ -167,4 +167,14 @@ export class RoomComponent extends BaseCoreAbstract {
   nextTurn() {
     this.socketIoService.sendNextTurn(this.room);
   }
+
+  actionMahjong(action: string) {
+    switch (action) {
+      case 'pong':
+        this.socketIoService.sendMahjongAction('pong', this.room, this.player, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
+        break;
+      case 'kong':
+        break;
+    }
+  }
 }

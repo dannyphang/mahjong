@@ -91,4 +91,8 @@ export class SocketioService {
     sendDrawMahjong(room: RoomDto, player: PlayerDto) {
         this.socket.emit('drawMahjong', { room: room, player: player });
     }
+
+    sendMahjongAction(action: string, room: RoomDto, player: PlayerDto, selectedMahjong: MahjongDto) {
+        this.socket.emit('action', { action: action, room: room, player: player, selectedMahjong: selectedMahjong });
+    }
 }

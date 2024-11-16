@@ -2,6 +2,7 @@ import * as db from "../firebase/firebase-admin.js";
 
 const roomCollectionName = "room";
 const mahjongCollectionName = "mahjong";
+const playerCollectionName = "player";
 
 function createGame(room) {
   return new Promise(async function (resolve, reject) {
@@ -38,10 +39,18 @@ function createGame(room) {
       let handTileAmount = room.playerList[i].direction === 1 ? 14 : 13;
 
       // reset flower and hand tiles and points
+      room.playerList[i].mahjong.publicTiles.mahjongTile = [];
       room.playerList[i].mahjong.handTiles.mahjongTile = [];
       room.playerList[i].mahjong.flowerTiles.mahjongTile = [];
+      room.playerList[i].mahjong.publicTiles.point = 0;
       room.playerList[i].mahjong.handTiles.point = 0;
       room.playerList[i].mahjong.flowerTiles.point = 0;
+
+      // reset action to init value
+      room.playerList[i].action.isPongable = false;
+      room.playerList[i].action.isKongable = false;
+      room.playerList[i].action.isChowable = false;
+      room.playerList[i].action.isWinnable = false;
 
       for (let j = 0; j < handTileAmount; j++) {
         // set hand tile and flower tile
@@ -87,6 +96,8 @@ function createGame(room) {
       ) {
         room.playerList[i].mahjong.flowerTiles.point++;
       }
+
+      updatePlayer(room.playerList[i]).then((playerU) => {});
     }
 
     updateRoom(room).then((roomU) => {
@@ -129,6 +140,27 @@ function updateRoom(room) {
   });
 }
 
+function updatePlayer(player) {
+  return new Promise(async function (resolve, reject) {
+    let newRef = db.default.db.collection(playerCollectionName).doc(player.playerId);
+    await newRef.update(player);
+
+    resolve(player);
+  });
+}
+
+function updateRoomAndPlayer(room, player) {
+  return new Promise(async function (resolve, reject) {
+    let newRef = db.default.db.collection(roomCollectionName).doc(room.roomId);
+    await newRef.update(room);
+
+    let newRef2 = db.default.db.collection(playerCollectionName).doc(player.playerId);
+    await newRef2.update(player);
+
+    resolve({ room, player });
+  });
+}
+
 function playerQuitRoom(room, player) {
   return new Promise(async function (resolve, reject) {
     updateRoom(room).then((roomU) => {
@@ -142,6 +174,40 @@ function playerQuitRoom(room, player) {
 
 function discardMahjong(room, player, discardedMahjongTile) {
   return new Promise(async function (resolve, reject) {
+    // check if other player can do any action
+    room.playerList.forEach((p) => {
+      if (p.playerId !== player.playerId) {
+        let jokerCount = 0;
+        let sameMahjongCount = 0;
+
+        p.mahjong.handTiles.mahjongTile.forEach((m) => {
+          if (m.joker) {
+            jokerCount++;
+          }
+          if (m.code === discardedMahjongTile.code) {
+            sameMahjongCount++;
+          }
+        });
+
+        // TODO: pong
+        if (sameMahjongCount >= 2 || (jokerCount >= 1 && sameMahjongCount >= 1)) {
+          p.action.isPongable = true;
+        } else {
+          p.action.isPongable = false;
+        }
+
+        // TODO: kong
+        if (sameMahjongCount === 3) {
+          p.action.isKongable = true;
+        } else {
+          p.action.isKongable = false;
+        }
+      }
+    });
+
+    // TODO: chow (chi)
+    // TODO: win
+
     room.mahjong.discardTiles.push({
       ...discardedMahjongTile,
       isSelected: false,
@@ -150,6 +216,10 @@ function discardMahjong(room, player, discardedMahjongTile) {
     room.playerList.find((p) => p.id === player.id).mahjong.handTiles.mahjongTile = room.playerList
       .find((p) => p.id === player.id)
       .mahjong.handTiles.mahjongTile.filter((m) => m.id !== discardedMahjongTile.id);
+
+    room.playerList.forEach((p) => {
+      updatePlayer(p).then((playerU) => {});
+    });
 
     nextTurn(room).then((roomNU) => {
       updateRoom(roomNU).then((roomU) => {
@@ -164,45 +234,142 @@ function discardMahjong(room, player, discardedMahjongTile) {
 
 function drawMahjong(room, player) {
   return new Promise(async function (resolve, reject) {
-    let newMahjong;
-    do {
-      newMahjong = room.mahjong.remainingTiles[0];
-      room.mahjong.remainingTiles.shift();
-      if (newMahjong.type !== "Flower") {
-        room.playerList
-          .find((p) => p.playerId === player.playerId)
-          .mahjong.handTiles.mahjongTile.push(newMahjong);
-      } else {
-        room.playerList
-          .find((p) => p.playerId === player.playerId)
-          .mahjong.flowerTiles.mahjongTile.push(newMahjong);
-        room.playerList.find((p) => p.playerId === player.playerId).mahjong.flowerTiles.point +=
-          calculateMahjongTilePoints(
-            newMahjong,
-            room.playerList.find((p) => p.playerId === player.playerId)
-          );
-      }
-    } while (newMahjong.type === "Flower");
+    // check if the player is drawable
+    if ((player.mahjong.handTiles.mahjongTile.length - 2) % 3 !== 0) {
+      let newMahjong;
+      do {
+        newMahjong = room.mahjong.remainingTiles[0];
+        room.mahjong.remainingTiles.shift();
+        if (newMahjong.type !== "Flower") {
+          room.playerList
+            .find((p) => p.playerId === player.playerId)
+            .mahjong.handTiles.mahjongTile.push(newMahjong);
+        } else {
+          room.playerList
+            .find((p) => p.playerId === player.playerId)
+            .mahjong.flowerTiles.mahjongTile.push(newMahjong);
+          room.playerList.find((p) => p.playerId === player.playerId).mahjong.flowerTiles.point +=
+            calculateMahjongTilePoints(
+              newMahjong,
+              room.playerList.find((p) => p.playerId === player.playerId)
+            );
+        }
+      } while (newMahjong.type === "Flower");
 
-    updateRoom(room).then((roomU) => {
-      resolve(roomU);
-    });
+      updatePlayer(room.playerList.find((p) => p.playerId === player.playerId)).then(
+        (playerU) => {}
+      );
+
+      updateRoom(room).then((roomU) => {
+        resolve(roomU);
+      });
+    } else {
+      resolve({
+        ...room,
+        updateMessage: `You cannot draw now, please discard a mahjong tile.`,
+      });
+    }
   });
 }
 
 function nextTurn(room) {
   return new Promise(async function (resolve, reject) {
-    console.log(room.gameOrder);
     room.gameOrder++;
     if (room.gameOrder > 3) {
       room.gameOrder = 1;
     }
-    console.log(room.gameOrder);
+
     updateRoom(room).then((roomU) => {
       resolve({
         ...roomU,
         updateMessage: `Player ${room.gameOrder}'s turn.`,
       });
+    });
+  });
+}
+
+function actions(action, room, player, selectedMahjong) {
+  return new Promise(async function (resolve, reject) {
+    // set the selected mahjong isTaken = true
+    selectedMahjong.isTaken = true;
+    room.mahjong.discardTiles.find((m) => m.id === selectedMahjong.id).isTaken = true;
+
+    switch (action) {
+      case "pong":
+        room.playerList.forEach((p) => {
+          if (p.playerId === player.playerId) {
+            // reset isPongable
+            p.action.isPongable = false;
+            p.action.isKongable = false;
+            p.action.isChowable = false;
+
+            let sameTileCount = 0;
+            // priotize 2 same tile then only come to pong with joker
+            p.mahjong.handTiles.mahjongTile.forEach((m) => {
+              if (m.code === selectedMahjong.code) {
+                sameTileCount++;
+              }
+            });
+
+            p.mahjong.publicTiles.mahjongTile.push(selectedMahjong);
+
+            // check if got 2 same tiles, else use joker
+            if (sameTileCount >= 2) {
+              // push to public tile set
+              for (let i = 0; i < 2; i++) {
+                let pongTileInHand = p.mahjong.handTiles.mahjongTile.find(
+                  (m) => m.code === selectedMahjong.code
+                );
+                p.mahjong.handTiles.mahjongTile = p.mahjong.handTiles.mahjongTile.filter(
+                  (m) => m.id !== pongTileInHand.id
+                );
+                p.mahjong.publicTiles.mahjongTile.push(pongTileInHand);
+              }
+            } else {
+              // use joker
+              let pongTileInHand = p.mahjong.handTiles.mahjongTile.find(
+                (m) => m.code === selectedMahjong.code
+              );
+              p.mahjong.handTiles.mahjongTile = p.mahjong.handTiles.mahjongTile.filter(
+                (m) => m.id !== pongTileInHand.id
+              );
+              p.mahjong.publicTiles.mahjongTile.push(pongTileInHand);
+
+              let jokerTileInHand = p.mahjong.handTiles.mahjongTile.find((m) => m.joker);
+              p.mahjong.handTiles.mahjongTile = p.mahjong.handTiles.mahjongTile.filter(
+                (m) => m.id !== jokerTileInHand.id
+              );
+              p.mahjong.publicTiles.mahjongTile.push(jokerTileInHand);
+            }
+          }
+        });
+        break;
+      case "kong":
+        room.playerList.forEach((p) => {
+          if (p.playerId === player.playerId) {
+            // reset isPongable
+            p.action.isPongable = false;
+            p.action.isKongable = false;
+            p.action.isChowable = false;
+
+            for (let i = 0; i < 3; i++) {
+              let pongTileInHand = p.mahjong.handTiles.mahjongTile.find(
+                (m) => m.code === selectedMahjong.code
+              );
+              p.mahjong.handTiles.mahjongTile = p.mahjong.handTiles.mahjongTile.filter(
+                (m) => m.id !== pongTileInHand.id
+              );
+              p.mahjong.publicTiles.mahjongTile.push(pongTileInHand);
+            }
+          }
+        });
+        break;
+    }
+
+    room.gameOrder = player.direction;
+
+    updateRoom(room).then((roomU) => {
+      resolve(roomU);
     });
   });
 }
@@ -234,4 +401,7 @@ export {
   discardMahjong,
   nextTurn,
   drawMahjong,
+  updatePlayer,
+  actions,
+  updateRoomAndPlayer,
 };
