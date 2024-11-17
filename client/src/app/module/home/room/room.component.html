@@ -4,7 +4,11 @@
   <div class="tw-p-[var(--content-gap)] tw-grid tw-gap-[var(--content-gap)]">
     <div class="tw-flex tw-gap-[var(--content-gap)]">
       <div *ngFor="let p of room.playerList">
-        <p-button [label]="p.playerName" [outlined]="true"></p-button>
+        <p-button
+          [label]="p.playerName"
+          [outlined]="true"
+          [severity]="p.playerId === player.playerId ? 'primary' : 'secondary'"
+        ></p-button>
       </div>
     </div>
 
