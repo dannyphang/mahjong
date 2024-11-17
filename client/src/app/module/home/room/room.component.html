@@ -119,7 +119,7 @@
         <!-- pong -->
         <p-button
           [label]="'Pong'"
-          (onClick)="actionMahjong('pong')"
+          (onClick)="actionMahjong('pong', p)"
           [outlined]="true"
           *ngIf="p.action.isPongable"
         ></p-button>
@@ -127,7 +127,7 @@
         <!-- kong -->
         <p-button
           [label]="'Kong'"
-          (onClick)="actionMahjong('kong')"
+          (onClick)="actionMahjong('kong', p)"
           [outlined]="true"
           *ngIf="p.action.isKongable"
         ></p-button>

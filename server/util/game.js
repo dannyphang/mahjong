@@ -217,18 +217,29 @@ function discardMahjong(room, player, discardedMahjongTile) {
       .find((p) => p.id === player.id)
       .mahjong.handTiles.mahjongTile.filter((m) => m.id !== discardedMahjongTile.id);
 
-    room.playerList.forEach((p) => {
-      updatePlayer(p).then((playerU) => {});
-    });
-
-    nextTurn(room).then((roomNU) => {
-      updateRoom(roomNU).then((roomU) => {
+    updateRoom(room).then((roomU) => {
+      nextTurn(roomU).then((roomNU) => {
         resolve({
-          ...roomU,
+          ...roomNU,
           updateMessage: `${player.playerName} discarded ${discardedMahjongTile.name}.`,
         });
       });
     });
+
+    // room.playerList.forEach((p) => {
+    //   if (p.playerId === player.playerId) {
+    //     updatePlayer(p).then((playerU) => {
+    //       updateRoom(room).then((roomU) => {
+    //         nextTurn(roomU).then((roomNU) => {
+    //           resolve({
+    //             ...room,
+    //             updateMessage: `${player.playerName} discarded ${discardedMahjongTile.name}.`,
+    //           });
+    //         });
+    //       });
+    //     });
+    //   }
+    // });
   });
 }
 
@@ -290,6 +301,8 @@ function nextTurn(room) {
 
 function actions(action, room, player, selectedMahjong) {
   return new Promise(async function (resolve, reject) {
+    console.log(player);
+
     // set the selected mahjong isTaken = true
     selectedMahjong.isTaken = true;
     room.mahjong.discardTiles.find((m) => m.id === selectedMahjong.id).isTaken = true;
@@ -367,7 +380,7 @@ function actions(action, room, player, selectedMahjong) {
     }
 
     room.gameOrder = player.direction;
-
+    console.log(room.gameOrder);
     updateRoom(room).then((roomU) => {
       resolve(roomU);
     });

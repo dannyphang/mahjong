@@ -168,10 +168,10 @@ export class RoomComponent extends BaseCoreAbstract {
     this.socketIoService.sendNextTurn(this.room);
   }
 
-  actionMahjong(action: string) {
+  actionMahjong(action: string, player: PlayerDto) {
     switch (action) {
       case 'pong':
-        this.socketIoService.sendMahjongAction('pong', this.room, this.player, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
+        this.socketIoService.sendMahjongAction('pong', this.room, player, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
         break;
       case 'kong':
         break;
