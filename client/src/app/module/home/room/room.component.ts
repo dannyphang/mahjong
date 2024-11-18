@@ -46,6 +46,33 @@ export class RoomComponent extends BaseCoreAbstract {
     }
   }
 
+  @HostListener("window:keydown", ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'Q':
+        this.startGame();
+        break;
+      case 'ArrowRight':
+        this.nextTurn();
+        break;
+      case '1':
+        this.sortMahjongList(this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+        break;
+      case '2':
+        this.drawMahjong(this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+        break;
+      case '3':
+        this.discardMahjong(this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+        break;
+      case '4':
+        this.actionMahjong('pong', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+        break;
+      case '5':
+        this.actionMahjong('kong', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+        break;
+    }
+  }
+
   playerQuited(player: PlayerDto) {
     this.room.playerList = this.room.playerList.filter(p => p.playerId !== player.playerId);
     this.socketIoService.sendPlayerQuitRoom(this.room, player);
@@ -68,7 +95,7 @@ export class RoomComponent extends BaseCoreAbstract {
 
   recieveJoinedPlayers() {
     this.socketIoService.recieveJoinedPlayers().subscribe(roomU => {
-      this.popMessage(roomU.updateMessage, 'Info', 'info');
+      this.popMessage(roomU.response.updateMessage, 'Info', 'info');
 
       let newRoom: RoomDto = {
         roomId: roomU.roomId,
@@ -92,9 +119,9 @@ export class RoomComponent extends BaseCoreAbstract {
   }
 
   recieveGameUpdate() {
-    this.socketIoService.recieveRoomUpdate(this.roomId).subscribe((room) => {
+    this.socketIoService.recieveRoomUpdate().subscribe((room) => {
       this.room = room;
-      this.popMessage(room.updateMessage, 'Info', 'info');
+      this.popMessage(room.response.updateMessage, 'Info', 'info');
     });
   }
 

@@ -64,9 +64,21 @@ export class SocketioService {
         });
     }
 
-    recieveRoomUpdate(roomId: string) {
+    recieveRoomUpdate() {
         return new Observable<RoomUpdateDto>((observer) => {
             this.socket.on('roomUpdate', (room: RoomUpdateDto) => {
+                this.currentPlayer = room.playerList.find(p => p.playerId === this.currentPlayer.playerId)!;
+
+                observer.next(room);
+            });
+        });
+    }
+
+    recievePlayerRoomUpdate() {
+        return new Observable<RoomUpdateDto>((observer) => {
+            this.socket.on('roomUpdate', (room: RoomUpdateDto) => {
+                this.currentPlayer = room.playerList.find(p => p.playerId === this.currentPlayer.playerId)!;
+
                 observer.next(room);
             });
         });
