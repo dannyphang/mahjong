@@ -30,6 +30,7 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
 
   createGame() {
     if (this.usernameFormControl.value) {
+      this.popMessage('Creating room...', "Info", "info");
       this.gameService.getPlayerByName(this.usernameFormControl.value).subscribe({
         next: res => {
           if (res.isSuccess) {
@@ -80,6 +81,7 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
 
   enterRoom() {
     if (this.usernameFormControl.value) {
+      this.popMessage('Entering room...', "Info", "info");
       this.gameService.getPlayerByName(this.usernameFormControl.value).subscribe({
         next: res => {
           if (res.isSuccess) {
