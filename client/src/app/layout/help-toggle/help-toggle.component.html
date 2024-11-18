@@ -1,0 +1,82 @@
+<div
+  class="tw-fixed tw-right-[var(--content-gap)] tw-bottom-[var(--content-gap)] tw-bg-white tw-rounded-full"
+>
+  <p-button
+    [icon]="'pi pi-question'"
+    [rounded]="true"
+    [outlined]="true"
+    (onClick)="helpDialogVisible = true"
+  ></p-button>
+</div>
+
+<p-dialog [(visible)]="helpDialogVisible" [modal]="true">
+  <ng-template pTemplate="content">
+    <div class="tw-p-[var(--content-gap)] tw-gap-[var(--content-gap)] tw-grid">
+      <div
+        class="tw-flex tw-gap-[var(--content-gap)] tw-items-center tw-justify-between"
+      >
+        <p-button [outlined]="true" [label]="'shift'"></p-button>
+        <div>+</div>
+        <p-button [outlined]="true" [label]="'q'"></p-button>
+        <div class="tw-flex tw-gap-[var(--content-gap)] tw-items-center">
+          <div>=</div>
+          <div class="tw-w-[100px] tw-flex tw-justify-end">Start Game</div>
+        </div>
+      </div>
+      <div
+        class="tw-flex tw-gap-[var(--content-gap)] tw-items-center tw-justify-between"
+      >
+        <p-button [outlined]="true" [label]="'>'"></p-button>
+        <div class="tw-flex tw-gap-[var(--content-gap)] tw-items-center">
+          <div>=</div>
+          <div class="tw-w-[100px] tw-flex tw-justify-end">Next Turn</div>
+        </div>
+      </div>
+      <div
+        class="tw-flex tw-gap-[var(--content-gap)] tw-items-center tw-justify-between"
+      >
+        <p-button [outlined]="true" [label]="'1'"></p-button>
+        <div class="tw-flex tw-gap-[var(--content-gap)] tw-items-center">
+          <div>=</div>
+          <div class="tw-w-[100px] tw-flex tw-justify-end">Sort</div>
+        </div>
+      </div>
+      <div
+        class="tw-flex tw-gap-[var(--content-gap)] tw-items-center tw-justify-between"
+      >
+        <p-button [outlined]="true" [label]="'2'"></p-button>
+        <div class="tw-flex tw-gap-[var(--content-gap)] tw-items-center">
+          <div>=</div>
+          <div class="tw-w-[100px] tw-flex tw-justify-end">Draw</div>
+        </div>
+      </div>
+      <div
+        class="tw-flex tw-gap-[var(--content-gap)] tw-items-center tw-justify-between"
+      >
+        <p-button [outlined]="true" [label]="'3'"></p-button>
+        <div class="tw-flex tw-gap-[var(--content-gap)] tw-items-center">
+          <div>=</div>
+          <div class="tw-w-[100px] tw-flex tw-justify-end">Discard</div>
+        </div>
+      </div>
+      <div
+        class="tw-flex tw-gap-[var(--content-gap)] tw-items-center tw-justify-between"
+      >
+        <p-button [outlined]="true" [label]="'4'"></p-button>
+        <div class="tw-flex tw-gap-[var(--content-gap)] tw-items-center">
+          <div>=</div>
+          <div class="tw-w-[100px] tw-flex tw-justify-end">Pong</div>
+        </div>
+      </div>
+      <div
+        class="tw-flex tw-gap-[var(--content-gap)] tw-items-center tw-justify-between"
+      >
+        <p-button [outlined]="true" [label]="'5'"></p-button>
+        <div class="tw-flex tw-gap-[var(--content-gap)] tw-items-center">
+          <div>=</div>
+          <div class="tw-w-[100px] tw-flex tw-justify-end">Kong</div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>

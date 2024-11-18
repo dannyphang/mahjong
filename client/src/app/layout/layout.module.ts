@@ -7,12 +7,14 @@ import { CommonSharedModule } from '../core/shared/modules/common-shared.module'
 import { MaterialModule } from '../core/shared/modules/material.module';
 import { ComponentsModule } from '../core/shared/components/components.module';
 import { PrimeNgModule } from '../core/shared/modules/primeng.module';
+import { HelpToggleComponent } from './help-toggle/help-toggle.component';
 
 @NgModule({
   declarations: [
     LayoutComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    HelpToggleComponent
   ],
   imports: [
     CommonModule,

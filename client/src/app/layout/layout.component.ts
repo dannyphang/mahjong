@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-layout',
@@ -6,4 +6,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './layout.component.scss'
 })
 export class LayoutComponent {
+  helpDialogVisible: boolean = false;
+
+  @HostListener("window:keydown", ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key === "?") {
+      this.helpDialogVisible = !this.helpDialogVisible;
+    }
+  }
 }
