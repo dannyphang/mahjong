@@ -2,6 +2,7 @@
 
 <div *ngIf="player">
   <div class="tw-p-[var(--content-gap)] tw-grid tw-gap-[var(--content-gap)]">
+    <!-- player list in the room -->
     <div class="tw-flex tw-gap-[var(--content-gap)]">
       <div *ngFor="let p of room.playerList">
         <p-button
@@ -13,16 +14,18 @@
     </div>
 
     <div class="tw-flex tw-gap-[var(--content-gap)]">
+      <!-- start game -->
       <p-button
         [label]="'Start Game'"
         (onClick)="startGame()"
         *ngIf="player.playerId === room.roomOwnerId"
       ></p-button>
 
+      <!-- next player -->
       <p-button
-        [label]="'Any Button'"
+        [label]="'Next player turn'"
         [outlined]="true"
-        (onClick)="anyButton()"
+        (onClick)="nextTurn()"
       ></p-button>
     </div>
   </div>

@@ -63,7 +63,10 @@ export class PlayerDto {
 }
 
 export class RoomUpdateDto extends RoomDto {
-    updateMessage: string;
+    response: {
+        isSuccess: boolean;
+        updateMessage: string;
+    }
 }
 
 export class MahjongGroupDto {
