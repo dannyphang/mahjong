@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-help-toggle',
@@ -7,10 +7,14 @@ import { Component, Input } from '@angular/core';
 })
 export class HelpToggleComponent {
   @Input() helpDialogVisible: boolean = false;
+  @Output() dialogVisibleEmit: EventEmitter<boolean> = new EventEmitter();
 
   constructor() {
 
   }
 
-
+  onHide() {
+    this.helpDialogVisible = false;
+    this.dialogVisibleEmit.emit(this.helpDialogVisible);
+  }
 }
