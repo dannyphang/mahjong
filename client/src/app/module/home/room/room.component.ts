@@ -120,8 +120,14 @@ export class RoomComponent extends BaseCoreAbstract {
 
   recieveGameUpdate() {
     this.socketIoService.recieveRoomUpdate().subscribe((room) => {
-      this.room = room;
-      this.popMessage(room.response.updateMessage, 'Info', 'info');
+      if (room.response.isSuccess) {
+        this.room = room;
+        this.socketIoService.currentPlayer = room.playerList.find(p => p.playerId === this.player.playerId)!;
+        this.popMessage(room.response.updateMessage, 'Info', 'info');
+      }
+      else {
+        this.popMessage(room.response.updateMessage, 'Error', 'error');
+      }
     });
   }
 

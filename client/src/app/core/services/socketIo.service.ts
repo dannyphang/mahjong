@@ -67,8 +67,6 @@ export class SocketioService {
     recieveRoomUpdate() {
         return new Observable<RoomUpdateDto>((observer) => {
             this.socket.on('roomUpdate', (room: RoomUpdateDto) => {
-                this.currentPlayer = room.playerList.find(p => p.playerId === this.currentPlayer.playerId)!;
-
                 observer.next(room);
             });
         });
