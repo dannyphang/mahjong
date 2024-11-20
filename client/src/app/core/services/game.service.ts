@@ -41,6 +41,10 @@ export class GameService {
         });
         return this.http.get<ResponseModel<PlayerDto[]>>((apiConfig.baseUrl + '/player'), { headers: header }).pipe();
     }
+
+    getCalculatePoint(mahjongList: MahjongDto[]): Observable<ResponseModel<MahjongCombinationGroupDto>> {
+        return this.http.post<ResponseModel<MahjongCombinationGroupDto>>(apiConfig.baseUrl + '/mahjong/calculate_points', { mahjongList }).pipe();
+    }
 }
 
 export class RoomDto {
@@ -104,4 +108,21 @@ export class MahjongActionDto {
     isKongable: boolean;
     isChowable: boolean;
     isWinnable: boolean;
+}
+
+export class MahjongCombinationDto {
+    isDuiDuiHu: boolean;
+    isPingHu: boolean;
+    isQuanTongZi: boolean;
+    isYaoJiu: boolean;
+    isQuanZi: boolean;
+    isKanKanHu: boolean;
+    isDaSanYuan: boolean;
+    isXiaoSanYuan: boolean;
+    isDaSiXi: boolean;
+    isXiaoSiXi: boolean;
+}
+
+export class MahjongCombinationGroupDto extends MahjongCombinationDto {
+    points: number;
 }

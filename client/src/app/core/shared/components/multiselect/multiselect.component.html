@@ -39,7 +39,15 @@
         </div>
       </ng-template>
       <ng-template let-option pTemplate="item">
-        <div>{{ option.label }}</div>
+        <div class="tw-flex tw-gap-[var(--content-gap)] tw-items-center">
+          <img
+            [src]="
+              '../../../../../assets/images/mahjong/' + option.preIcon + '.png'
+            "
+            *ngIf="option.preIcon"
+          />
+          <div>{{ option.label }}</div>
+        </div>
       </ng-template>
     </p-multiSelect>
   </div>
