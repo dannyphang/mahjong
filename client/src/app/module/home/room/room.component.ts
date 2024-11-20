@@ -70,6 +70,12 @@ export class RoomComponent extends BaseCoreAbstract {
       case '5':
         this.actionMahjong('kong', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
         break;
+      case '6':
+        this.actionMahjong('chow', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+        break;
+      case '7':
+        this.actionMahjong('win', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+        break;
     }
   }
 

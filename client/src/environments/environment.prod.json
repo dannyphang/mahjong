@@ -1,4 +1,4 @@
 {
-  "baseUrl": "",
-  "socketEndpoint": ""
+  "baseUrl": "https://mahjong-v2.onrender.com",
+  "socketEndpoint": "https://mahjong-v2.onrender.com"
 }
