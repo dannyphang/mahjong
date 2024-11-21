@@ -134,6 +134,14 @@
           [outlined]="true"
           *ngIf="p.action.isKongable"
         ></p-button>
+
+        <!-- check point -->
+        <p-button
+          [label]="'Check'"
+          (onClick)="checkPoint(p)"
+          [outlined]="true"
+          *ngIf="p.action.isKongable"
+        ></p-button>
       </div>
 
       <!-- flower set -->
@@ -149,7 +157,7 @@
         </div>
       </div>
 
-      <div class="tw-flex tw-gap-[var(--content-gap-xl)]">
+      <div class="tw-flex tw-gap-[var(--content-gap-xl)] tw-flex-wrap">
         <!-- hand set -->
         <div
           class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap"
@@ -162,7 +170,7 @@
               let mahjong of p.mahjong.handTiles.mahjongTile;
               let i = index
             "
-            class="tw-mx-[-4px]"
+            class="tw-mx-[-4px] tw-flex"
           >
             <app-mahjong
               [mahjong]="mahjong"

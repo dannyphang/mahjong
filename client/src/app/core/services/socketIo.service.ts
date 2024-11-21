@@ -31,9 +31,8 @@ export class SocketioService {
         return this.currentRoom;
     }
 
-    connect(gameId: string) {
+    connect() {
         this.socket = io(apiConfig.socketUrl);
-        // this.socket.emit('joinRoom', { gameId: gameId });
     }
 
     playerJoinRoom(player: PlayerDto, room: RoomDto) {

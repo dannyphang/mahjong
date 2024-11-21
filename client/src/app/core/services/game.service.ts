@@ -42,8 +42,8 @@ export class GameService {
         return this.http.get<ResponseModel<PlayerDto[]>>((apiConfig.baseUrl + '/player'), { headers: header }).pipe();
     }
 
-    getCalculatePoint(mahjongList: MahjongDto[]): Observable<ResponseModel<MahjongCombinationGroupDto>> {
-        return this.http.post<ResponseModel<MahjongCombinationGroupDto>>(apiConfig.baseUrl + '/mahjong/calculate_points', { mahjongList }).pipe();
+    getCalculatePoint(mahjong: MahjongGroupDto): Observable<ResponseModel<MahjongCombinationGroupDto>> {
+        return this.http.post<ResponseModel<MahjongCombinationGroupDto>>(apiConfig.baseUrl + '/mahjong/calculate_points', { mahjong }).pipe();
     }
 }
 

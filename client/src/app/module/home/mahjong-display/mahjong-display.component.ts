@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GameService, MahjongDto } from '../../../core/services/game.service';
+import { GameService, MahjongDto, MahjongGroupDto } from '../../../core/services/game.service';
 import { MessageService } from 'primeng/api';
 import { BaseCoreAbstract } from '../../../core/shared/base/base-core.abstract';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -80,7 +80,21 @@ export class MahjongDisplayComponent extends BaseCoreAbstract {
       this.popMessage('The mahjong set must be 14 tiles.', "Error", "error");
     }
     else {
-      this.gameService.getCalculatePoint(this.tempArray).subscribe(res => {
+      let mahjong: MahjongGroupDto = {
+        publicTiles: {
+          mahjongTile: [],
+          point: 0,
+        },
+        handTiles: {
+          mahjongTile: this.tempArray,
+          point: 0,
+        },
+        flowerTiles: {
+          mahjongTile: [],
+          point: 0,
+        }
+      }
+      this.gameService.getCalculatePoint(mahjong).subscribe(res => {
         if (res.isSuccess) {
           this.points = res.data.points
         }
