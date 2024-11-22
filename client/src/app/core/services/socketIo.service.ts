@@ -55,14 +55,6 @@ export class SocketioService {
         });
     }
 
-    recieveStartGame() {
-        return new Observable<RoomUpdateDto>((observer) => {
-            this.socket.on('startGame', (room: RoomUpdateDto) => {
-                observer.next(room);
-            });
-        });
-    }
-
     recieveRoomUpdate() {
         return new Observable<RoomUpdateDto>((observer) => {
             this.socket.on('roomUpdate', (room: RoomUpdateDto) => {

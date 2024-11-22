@@ -174,6 +174,9 @@ function playerQuitRoom(room, player) {
 
 function discardMahjong(room, player, discardedMahjongTile) {
     return new Promise(async function (resolve, reject) {
+        console.log(player);
+        console.log("----------------");
+
         // check player handtile number
         if ((player.mahjong.handTiles.mahjongTile.length - 2) % 3 === 0) {
             // check if other player can do any action
@@ -215,11 +218,11 @@ function discardMahjong(room, player, discardedMahjongTile) {
                 isSelected: false,
             });
 
-            room.playerList.find((p) => p.id === player.id).mahjong.handTiles.mahjongTile = room.playerList
-                .find((p) => p.id === player.id)
+            room.playerList.find((p) => p.playerId === player.playerId).mahjong.handTiles.mahjongTile = room.playerList
+                .find((p) => p.playerId === player.playerId)
                 .mahjong.handTiles.mahjongTile.filter((m) => m.id !== discardedMahjongTile.id);
 
-            player = room.playerList.find((p) => p.id === player.id);
+            player = room.playerList.find((p) => p.playerId === player.playerId);
 
             updatePlayer(player).then((playerU) => {
                 updateRoom(room).then((roomU) => {

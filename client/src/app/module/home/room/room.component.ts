@@ -93,7 +93,6 @@ export class RoomComponent extends BaseCoreAbstract {
     this.socketIoService.connect();
 
     this.recieveJoinedPlayers();
-    this.recieveStartGame();
     this.recieveGameUpdate();
 
     this.socketIoService.playerJoinRoom(this.player, this.room);
@@ -115,12 +114,6 @@ export class RoomComponent extends BaseCoreAbstract {
 
       this.socketIoService.currentRoom = newRoom;
       this.room = newRoom;
-    });
-  }
-
-  recieveStartGame() {
-    this.socketIoService.recieveStartGame().subscribe((room) => {
-      this.room = room;
     });
   }
 
@@ -173,14 +166,6 @@ export class RoomComponent extends BaseCoreAbstract {
       if (m.id !== mahjong.id) {
         m.isSelected = false;
       }
-      // else {
-      //   if (m.isSelected) {
-      //     m.isSelected = false;
-      //   }
-      //   else {
-      //     m.isSelected = true;
-      //   }
-      // }
     });
 
     this.room.playerList.find(p => p.playerId === player.playerId)!.mahjong = player.mahjong;
