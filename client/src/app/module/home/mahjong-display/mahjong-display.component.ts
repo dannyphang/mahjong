@@ -84,57 +84,57 @@ export class MahjongDisplayComponent extends BaseCoreAbstract {
   }
 
   checkMahjongSetInfo() {
-    if (this.tempArray.length + this.tempArray2.length !== 14) {
-      this.popMessage('The mahjong set must be 14 tiles.', "Error", "error");
-    }
-    else {
-      let mahjong: MahjongGroupDto = {
-        publicTiles: {
-          mahjongTile: this.tempArray,
-          point: 0,
-        },
-        handTiles: {
-          mahjongTile: this.tempArray2,
-          point: 0,
-        },
-        flowerTiles: {
-          mahjongTile: [],
-          point: 0,
-        }
-      }
+    // if (this.tempArray.length + this.tempArray2.length !== 14) {
+    //   this.popMessage('The mahjong set must be 14 tiles.', "Error", "error");
+    // }
+    // else {
+    //   let mahjong: MahjongGroupDto = {
+    //     publicTiles: {
+    //       mahjongTile: this.tempArray,
+    //       point: 0,
+    //     },
+    //     handTiles: {
+    //       mahjongTile: this.tempArray2,
+    //       point: 0,
+    //     },
+    //     flowerTiles: {
+    //       mahjongTile: [],
+    //       point: 0,
+    //     }
+    //   }
 
-      let player: PlayerDto = {
-        statusId: 1,
-        pin: 123456,
-        direction: 1,
-        mahjong: mahjong,
-        playerName: 'a',
-        action: {
-          isPongable: false,
-          isKongable: false,
-          isChowable: false,
-          isWinnable: false,
-        },
-        drawAction: {
-          isDrawFlower: false,
-          isDrawKong: false,
-          isDrawSecondKong: true,
-          isDrawLastTile: false,
-          isGetPong: false,
-          isKaLong: false,
-          isSoloPong: false,
-          isStealKong: false,
-          isSoloDraw: false,
-        }
-      }
-      this.gameService.getCalculatePoint(player).subscribe(res => {
-        if (res.isSuccess) {
-          this.points = res.data.points
-        }
-        else {
-          this.popMessage(res.responseMessage, "Error", "error");
-        }
-      })
-    }
+    //   let player: PlayerDto = {
+    //     statusId: 1,
+    //     pin: 123456,
+    //     direction: 1,
+    //     mahjong: mahjong,
+    //     playerName: 'a',
+    //     action: {
+    //       isPongable: false,
+    //       isKongable: false,
+    //       isChowable: false,
+    //       isWinnable: false,
+    //     },
+    //     drawAction: {
+    //       isDrawFlower: false,
+    //       isDrawKong: false,
+    //       isDrawSecondKong: true,
+    //       isDrawLastTile: false,
+    //       isGetPong: false,
+    //       isKaLong: false,
+    //       isSoloPong: false,
+    //       isStealKong: false,
+    //       isSoloDraw: false,
+    //     }
+    //   }
+    //   this.gameService.getCalculatePoint(player).subscribe(res => {
+    //     if (res.isSuccess) {
+    //       this.points = res.data.points
+    //     }
+    //     else {
+    //       this.popMessage(res.responseMessage, "Error", "error");
+    //     }
+    //   })
+    // }
   }
 }
