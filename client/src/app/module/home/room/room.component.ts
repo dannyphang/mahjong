@@ -212,7 +212,7 @@ export class RoomComponent extends BaseCoreAbstract {
   }
 
   checkPoint(player: PlayerDto) {
-    this.gameService.getCalculatePoint(player.mahjong).subscribe(res => {
+    this.gameService.getCalculatePoint(player).subscribe(res => {
       if (res.isSuccess) {
         console.log(res.data)
       }

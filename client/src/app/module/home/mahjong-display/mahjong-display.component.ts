@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GameService, MahjongDto, MahjongGroupDto } from '../../../core/services/game.service';
+import { GameService, MahjongDto, MahjongGroupDto, PlayerDto } from '../../../core/services/game.service';
 import { MessageService } from 'primeng/api';
 import { BaseCoreAbstract } from '../../../core/shared/base/base-core.abstract';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -15,8 +15,10 @@ import { FormControl } from '@angular/forms';
 export class MahjongDisplayComponent extends BaseCoreAbstract {
   mahjongList: MahjongDto[] = [];
   tempArray: MahjongDto[] = [];
+  tempArray2: MahjongDto[] = [];
   mahjongOptions: OptionsModel[] = [];
-  mahjongPlaygroundFormControl: FormControl<string[] | null> = new FormControl<string[]>([])
+  publicFormControl: FormControl<string[] | null> = new FormControl<string[]>([])
+  handFormControl: FormControl<string[] | null> = new FormControl<string[]>([])
   points: number;
 
   constructor(
@@ -41,10 +43,16 @@ export class MahjongDisplayComponent extends BaseCoreAbstract {
         });
       }
     });
-    this.mahjongPlaygroundFormControl.valueChanges.subscribe(mahjongList => {
+    this.publicFormControl.valueChanges.subscribe(mahjongList => {
       this.tempArray = [];
       mahjongList?.forEach(uid => {
         this.tempArray.push(this.mahjongList.find(m => m.uid === uid)!);
+      })
+    })
+    this.handFormControl.valueChanges.subscribe(mahjongList => {
+      this.tempArray2 = [];
+      mahjongList?.forEach(uid => {
+        this.tempArray2.push(this.mahjongList.find(m => m.uid === uid)!);
       })
     })
   }
@@ -71,22 +79,22 @@ export class MahjongDisplayComponent extends BaseCoreAbstract {
     }
   }
 
-  drop(event: CdkDragDrop<MahjongDto[]>) {
-    moveItemInArray(this.tempArray, event.previousIndex, event.currentIndex);
+  drop(event: CdkDragDrop<MahjongDto[]>, mahjongList: MahjongDto[]) {
+    moveItemInArray(mahjongList, event.previousIndex, event.currentIndex);
   }
 
   checkMahjongSetInfo() {
-    if (this.tempArray.length !== 14) {
+    if (this.tempArray.length + this.tempArray2.length !== 14) {
       this.popMessage('The mahjong set must be 14 tiles.', "Error", "error");
     }
     else {
       let mahjong: MahjongGroupDto = {
         publicTiles: {
-          mahjongTile: [],
+          mahjongTile: this.tempArray,
           point: 0,
         },
         handTiles: {
-          mahjongTile: this.tempArray,
+          mahjongTile: this.tempArray2,
           point: 0,
         },
         flowerTiles: {
@@ -94,9 +102,25 @@ export class MahjongDisplayComponent extends BaseCoreAbstract {
           point: 0,
         }
       }
-      this.gameService.getCalculatePoint(mahjong).subscribe(res => {
+
+      let player: PlayerDto = {
+        statusId: 1,
+        direction: 1,
+        mahjong: mahjong,
+        playerName: 'a',
+        action: {
+          isPongable: false,
+          isKongable: false,
+          isChowable: false,
+          isWinnable: false,
+        }
+      }
+      this.gameService.getCalculatePoint(player).subscribe(res => {
         if (res.isSuccess) {
           this.points = res.data.points
+        }
+        else {
+          this.popMessage(res.responseMessage, "Error", "error");
         }
       })
     }
