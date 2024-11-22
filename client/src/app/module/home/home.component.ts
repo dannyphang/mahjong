@@ -49,10 +49,7 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                     mahjongTile: [],
                     point: 0
                   },
-                  publicTiles: {
-                    mahjongTile: [],
-                    point: 0
-                  },
+                  publicTiles: [],
                   flowerTiles: {
                     mahjongTile: [],
                     point: 0
@@ -63,7 +60,8 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                   isPongable: false,
                   isKongable: false,
                   isChowable: false,
-                  isWinnable: false
+                  isWinnable: false,
+                  isSelfKongable: false
                 },
                 drawAction: {
                   isDrawFlower: false,
@@ -121,10 +119,7 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                     mahjongTile: [],
                     point: 0
                   },
-                  publicTiles: {
-                    mahjongTile: [],
-                    point: 0
-                  },
+                  publicTiles: [],
                   flowerTiles: {
                     mahjongTile: [],
                     point: 0
@@ -135,7 +130,8 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                   isPongable: false,
                   isKongable: false,
                   isChowable: false,
-                  isWinnable: false
+                  isWinnable: false,
+                  isSelfKongable: false
                 },
                 drawAction: {
                   isDrawFlower: false,

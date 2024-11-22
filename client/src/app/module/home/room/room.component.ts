@@ -198,6 +198,17 @@ export class RoomComponent extends BaseCoreAbstract {
         this.socketIoService.sendMahjongAction('pong', this.room, player, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
         break;
       case 'kong':
+        this.socketIoService.sendMahjongAction('kong', this.room, player, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
+        break;
+      case 'self-kong':
+        let selectedMahjong = this.room.playerList.find(p => p.playerId === this.player.playerId)?.mahjong.handTiles.mahjongTile.find(m => m.isSelected);
+
+        if (!selectedMahjong) {
+          this.popMessage("Please select a tile to Kong.", 'Error', 'error');
+        }
+        else {
+          this.socketIoService.sendMahjongAction('self-kong', this.room, player, selectedMahjong);
+        }
         break;
     }
   }

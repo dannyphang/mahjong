@@ -91,13 +91,7 @@
           [src]="'../../../../assets/images/mahjong/' + p.direction + '.png'"
         />
         <app-base-label
-          [label]="
-            '(' +
-            (
-              p.mahjong.flowerTiles.point + p.mahjong.publicTiles.point
-            ).toString() +
-            ')'
-          "
+          [label]="'(' + p.mahjong.flowerTiles.point.toString() + ')'"
         ></app-base-label>
 
         <!-- sort -->
@@ -142,12 +136,19 @@
           *ngIf="p.action.isKongable"
         ></p-button>
 
+        <!-- self kong -->
+        <p-button
+          [label]="'Self Kong'"
+          (onClick)="actionMahjong('self-kong', p)"
+          [outlined]="true"
+          *ngIf="p.action.isSelfKongable"
+        ></p-button>
+
         <!-- check point -->
         <p-button
           [label]="'Check'"
           (onClick)="checkPoint(p)"
           [outlined]="true"
-          *ngIf="p.action.isKongable"
         ></p-button>
       </div>
 
@@ -196,15 +197,16 @@
         </div>
 
         <!-- public set -->
-        <div class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap">
-          <div
-            *ngFor="
-              let mahjong of p.mahjong.publicTiles.mahjongTile;
-              let i = index
-            "
-            class="tw-mx-[-4px]"
-          >
-            <app-mahjong [mahjong]="mahjong"></app-mahjong>
+        <div
+          class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap tw-gap-[var(--content-gap)]"
+        >
+          <div *ngFor="let group of p.mahjong.publicTiles" class="tw-flex">
+            <div
+              *ngFor="let mahjong of group.mahjongTile; let i = index"
+              class="tw-mx-[-4px]"
+            >
+              <app-mahjong [mahjong]="mahjong"></app-mahjong>
+            </div>
           </div>
         </div>
       </div>

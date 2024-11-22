@@ -78,7 +78,7 @@ export class RoomUpdateDto extends RoomDto {
 
 export class MahjongGroupDto {
     handTiles: MahjongTileSetDto;
-    publicTiles: MahjongTileSetDto;
+    publicTiles: MahjongTileSetDto[];
     flowerTiles: MahjongTileSetDto;
 }
 
@@ -111,6 +111,7 @@ export class MahjongActionDto {
     isKongable: boolean;
     isChowable: boolean;
     isWinnable: boolean;
+    isSelfKongable: boolean;
 }
 
 export class MahjongCombinationDto {
