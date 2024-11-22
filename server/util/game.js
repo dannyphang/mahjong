@@ -174,60 +174,78 @@ function playerQuitRoom(room, player) {
 
 function discardMahjong(room, player, discardedMahjongTile) {
     return new Promise(async function (resolve, reject) {
-        // check if other player can do any action
-        room.playerList.forEach((p) => {
-            if (p.playerId !== player.playerId) {
-                let jokerCount = 0;
-                let sameMahjongCount = 0;
+        console.log(player);
+        console.log("----------------");
 
-                p.mahjong.handTiles.mahjongTile.forEach((m) => {
-                    if (m.joker) {
-                        jokerCount++;
+        // check player handtile number
+        if ((player.mahjong.handTiles.mahjongTile.length - 2) % 3 === 0) {
+            // check if other player can do any action
+            room.playerList.forEach((p) => {
+                if (p.playerId !== player.playerId) {
+                    let jokerCount = 0;
+                    let sameMahjongCount = 0;
+
+                    p.mahjong.handTiles.mahjongTile.forEach((m) => {
+                        if (m.joker) {
+                            jokerCount++;
+                        }
+                        if (m.code === discardedMahjongTile.code) {
+                            sameMahjongCount++;
+                        }
+                    });
+
+                    // TODO: pong
+                    if (sameMahjongCount >= 2 || (jokerCount >= 1 && sameMahjongCount >= 1)) {
+                        p.action.isPongable = true;
+                    } else {
+                        p.action.isPongable = false;
                     }
-                    if (m.code === discardedMahjongTile.code) {
-                        sameMahjongCount++;
+
+                    // TODO: kong
+                    if (sameMahjongCount === 3) {
+                        p.action.isKongable = true;
+                    } else {
+                        p.action.isKongable = false;
                     }
-                });
-
-                // TODO: pong
-                if (sameMahjongCount >= 2 || (jokerCount >= 1 && sameMahjongCount >= 1)) {
-                    p.action.isPongable = true;
-                } else {
-                    p.action.isPongable = false;
                 }
+            });
 
-                // TODO: kong
-                if (sameMahjongCount === 3) {
-                    p.action.isKongable = true;
-                } else {
-                    p.action.isKongable = false;
-                }
-            }
-        });
+            // TODO: chow (chi)
+            // TODO: win
 
-        // TODO: chow (chi)
-        // TODO: win
+            room.mahjong.discardTiles.push({
+                ...discardedMahjongTile,
+                isSelected: false,
+            });
 
-        room.mahjong.discardTiles.push({
-            ...discardedMahjongTile,
-            isSelected: false,
-        });
+            room.playerList.find((p) => p.playerId === player.playerId).mahjong.handTiles.mahjongTile = room.playerList
+                .find((p) => p.playerId === player.playerId)
+                .mahjong.handTiles.mahjongTile.filter((m) => m.id !== discardedMahjongTile.id);
 
-        room.playerList.find((p) => p.id === player.id).mahjong.handTiles.mahjongTile = room.playerList
-            .find((p) => p.id === player.id)
-            .mahjong.handTiles.mahjongTile.filter((m) => m.id !== discardedMahjongTile.id);
+            player = room.playerList.find((p) => p.playerId === player.playerId);
 
-        updateRoom(room).then((roomU) => {
-            nextTurn(roomU).then((roomNU) => {
-                resolve({
-                    ...roomNU,
-                    response: {
-                        isSuccess: true,
-                        updateMessage: `${player.playerName} discarded ${discardedMahjongTile.name}.`,
-                    },
+            updatePlayer(player).then((playerU) => {
+                updateRoom(room).then((roomU) => {
+                    nextTurn(roomU).then((roomNU) => {
+                        resolve({
+                            ...roomNU,
+                            response: {
+                                isSuccess: true,
+                                updateMessage: `${player.playerName} discarded ${discardedMahjongTile.name}.`,
+                            },
+                        });
+                    });
                 });
             });
-        });
+        } else {
+            resolve({
+                ...room,
+                response: {
+                    isSuccess: false,
+                    updateMessage: `You cannot discard tile now.`,
+                },
+            });
+        }
 
         // room.playerList.forEach((p) => {
         //   if (p.playerId === player.playerId) {
