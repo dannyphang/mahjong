@@ -105,6 +105,7 @@ export class MahjongDisplayComponent extends BaseCoreAbstract {
 
       let player: PlayerDto = {
         statusId: 1,
+        pin: 123456,
         direction: 1,
         mahjong: mahjong,
         playerName: 'a',
