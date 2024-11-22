@@ -125,7 +125,7 @@
           [label]="'Pong'"
           (onClick)="actionMahjong('pong', p)"
           [outlined]="true"
-          *ngIf="p.action.isPongable"
+          *ngIf="p.action.isPongable && p.playerId === player.playerId"
         ></p-button>
 
         <!-- kong -->
@@ -141,7 +141,15 @@
           [label]="'Self Kong'"
           (onClick)="actionMahjong('self-kong', p)"
           [outlined]="true"
-          *ngIf="p.action.isSelfKongable"
+          *ngIf="p.action.isSelfKongable && p.playerId === player.playerId"
+        ></p-button>
+
+        <!-- chow -->
+        <p-button
+          [label]="'Chow'"
+          (onClick)="actionMahjong('chow', p)"
+          [outlined]="true"
+          *ngIf="p.action.isChowable && p.playerId === player.playerId"
         ></p-button>
 
         <!-- check point -->

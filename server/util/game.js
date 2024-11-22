@@ -207,7 +207,14 @@ function discardMahjong(room, player, discardedMahjongTile) {
                 }
             });
 
-            // TODO: chow (chi)
+            // Check Chow (only for the next player in sequence)
+            if (isNextPlayer(room, player, p)) {
+                const chowable = checkChow(p.mahjong.handTiles.mahjongTile, discardedMahjongTile);
+                p.action.isChowable = chowable;
+            } else {
+                p.action.isChowable = false;
+            }
+
             // TODO: win
 
             room.mahjong.discardTiles.push({
@@ -1032,6 +1039,32 @@ function isKongableFromHandSet(drawedMahjong, mahjongList) {
     });
 
     return sameTile === 3;
+}
+
+function checkChow(handTiles, discardedTile) {
+    const suit = discardedTile.code.split("_")[0];
+    const number = parseInt(discardedTile.code.split("_")[1]);
+
+    // Look for tiles that can form a sequence with the discarded tile
+    const neededTiles = [`${suit}_${number - 1}`, `${suit}_${number + 1}`];
+
+    let count = 0;
+    handTiles.forEach((tile) => {
+        if (neededTiles.includes(tile.code)) {
+            count++;
+        }
+    });
+
+    // At least 2 matching tiles are required to form a Chow
+    return count >= 2;
+}
+
+function isNextPlayer(room, currentPlayer, targetPlayer) {
+    const playerOrder = room.playerList.map((p) => p.direction);
+    const currentIndex = playerOrder.indexOf(currentPlayer.direction);
+    const nextIndex = (currentIndex + 1) % playerOrder.length;
+
+    return room.playerList[nextIndex].playerId === targetPlayer.playerId;
 }
 
 export { createGame, playerJoinRoom, updateRoom, playerQuitRoom, discardMahjong, nextTurn, drawMahjong, updatePlayer, actions, updateRoomAndPlayer, calculateMahjongSetPoints };
