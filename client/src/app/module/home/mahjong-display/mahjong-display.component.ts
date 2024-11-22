@@ -113,6 +113,17 @@ export class MahjongDisplayComponent extends BaseCoreAbstract {
           isKongable: false,
           isChowable: false,
           isWinnable: false,
+        },
+        drawAction: {
+          isDrawFlower: false,
+          isDrawKong: false,
+          isDrawSecondKong: true,
+          isDrawLastTile: false,
+          isGetPong: false,
+          isKaLong: false,
+          isSoloPong: false,
+          isStealKong: false,
+          isSoloDraw: false,
         }
       }
       this.gameService.getCalculatePoint(player).subscribe(res => {

@@ -62,6 +62,17 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                 isKongable: false,
                 isChowable: false,
                 isWinnable: false
+              },
+              drawAction: {
+                isDrawFlower: false,
+                isDrawKong: false,
+                isDrawSecondKong: false,
+                isDrawLastTile: false,
+                isGetPong: false,
+                isKaLong: false,
+                isSoloPong: false,
+                isStealKong: false,
+                isSoloDraw: false,
               }
             } as PlayerDto).subscribe(res3 => {
               if (res3.isSuccess) {
@@ -113,6 +124,17 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                 isKongable: false,
                 isChowable: false,
                 isWinnable: false
+              },
+              drawAction: {
+                isDrawFlower: false,
+                isDrawKong: false,
+                isDrawSecondKong: false,
+                isDrawLastTile: false,
+                isGetPong: false,
+                isKaLong: false,
+                isSoloPong: false,
+                isStealKong: false,
+                isSoloDraw: false,
               }
             } as PlayerDto).subscribe(res => {
               if (res.isSuccess) {

@@ -35,12 +35,19 @@
     <!-- testing area (remaining mahjong) -->
     <div
       class="tw-flex tw-flex-wrap tw-gap-[var(--content-gap)] tw-p-[var(--content-gap)] tw-justify-center tw-items-center"
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="drop($event, room.mahjong.remainingTiles)"
     >
       <div
         *ngFor="let mahjong of room.mahjong.remainingTiles; let i = index"
         class="tw-mx-[-4px]"
       >
-        <app-mahjong [mahjong]="mahjong" [selectable]="false"></app-mahjong>
+        <app-mahjong
+          [mahjong]="mahjong"
+          [selectable]="false"
+          cdkDrag
+        ></app-mahjong>
       </div>
     </div>
 

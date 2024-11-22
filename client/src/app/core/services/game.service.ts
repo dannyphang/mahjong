@@ -64,6 +64,7 @@ export class PlayerDto {
     direction: number;
     mahjong: MahjongGroupDto;
     action: MahjongActionDto;
+    drawAction: MahjongDrawActionDto;
 }
 
 export class RoomUpdateDto extends RoomDto {
@@ -121,8 +122,21 @@ export class MahjongCombinationDto {
     isXiaoSanYuan: boolean;
     isDaSiXi: boolean;
     isXiaoSiXi: boolean;
+    isMenQianQing: boolean;
 }
 
 export class MahjongCombinationGroupDto extends MahjongCombinationDto {
     points: number;
+}
+
+export class MahjongDrawActionDto {
+    isDrawFlower: boolean;
+    isDrawKong: boolean;
+    isDrawSecondKong: boolean;
+    isGetPong: boolean;
+    isStealKong: boolean;
+    isKaLong: boolean;
+    isSoloPong: boolean;
+    isDrawLastTile: boolean;
+    isSoloDraw: boolean;
 }

@@ -411,6 +411,9 @@ function calculateMahjongSetPoints(mahjong, player) {
             isXiaoSanYuan: false,
             isDaSiXi: false,
             isXiaoSiXi: false,
+            isMenQianQing: false,
+            isKongShangKong: false,
+            isHaiDiLauYue: false,
         };
 
         let mahjongList = mahjong.publicTiles.mahjongTile.concat(mahjong.handTiles.mahjongTile);
@@ -430,7 +433,7 @@ function calculateMahjongSetPoints(mahjong, player) {
                 }
 
                 // check if 平胡?
-                if (combination.isQuanTongZi && checkPingHu(mahjongList)) {
+                if (combination.isQuanTongZi && checkPingHu(mahjongList) && !player.drawAction.isKaLong) {
                     combination.isPingHu = true;
                 }
 
@@ -463,6 +466,26 @@ function calculateMahjongSetPoints(mahjong, player) {
                 if (isSmallFourWinds(mahjongList)) {
                     combination.isXiaoSiXi = true;
                 }
+
+                // check if 门前清
+                if (player.mahjong.flowerTiles.mahjongTile.length === 0) {
+                    // combination.isMenQianQing = true;
+                }
+
+                // check if 坎坎胡
+                if (isDuiDuiHu(mahjongList) && (player.drawAction.isSoloDraw || player.drawAction.isSoloPong) && player.mahjong.publicTiles.mahjongTile.length === 0) {
+                    combination.isKanKanHu = true;
+                }
+
+                // check if 海底捞月
+                if (player.drawAction.isDrawLastTile) {
+                    combination.isHaiDiLauYue = true;
+                }
+
+                // check if 扛上扛
+                if (player.drawAction.isDrawSecondKong) {
+                    combination.isKongShangKong = true;
+                }
             } catch (err) {
                 console.log(err);
                 resolve({
@@ -472,6 +495,11 @@ function calculateMahjongSetPoints(mahjong, player) {
             }
 
             // check point
+            finalPoint += getPointsFromCanon(mahjongList, player);
+
+            // check player draw action
+            finalPoint += getPointsFromDrawAction(player);
+
             if (combination.isQuanTongZi) {
                 if (combination.isDuiDuiHu || combination.isPingHu) {
                     finalPoint += 4;
@@ -486,12 +514,20 @@ function calculateMahjongSetPoints(mahjong, player) {
                 finalPoint += 1;
             }
 
-            if (combination.isQuanZi || combination.isKanKanHu || combination.isDaSanYuan || combination.isDaSiXi || combination.isXiaoSiXi) {
-                finalPoint += 10;
+            if (
+                combination.isQuanZi ||
+                combination.isKanKanHu ||
+                combination.isDaSanYuan ||
+                combination.isDaSiXi ||
+                combination.isXiaoSiXi ||
+                combination.isMenQianQing ||
+                combination.isHaiDiLauYue ||
+                combination.isKongShangKong
+            ) {
+                finalPoint = 10;
             } else if (combination.isXiaoSanYuan) {
                 finalPoint += 1;
             }
-            finalPoint += getPointsFromCanon(mahjongList, player);
 
             resolve({
                 points: finalPoint,
@@ -911,6 +947,18 @@ function getPointsFromCanon(mahjongList, player) {
         }
     }
     return points;
+}
+
+function getPointsFromDrawAction(player) {
+    if (player.drawAction.isDrawFlower) {
+        return 1;
+    } else if (player.drawAction.isDrawKong) {
+        return 1;
+    } else if (player.drawAction.isStealKong) {
+        return 1;
+    }
+
+    return 0;
 }
 
 export { createGame, playerJoinRoom, updateRoom, playerQuitRoom, discardMahjong, nextTurn, drawMahjong, updatePlayer, actions, updateRoomAndPlayer, calculateMahjongSetPoints };
