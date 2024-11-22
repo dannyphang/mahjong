@@ -70,6 +70,12 @@ export class RoomComponent extends BaseCoreAbstract {
       case '5':
         this.actionMahjong('kong', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
         break;
+      case '6':
+        this.actionMahjong('chow', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+        break;
+      case '7':
+        this.actionMahjong('win', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+        break;
     }
   }
 
@@ -84,7 +90,7 @@ export class RoomComponent extends BaseCoreAbstract {
     this.player = this.socketIoService.currentPlayer;
     this.room = this.socketIoService.currentRoom;
 
-    this.socketIoService.connect(this.roomId);
+    this.socketIoService.connect();
 
     this.recieveJoinedPlayers();
     this.recieveStartGame();
@@ -209,5 +215,13 @@ export class RoomComponent extends BaseCoreAbstract {
       case 'kong':
         break;
     }
+  }
+
+  checkPoint(player: PlayerDto) {
+    this.gameService.getCalculatePoint(player).subscribe(res => {
+      if (res.isSuccess) {
+        console.log(res.data)
+      }
+    })
   }
 }

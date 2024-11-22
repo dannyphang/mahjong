@@ -10,7 +10,7 @@ import { EMAIL_REGEX, URL_REGEX } from '../../constants/common.constants';
 export class BaseInputComponent
   extends BaseFieldControlComponent
   implements OnInit {
-  @Input() mode: 'text' | 'number' | 'password' | 'switch' | 'label-text' | 'email' | 'url' | 'phone' =
+  @Input() mode: 'text' | 'number' | 'password' | 'switch' | 'label-text' | 'email' | 'url' | 'phone' | 'pin' =
     'text';
   @Input() iconUrl!: string;
   @Input() leftIconUrl!: string;

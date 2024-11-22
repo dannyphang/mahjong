@@ -35,11 +35,16 @@ export class GameService {
         return this.http.put<ResponseModel<PlayerDto>>(apiConfig.baseUrl + '/player', { player }).pipe();
     }
 
-    getPlayerByName(name: string): Observable<ResponseModel<PlayerDto[]>> {
+    getPlayerByName(name: string, pin: number): Observable<ResponseModel<PlayerDto[]>> {
         let header: HttpHeaders = new HttpHeaders({
-            name: name
+            name: name,
+            pin: pin
         });
         return this.http.get<ResponseModel<PlayerDto[]>>((apiConfig.baseUrl + '/player'), { headers: header }).pipe();
+    }
+
+    getCalculatePoint(player: PlayerDto): Observable<ResponseModel<MahjongCombinationGroupDto>> {
+        return this.http.post<ResponseModel<MahjongCombinationGroupDto>>(apiConfig.baseUrl + '/mahjong/calculate_points', { player }).pipe();
     }
 }
 
@@ -60,6 +65,8 @@ export class PlayerDto {
     direction: number;
     mahjong: MahjongGroupDto;
     action: MahjongActionDto;
+    drawAction: MahjongDrawActionDto;
+    pin: number;
 }
 
 export class RoomUpdateDto extends RoomDto {
@@ -104,4 +111,34 @@ export class MahjongActionDto {
     isKongable: boolean;
     isChowable: boolean;
     isWinnable: boolean;
+}
+
+export class MahjongCombinationDto {
+    isDuiDuiHu: boolean;
+    isPingHu: boolean;
+    isQuanTongZi: boolean;
+    isYaoJiu: boolean;
+    isQuanZi: boolean;
+    isKanKanHu: boolean;
+    isDaSanYuan: boolean;
+    isXiaoSanYuan: boolean;
+    isDaSiXi: boolean;
+    isXiaoSiXi: boolean;
+    isMenQianQing: boolean;
+}
+
+export class MahjongCombinationGroupDto extends MahjongCombinationDto {
+    points: number;
+}
+
+export class MahjongDrawActionDto {
+    isDrawFlower: boolean;
+    isDrawKong: boolean;
+    isDrawSecondKong: boolean;
+    isGetPong: boolean;
+    isStealKong: boolean;
+    isKaLong: boolean;
+    isSoloPong: boolean;
+    isDrawLastTile: boolean;
+    isSoloDraw: boolean;
 }

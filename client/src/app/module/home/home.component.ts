@@ -14,7 +14,7 @@ import { MessageService } from 'primeng/api';
 export class HomeComponent extends BaseCoreAbstract implements OnInit {
   roomIdFormControl: FormControl = new FormControl('4XVPqIQ8BaTHw4ZvVgtn');
   usernameFormControl: FormControl = new FormControl('');
-
+  pinFormControl: FormControl<number> = new FormControl();
   constructor(
     private router: Router,
     private socketIoService: SocketioService,
@@ -30,49 +30,70 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
 
   createGame() {
     if (this.usernameFormControl.value) {
-      this.popMessage('Creating room...', "Info", "info");
-      this.gameService.getPlayerByName(this.usernameFormControl.value).subscribe({
-        next: res => {
-          if (res.isSuccess) {
-            this.socketIoService.currentPlayer = res.data[0];
+      if (this.pinFormControl.value) {
+        this.popMessage('Creating room...', "Info", "info");
+        this.gameService.getPlayerByName(this.usernameFormControl.value, this.pinFormControl.value).subscribe({
+          next: res => {
+            if (res.isSuccess) {
+              this.socketIoService.currentPlayer = res.data[0];
 
-            this.navigateToRoom(true);
-          }
-          else {
-            this.gameService.createPlayer({
-              playerName: this.usernameFormControl.value,
-              statusId: 1,
-              mahjong: {
-                handTiles: {
-                  mahjongTile: [],
-                  point: 0
+              this.navigateToRoom(true);
+            }
+            else {
+              this.gameService.createPlayer({
+                playerName: this.usernameFormControl.value,
+                pin: this.pinFormControl.value,
+                statusId: 1,
+                mahjong: {
+                  handTiles: {
+                    mahjongTile: [],
+                    point: 0
+                  },
+                  publicTiles: {
+                    mahjongTile: [],
+                    point: 0
+                  },
+                  flowerTiles: {
+                    mahjongTile: [],
+                    point: 0
+                  }
                 },
-                publicTiles: {
-                  mahjongTile: [],
-                  point: 0
+                direction: 0,
+                action: {
+                  isPongable: false,
+                  isKongable: false,
+                  isChowable: false,
+                  isWinnable: false
                 },
-                flowerTiles: {
-                  mahjongTile: [],
-                  point: 0
+                drawAction: {
+                  isDrawFlower: false,
+                  isDrawKong: false,
+                  isDrawSecondKong: false,
+                  isDrawLastTile: false,
+                  isGetPong: false,
+                  isKaLong: false,
+                  isSoloPong: false,
+                  isStealKong: false,
+                  isSoloDraw: false,
                 }
-              },
-              direction: 0,
-              action: {
-                isPongable: false,
-                isKongable: false,
-                isChowable: false,
-                isWinnable: false
-              }
-            } as PlayerDto).subscribe(res3 => {
-              if (res3.isSuccess) {
-                this.socketIoService.player = res3.data;
+              } as PlayerDto).subscribe(res3 => {
+                if (res3.isSuccess) {
+                  this.socketIoService.player = res3.data;
 
-                this.navigateToRoom(true);
-              }
-            });
+                  this.navigateToRoom(true);
+                }
+              });
+            }
+          },
+          error: (error) => {
+            this.popMessage('Incorrect pin...', "Error", "error");
           }
-        },
-      });
+        });
+      }
+      else {
+        this.popMessage('Must enter your pin...', "Info", "info");
+      }
+
     }
     else {
       this.popMessage('Username cannot be empty before creating a room', "Error", "error")
@@ -81,49 +102,70 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
 
   enterRoom() {
     if (this.usernameFormControl.value) {
-      this.popMessage('Entering room...', "Info", "info");
-      this.gameService.getPlayerByName(this.usernameFormControl.value).subscribe({
-        next: res => {
-          if (res.isSuccess) {
-            this.socketIoService.player = res.data[0];
+      if (this.pinFormControl.value) {
+        this.popMessage('Entering room...', "Info", "info");
+        this.gameService.getPlayerByName(this.usernameFormControl.value, this.pinFormControl.value).subscribe({
+          next: res => {
+            if (res.isSuccess) {
+              this.socketIoService.player = res.data[0];
 
-            this.navigateToRoom();
-          }
-          else {
-            this.gameService.createPlayer({
-              playerName: this.usernameFormControl.value,
-              statusId: 1,
-              mahjong: {
-                handTiles: {
-                  mahjongTile: [],
-                  point: 0
+              this.navigateToRoom();
+            }
+            else {
+              this.gameService.createPlayer({
+                playerName: this.usernameFormControl.value,
+                pin: this.pinFormControl.value,
+                statusId: 1,
+                mahjong: {
+                  handTiles: {
+                    mahjongTile: [],
+                    point: 0
+                  },
+                  publicTiles: {
+                    mahjongTile: [],
+                    point: 0
+                  },
+                  flowerTiles: {
+                    mahjongTile: [],
+                    point: 0
+                  }
                 },
-                publicTiles: {
-                  mahjongTile: [],
-                  point: 0
+                direction: 0,
+                action: {
+                  isPongable: false,
+                  isKongable: false,
+                  isChowable: false,
+                  isWinnable: false
                 },
-                flowerTiles: {
-                  mahjongTile: [],
-                  point: 0
+                drawAction: {
+                  isDrawFlower: false,
+                  isDrawKong: false,
+                  isDrawSecondKong: false,
+                  isDrawLastTile: false,
+                  isGetPong: false,
+                  isKaLong: false,
+                  isSoloPong: false,
+                  isStealKong: false,
+                  isSoloDraw: false,
                 }
-              },
-              direction: 0,
-              action: {
-                isPongable: false,
-                isKongable: false,
-                isChowable: false,
-                isWinnable: false
-              }
-            } as PlayerDto).subscribe(res => {
-              if (res.isSuccess) {
-                this.socketIoService.player = res.data;
+              } as PlayerDto).subscribe(res => {
+                if (res.isSuccess) {
+                  this.socketIoService.player = res.data;
 
-                this.navigateToRoom();
-              }
-            });
+                  this.navigateToRoom();
+                }
+              });
+            }
+          },
+          error: (error) => {
+            this.popMessage('Incorrect pin...', "Error", "error");
           }
-        }
-      });
+        });
+      }
+      else {
+        this.popMessage('Must enter your pin...', "Info", "info");
+      }
+
     }
     else {
       this.popMessage('Username cannot be empty before creating a room', "Error", "error")

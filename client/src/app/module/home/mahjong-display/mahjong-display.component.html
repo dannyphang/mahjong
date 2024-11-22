@@ -1,14 +1,74 @@
+<app-toast></app-toast>
+
 <div
-  class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap"
-  cdkDropList
-  cdkDropListOrientation="horizontal"
-  (cdkDropListDropped)="drop($event)"
+  class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap tw-gap-[var(--content-gap)]"
 >
-  <div *ngFor="let mahjong of tempArray; let i = index" class="tw-mx-[-4px]">
+  <div *ngFor="let mahjong of mahjongList; let i = index" class="tw-mx-[-4px]">
     <app-mahjong
       [mahjong]="mahjong"
-      cdkDrag
       (click)="mahjong.isSelected = true"
     ></app-mahjong>
+  </div>
+</div>
+
+<div class="tw-p-[var(--content-gap)] tw-gap-[var(--content-gap)]">
+  <div>Playground</div>
+
+  <app-base-multiselect
+    [options]="mahjongOptions"
+    [fieldControl]="publicFormControl"
+    [label]="'Public tile'"
+    [placeholder]="'select'"
+  ></app-base-multiselect>
+
+  <div class="tw-flex tw-flex-wrap tw-gap-[var(--content-gap)] tw-items-center">
+    <div
+      class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap"
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="drop($event, tempArray)"
+    >
+      <div
+        *ngFor="let mahjong of tempArray; let i = index"
+        class="tw-mx-[-4px] tw-gap-[var(--content-gap)] tw-flex"
+      >
+        <app-mahjong
+          [mahjong]="mahjong"
+          (click)="mahjong.isSelected = true"
+          cdkDrag
+        ></app-mahjong>
+        <div *ngIf="(i + 1) % 3 === 0"></div>
+      </div>
+    </div>
+  </div>
+
+  <app-base-multiselect
+    [options]="mahjongOptions"
+    [fieldControl]="handFormControl"
+    [label]="'hand tile'"
+    [placeholder]="'select'"
+  ></app-base-multiselect>
+
+  <div class="tw-flex tw-flex-wrap tw-gap-[var(--content-gap)] tw-items-center">
+    <div
+      class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap"
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="drop($event, tempArray2)"
+    >
+      <div
+        *ngFor="let mahjong of tempArray2; let i = index"
+        class="tw-mx-[-4px] tw-gap-[var(--content-gap)] tw-flex"
+      >
+        <app-mahjong
+          [mahjong]="mahjong"
+          (click)="mahjong.isSelected = true"
+          cdkDrag
+        ></app-mahjong>
+        <div *ngIf="(i + 1) % 3 === 0"></div>
+      </div>
+    </div>
+    <p-button [label]="'Check'" (onClick)="checkMahjongSetInfo()"></p-button>
+    <div>Points: {{ points }}</div>
   </div>
 </div>

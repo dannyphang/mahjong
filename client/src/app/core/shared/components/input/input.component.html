@@ -116,6 +116,22 @@
       <div *ngIf="suffix" class="suffix">{{ suffix }}</div>
     </div>
 
+    <!-- number -->
+    <div class="input-number-container" *ngIf="mode === 'pin'">
+      <p-inputOtp
+        [formControl]="fieldControl"
+        [integerOnly]="onlyNumber"
+        [length]="6"
+        [readonly]="disabled"
+        [mask]="true"
+      />
+
+      <img *ngIf="!!iconUrl" [src]="iconUrl" />
+      <img class="leftIcon" *ngIf="!!leftIconUrl" [src]="leftIconUrl" />
+      <div #prefix_content class="prefix" *ngIf="!!prefix">{{ prefix }}</div>
+      <div *ngIf="suffix" class="suffix">{{ suffix }}</div>
+    </div>
+
     <!-- label-text -->
     <div class="input-number-container" *ngIf="mode === 'label-text'">
       <app-base-label
