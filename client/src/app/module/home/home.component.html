@@ -1,7 +1,10 @@
 <app-toast></app-toast>
 
 <div class="lobby-container" (keydown.enter)="enterRoom()">
-  <div class="lobby-player-div" class="tw-mb-[var(--content-gap)]">
+  <div
+    class="lobby-player-div"
+    class="tw-mb-[var(--content-gap)] tw-gap-[var(--content-gap)] tw-flex"
+  >
     <app-base-input
       [label]="'Username'"
       [maxLength]="50"
@@ -10,6 +13,14 @@
       "
       [fieldControl]="usernameFormControl"
       [autoFocus]="true"
+      class="tw-w-full"
+    ></app-base-input>
+    <app-base-input
+      [label]="'Pin'"
+      [fieldControl]="pinFormControl"
+      [mode]="'pin'"
+      [onlyNumber]="true"
+      class="tw-w-full"
     ></app-base-input>
   </div>
 
