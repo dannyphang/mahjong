@@ -21,7 +21,7 @@ import { HelpToggleComponent } from './help-toggle/help-toggle.component';
     CommonSharedModule,
     MaterialModule,
     ComponentsModule,
-    PrimeNgModule
+    PrimeNgModule,
   ],
   providers: [
     DatePipe
