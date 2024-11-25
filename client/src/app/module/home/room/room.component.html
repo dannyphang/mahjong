@@ -85,7 +85,9 @@
       <div
         class="tw-flex tw-p-[var(--content-gap)] tw-gap-[var(--content-gap)] tw-items-center"
       >
-        <app-base-label [label]="p.playerName"></app-base-label>
+        <!-- <app-base-label [label]="p.playerName"></app-base-label> -->
+        <app-chip [label]="p.playerName" [removable]="false"></app-chip>
+
         <img
           class="direction-icon"
           [src]="'../../../../assets/images/mahjong/' + p.direction + '.png'"
@@ -108,7 +110,7 @@
           (onClick)="drawMahjong(p)"
           [outlined]="true"
           *ngIf="p.playerId === player.playerId"
-          [disabled]="room.gameOrder !== p.direction"
+          [disabled]="room.gameOrder !== p.direction || checkIsTileFullNow(p)"
         ></p-button>
 
         <!-- discard -->
@@ -116,7 +118,11 @@
           [label]="'Discard'"
           (onClick)="discardMahjong(p)"
           [outlined]="true"
-          [disabled]="room.gameOrder !== p.direction"
+          [disabled]="
+            room.gameOrder !== p.direction ||
+            checkIsTileSelected(p) ||
+            !checkIsTileFullNow(p)
+          "
           *ngIf="p.playerId === player.playerId"
         ></p-button>
 
@@ -125,7 +131,7 @@
           [label]="'Pong'"
           (onClick)="actionMahjong('pong', p)"
           [outlined]="true"
-          *ngIf="p.action.isPongable"
+          *ngIf="p.action.isPongable && p.playerId === player.playerId"
         ></p-button>
 
         <!-- kong -->
@@ -141,7 +147,16 @@
           [label]="'Self Kong'"
           (onClick)="actionMahjong('self-kong', p)"
           [outlined]="true"
-          *ngIf="p.action.isSelfKongable"
+          [disabled]="checkIsTileSelected(p)"
+          *ngIf="p.action.isSelfKongable && p.playerId === player.playerId"
+        ></p-button>
+
+        <!-- chow -->
+        <p-button
+          [label]="'Chow'"
+          (onClick)="actionMahjong('chow', p)"
+          [outlined]="true"
+          *ngIf="p.action.isChowable && p.playerId === player.playerId"
         ></p-button>
 
         <!-- check point -->
@@ -183,7 +198,7 @@
             <app-mahjong
               [mahjong]="mahjong"
               cdkDrag
-              (click)="mahjong.isSelected = true"
+              (click)="(mahjong.isSelected != mahjong.isSelected)"
               *ngIf="p.playerId === player.playerId"
               (selectedTile)="selectedTileOutput($event, p)"
             ></app-mahjong>
@@ -205,7 +220,10 @@
               *ngFor="let mahjong of group.mahjongTile; let i = index"
               class="tw-mx-[-4px]"
             >
-              <app-mahjong [mahjong]="mahjong"></app-mahjong>
+              <app-mahjong
+                [mahjong]="mahjong"
+                [selectable]="false"
+              ></app-mahjong>
             </div>
           </div>
         </div>
@@ -213,3 +231,50 @@
     </div>
   </section>
 </div>
+
+<p-dialog
+  [(visible)]="chowVisible"
+  [modal]="true"
+  [closable]="false"
+  (onHide)="cancelChow()"
+>
+  <ng-template pTemplate="content">
+    <div>
+      <app-mahjong
+        [mahjong]="
+          room.mahjong.discardTiles[room.mahjong.discardTiles.length - 1]
+        "
+      ></app-mahjong>
+    </div>
+
+    <!-- hand set -->
+    <div
+      class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap"
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="drop($event, player.mahjong.handTiles.mahjongTile)"
+    >
+      <div
+        *ngFor="
+          let mahjong of player.mahjong.handTiles.mahjongTile;
+          let i = index
+        "
+        class="tw-mx-[-4px] tw-flex"
+      >
+        <app-mahjong
+          [mahjong]="mahjong"
+          cdkDrag
+          (click)="(mahjong.isSelected != mahjong.isSelected)"
+          (selectedTile)="selectedTileOutput2($event, player)"
+        ></app-mahjong>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <div class="tw-flex tw-justify-between">
+      <p-button [label]="'Cancel'" (onClick)="cancelChow()"></p-button>
+      <p-button [label]="'OK'" (onClick)="sendChow()"></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
