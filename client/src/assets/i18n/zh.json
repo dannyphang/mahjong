@@ -1,0 +1,33 @@
+{
+  "ACTION": {
+    "PONG": "碰",
+    "KONG": "杠",
+    "CHOW": "吃",
+    "SELF_KONG": "暗杠",
+    "WIN": "胡",
+    "DRAW": "摸牌",
+    "DISCARD": "丢牌",
+    "SORT": "整理",
+    "START_GAME": "开始游戏",
+    "MESSAGE": {
+      "SELECTE_TILE_DISCARD": "请选择一张麻将丢弃.",
+      "SELECTE_TILE_KONG": "请选择一张麻将杠.",
+      "SELECTE_TILE_CHOW": "请选择重新选择吃的麻将."
+    }
+  },
+  "ROOM": {
+    "GAME_TURN": "玩家回合: "
+  },
+  "BUTTON": {
+    "CANCEL": "取消",
+    "OK": "确定",
+    "ENTER_ROOM": "进入房间",
+    "CREATE_ROOM": "开新房间"
+  },
+  "MAHJONG": "麻将",
+  "INPUT": {
+    "USERNAME": "玩家名字",
+    "PIN": "密码",
+    "ROOM_ID": "房间号"
+  }
+}

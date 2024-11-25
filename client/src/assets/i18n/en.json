@@ -1,0 +1,33 @@
+{
+  "ACTION": {
+    "PONG": "Pong",
+    "KONG": "Kong",
+    "CHOW": "Chow",
+    "SELF_KONG": "Self Kong",
+    "WIN": "Win",
+    "DRAW": "Draw",
+    "DISCARD": "Discard",
+    "SORT": "Sort",
+    "START_GAME": "Start Game",
+    "MESSAGE": {
+      "SELECTE_TILE_DISCARD": "Please select a tile to discard.",
+      "SELECTE_TILE_KONG": "Please select a tile to Kong.",
+      "SELECTE_TILE_CHOW": "Please select again tiles to Chow."
+    }
+  },
+  "ROOM": {
+    "GAME_TURN": "Game Turn: "
+  },
+  "BUTTON": {
+    "CANCEL": "Cancel",
+    "OK": "OK",
+    "ENTER_ROOM": "Enter Room",
+    "CREATE_ROOM": "Create Room"
+  },
+  "MAHJONG": "Mahjong",
+  "INPUT": {
+    "USERNAME": "Username",
+    "PIN": "PIN",
+    "ROOM_ID": "Room ID"
+  }
+}
