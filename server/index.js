@@ -97,6 +97,12 @@ io.on("connection", (socket) => {
             io.in(roomU.roomId).emit("roomUpdate", roomU);
         });
     });
+
+    socket.on("chow", ({ room, player, selectedMahjongChow, selectedMahjong }) => {
+        games.chowAction(room, player, selectedMahjongChow, selectedMahjong).then((roomU) => {
+            io.in(roomU.roomId).emit("roomUpdate", roomU);
+        });
+    });
 });
 
 const consoleColor = {

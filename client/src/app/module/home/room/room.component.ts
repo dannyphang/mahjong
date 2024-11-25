@@ -16,6 +16,8 @@ export class RoomComponent extends BaseCoreAbstract {
   role = 'operative';
   room: RoomDto;
   player: PlayerDto;
+  chowVisible: boolean;
+  selectedChowList: MahjongDto[] = [];
 
   constructor(
     private socketIoService: SocketioService,
@@ -122,6 +124,7 @@ export class RoomComponent extends BaseCoreAbstract {
       if (room.response.isSuccess) {
         this.room = room;
         this.socketIoService.currentPlayer = room.playerList.find(p => p.playerId === this.player.playerId)!;
+        this.player = this.socketIoService.currentPlayer;
         this.popMessage(room.response.updateMessage, 'Info', 'info');
       }
       else {
@@ -171,6 +174,19 @@ export class RoomComponent extends BaseCoreAbstract {
     this.room.playerList.find(p => p.playerId === player.playerId)!.mahjong = player.mahjong;
   }
 
+  selectedTileOutput2(mahjong: MahjongDto, player: PlayerDto) {
+    player.mahjong.handTiles.mahjongTile.forEach(m => {
+      if (m.id === mahjong.id) {
+        m = mahjong;
+      }
+      if (m.isSelected && !this.selectedChowList.find(mah => mah.id === m.id)) {
+        this.selectedChowList.push(m);
+      }
+    });
+
+    this.room.playerList.find(p => p.playerId === player.playerId)!.mahjong = player.mahjong;
+  }
+
   anyButton() {
     this.nextTurn();
   }
@@ -182,6 +198,14 @@ export class RoomComponent extends BaseCoreAbstract {
     else {
       this.popMessage("Please select a tile to discard.", 'Error', 'error');
     }
+  }
+
+  checkIsTileSelected(player: PlayerDto) {
+    return !player.mahjong.handTiles.mahjongTile.find(m => m.isSelected);
+  }
+
+  checkIsTileFullNow(player: PlayerDto) {
+    return (player.mahjong.handTiles.mahjongTile.length - 2) % 3 === 0;
   }
 
   drawMahjong(player: PlayerDto) {
@@ -198,7 +222,11 @@ export class RoomComponent extends BaseCoreAbstract {
         this.socketIoService.sendMahjongAction('pong', this.room, player, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
         break;
       case 'chow':
-        this.socketIoService.sendMahjongAction('chow', this.room, player, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
+        this.player.mahjong.handTiles.mahjongTile.forEach(m => {
+          m.isSelected = false;
+        });
+        this.selectedChowList = [];
+        this.chowVisible = true;
         break;
       case 'kong':
         this.socketIoService.sendMahjongAction('kong', this.room, player, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
@@ -222,5 +250,26 @@ export class RoomComponent extends BaseCoreAbstract {
         console.log(res.data)
       }
     })
+  }
+
+  cancelChow() {
+    this.player.mahjong.handTiles.mahjongTile.forEach(m => {
+      m.isSelected = false;
+    });
+
+    this.room.playerList.find(p => p.playerId === this.player.playerId)!.mahjong = this.player.mahjong;
+    this.selectedChowList = [];
+    this.chowVisible = false;
+  }
+
+  sendChow() {
+    console.log(this.selectedChowList)
+    if (this.selectedChowList.length !== 2) {
+      this.popMessage("Please select again tiles to Chow.", 'Error', 'error');
+    }
+    else {
+      this.socketIoService.sendChow(this.room, this.player, this.selectedChowList, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
+      this.cancelChow();
+    }
   }
 }
