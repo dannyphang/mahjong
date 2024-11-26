@@ -136,7 +136,8 @@ export class RoomComponent extends BaseCoreAbstract {
   }
 
   startGame() {
-    this.socketIoService.startGame(this.room);
+    // this.socketIoService.startGame(this.room);
+    this.socketIoService.startTestGame(this.room);
   }
 
   updateRoom(room: RoomDto) {
@@ -243,6 +244,9 @@ export class RoomComponent extends BaseCoreAbstract {
           this.socketIoService.sendMahjongAction('self-kong', this.room, player, selectedMahjong);
         }
         break;
+      case 'win':
+        this.checkPoint(player)
+        break;
     }
   }
 
@@ -250,6 +254,9 @@ export class RoomComponent extends BaseCoreAbstract {
     this.gameService.getCalculatePoint(player).subscribe(res => {
       if (res.isSuccess) {
         console.log(res.data)
+      }
+      else {
+        console.log('not winning', res.data)
       }
     })
   }
