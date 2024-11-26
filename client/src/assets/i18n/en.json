@@ -12,7 +12,12 @@
     "MESSAGE": {
       "SELECTE_TILE_DISCARD": "Please select a tile to discard.",
       "SELECTE_TILE_KONG": "Please select a tile to Kong.",
-      "SELECTE_TILE_CHOW": "Please select again tiles to Chow."
+      "SELECTE_TILE_CHOW": "Please select again tiles to Chow.",
+      "INCORRECT_PIN": "Incorrect Pin...",
+      "MUST_ENTER_PIN": "Must enter Pin.",
+      "ENTERING_ROOM": "Entering room...",
+      "USERNAME_CANNOT_EMPTY": "Must enter Username.",
+      "ROOM_MAX_PLAYER": "This room is fulled."
     }
   },
   "ROOM": {

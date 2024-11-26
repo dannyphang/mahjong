@@ -12,7 +12,12 @@
     "MESSAGE": {
       "SELECTE_TILE_DISCARD": "请选择一张麻将丢弃.",
       "SELECTE_TILE_KONG": "请选择一张麻将杠.",
-      "SELECTE_TILE_CHOW": "请选择重新选择吃的麻将."
+      "SELECTE_TILE_CHOW": "请选择重新选择吃的麻将.",
+      "INCORRECT_PIN": "密码错误",
+      "MUST_ENTER_PIN": "需输入密码.",
+      "ENTERING_ROOM": "正在进入房间...",
+      "USERNAME_CANNOT_EMPTY": "需输入玩家名字.",
+      "ROOM_MAX_PLAYER": "房间已满."
     }
   },
   "ROOM": {

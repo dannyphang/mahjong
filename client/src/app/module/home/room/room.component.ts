@@ -104,7 +104,7 @@ export class RoomComponent extends BaseCoreAbstract {
 
   recieveJoinedPlayers() {
     this.socketIoService.recieveJoinedPlayers().subscribe(roomU => {
-      this.popMessage(roomU.response.updateMessage, 'Info', 'info');
+      this.popMessage(roomU.response.updateMessage, 'info');
 
       let newRoom: RoomDto = {
         roomId: roomU.roomId,
@@ -127,10 +127,10 @@ export class RoomComponent extends BaseCoreAbstract {
         this.room = room;
         this.socketIoService.currentPlayer = room.playerList.find(p => p.playerId === this.player.playerId)!;
         this.player = this.socketIoService.currentPlayer;
-        this.popMessage(room.response.updateMessage, 'Info', 'info');
+        this.popMessage(room.response.updateMessage, 'info');
       }
       else {
-        this.popMessage(room.response.updateMessage, 'Error', 'error');
+        this.popMessage(room.response.updateMessage, 'error');
       }
     });
   }
@@ -163,7 +163,7 @@ export class RoomComponent extends BaseCoreAbstract {
   }
 
   clickOtherPlayerTile() {
-    this.popMessage("Don't touch other player's mahjong tile!!", 'Error', 'error');
+    this.popMessage("Don't touch other player's mahjong tile!!", 'error');
   }
 
   selectedTileOutput(mahjong: MahjongDto, player: PlayerDto) {
@@ -198,7 +198,7 @@ export class RoomComponent extends BaseCoreAbstract {
       this.socketIoService.sendDiscardMahjongTile(this.room, player, player.mahjong.handTiles.mahjongTile.find(m => m.isSelected)!)
     }
     else {
-      this.popMessage(this.translateService.instant("ACTION.MESSAGE.SELECTE_TILE_DISCARD"), 'Error', 'error');
+      this.popMessage(this.translateService.instant("ACTION.MESSAGE.SELECTE_TILE_DISCARD"), 'error');
     }
   }
 
@@ -237,7 +237,7 @@ export class RoomComponent extends BaseCoreAbstract {
         let selectedMahjong = this.room.playerList.find(p => p.playerId === this.player.playerId)?.mahjong.handTiles.mahjongTile.find(m => m.isSelected);
 
         if (!selectedMahjong) {
-          this.popMessage(this.translateService.instant("ACTION.MESSAGE.SELECTE_TILE_KONG"), 'Error', 'error');
+          this.popMessage(this.translateService.instant("ACTION.MESSAGE.SELECTE_TILE_KONG"), 'error');
         }
         else {
           this.socketIoService.sendMahjongAction('self-kong', this.room, player, selectedMahjong);
@@ -266,7 +266,7 @@ export class RoomComponent extends BaseCoreAbstract {
 
   sendChow() {
     if (this.selectedChowList.length !== 2) {
-      this.popMessage(this.translateService.instant("ACTION.MESSAGE.SELECTE_TILE_CHOW"), 'Error', 'error');
+      this.popMessage(this.translateService.instant("ACTION.MESSAGE.SELECTE_TILE_CHOW"), 'error');
     }
     else {
       this.socketIoService.sendChow(this.room, this.player, this.selectedChowList, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
