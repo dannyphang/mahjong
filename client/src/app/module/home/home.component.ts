@@ -5,6 +5,7 @@ import { SocketioService } from '../../core/services/socketIo.service';
 import { GameService, MahjongActionDto, MahjongGroupDto, PlayerDto } from '../../core/services/game.service';
 import { BaseCoreAbstract } from '../../core/shared/base/base-core.abstract';
 import { MessageService } from 'primeng/api';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +20,8 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
     private router: Router,
     private socketIoService: SocketioService,
     private gameService: GameService,
-    protected override messageService: MessageService
+    protected override messageService: MessageService,
+    private translateService: TranslateService
   ) {
     super(messageService);
   }
@@ -31,7 +33,7 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
   createGame() {
     if (this.usernameFormControl.value) {
       if (this.pinFormControl.value) {
-        this.popMessage('Creating room...', "Info", "info");
+        this.popMessage(this.translateService.instant('ACTION.MESSAGE.CREATING_ROOM'), "info");
         this.gameService.getPlayerByName(this.usernameFormControl.value, this.pinFormControl.value).subscribe({
           next: res => {
             if (res.isSuccess) {
@@ -84,24 +86,23 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
             }
           },
           error: (error) => {
-            this.popMessage('Incorrect pin...', "Error", "error");
+            this.popMessage(this.translateService.instant('ACTION.MESSAGE.INCORRECT_PIN'), "error");
           }
         });
       }
       else {
-        this.popMessage('Must enter your pin...', "Info", "info");
+        this.popMessage(this.translateService.instant('ACTION.MESSAGE.MUST_ENTER_PIN'), "info");
       }
-
     }
     else {
-      this.popMessage('Username cannot be empty before creating a room', "Error", "error")
+      this.popMessage(this.translateService.instant('ACTION.MESSAGE.MUST_ENTER_PIN'), "error")
     }
   }
 
   enterRoom() {
     if (this.usernameFormControl.value) {
       if (this.pinFormControl.value) {
-        this.popMessage('Entering room...', "Info", "info");
+        this.popMessage(this.translateService.instant('ACTION.MESSAGE.ENTERING_ROOM'), "info");
         this.gameService.getPlayerByName(this.usernameFormControl.value, this.pinFormControl.value).subscribe({
           next: res => {
             if (res.isSuccess) {
@@ -154,17 +155,17 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
             }
           },
           error: (error) => {
-            this.popMessage('Incorrect pin...', "Error", "error");
+            this.popMessage(this.translateService.instant('ACTION.MESSAGE.INCORRECT_PIN'), "error");
           }
         });
       }
       else {
-        this.popMessage('Must enter your pin...', "Info", "info");
+        this.popMessage(this.translateService.instant('ACTION.MESSAGE.MUST_ENTER_PIN'), "info");
       }
 
     }
     else {
-      this.popMessage('Username cannot be empty before creating a room', "Error", "error")
+      this.popMessage(this.translateService.instant('ACTION.MESSAGE.USERNAME_CANNOT_EMPTY'), "error")
     }
   }
 
@@ -191,7 +192,7 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
             this.router.navigate(['/room', this.roomIdFormControl.value]);
           }
           else {
-            this.popMessage('Room player cannot more than 3 players', "Error", "error")
+            this.popMessage(this.translateService.instant('ACTION.MESSAGE.ROOM_MAX_PLAYER'), "error")
           }
         }
       });

@@ -8,6 +8,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class HelpToggleComponent {
   @Input() helpDialogVisible: boolean = false;
   @Output() dialogVisibleEmit: EventEmitter<boolean> = new EventEmitter();
+  @Input() translateVisible: boolean = true;
+  @Output() translateVisibleEmit: EventEmitter<boolean> = new EventEmitter();
 
   constructor() {
 

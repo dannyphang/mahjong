@@ -6,7 +6,7 @@
     class="tw-mb-[var(--content-gap)] tw-gap-[var(--content-gap)] tw-flex"
   >
     <app-base-input
-      [label]="'Username'"
+      [label]="'INPUT.USERNAME' | translate"
       [maxLength]="50"
       [iconLabelTooltip]="
         'If the username is not existing in any room, the user will be able to enter any room, else the user will be bring to the room'
@@ -16,7 +16,7 @@
       class="tw-w-full"
     ></app-base-input>
     <app-base-input
-      [label]="'Pin'"
+      [label]="'INPUT.PIN' | translate"
       [fieldControl]="pinFormControl"
       [mode]="'pin'"
       [onlyNumber]="true"
@@ -25,13 +25,19 @@
   </div>
 
   <app-base-input
-    [label]="'Room ID'"
+    [label]="'INPUT.ROOM_ID' | translate"
     [fieldControl]="roomIdFormControl"
   ></app-base-input>
 
   <div class="tw-flex tw-mt-[var(--content-gap)] tw-justify-between">
-    <p-button [label]="'Enter Room'" (onClick)="enterRoom()"></p-button>
-    <p-button [label]="'Create Room'" (onClick)="createGame()"></p-button>
-    <p-button [label]="'Mahjong'" (onClick)="tile()"></p-button>
+    <p-button
+      [label]="'BUTTON.ENTER_ROOM' | translate"
+      (onClick)="enterRoom()"
+    ></p-button>
+    <p-button
+      [label]="'BUTTON.CREATE_ROOM' | translate"
+      (onClick)="createGame()"
+    ></p-button>
+    <p-button [label]="'MAHJONG' | translate" (onClick)="tile()"></p-button>
   </div>
 </div>

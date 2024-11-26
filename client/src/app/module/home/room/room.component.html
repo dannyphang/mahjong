@@ -16,7 +16,7 @@
     <div class="tw-flex tw-gap-[var(--content-gap)]">
       <!-- start game -->
       <p-button
-        [label]="'Start Game'"
+        [label]="'ACTION.START_GAME' | translate"
         (onClick)="startGame()"
         *ngIf="player.playerId === room.roomOwnerId"
       ></p-button>
@@ -55,7 +55,7 @@
     <div
       class="tw-flex tw-gap-[var(--content-gap)] tw-p-[var(--content-gap)] tw-justify-center tw-items-center"
     >
-      <app-base-label [label]="'Game Turn: '"></app-base-label>
+      <app-base-label [label]="'ROOM.GAME_TURN' | translate"></app-base-label>
       <img
         [src]="'../../../../assets/images/mahjong/' + room.gameOrder + '.png'"
       />
@@ -85,7 +85,6 @@
       <div
         class="tw-flex tw-p-[var(--content-gap)] tw-gap-[var(--content-gap)] tw-items-center"
       >
-        <!-- <app-base-label [label]="p.playerName"></app-base-label> -->
         <app-chip [label]="p.playerName" [removable]="false"></app-chip>
 
         <img
@@ -98,7 +97,7 @@
 
         <!-- sort -->
         <p-button
-          [label]="'Sort'"
+          [label]="'ACTION.SORT' | translate"
           (onClick)="sortMahjongList(p)"
           [outlined]="true"
           *ngIf="p.playerId === player.playerId"
@@ -106,7 +105,7 @@
 
         <!-- draw -->
         <p-button
-          [label]="'Draw'"
+          [label]="'ACTION.DRAW' | translate"
           (onClick)="drawMahjong(p)"
           [outlined]="true"
           *ngIf="p.playerId === player.playerId"
@@ -115,7 +114,7 @@
 
         <!-- discard -->
         <p-button
-          [label]="'Discard'"
+          [label]="'ACTION.DISCARD' | translate"
           (onClick)="discardMahjong(p)"
           [outlined]="true"
           [disabled]="
@@ -128,7 +127,7 @@
 
         <!-- pong -->
         <p-button
-          [label]="'Pong'"
+          [label]="'ACTION.PONG' | translate"
           (onClick)="actionMahjong('pong', p)"
           [outlined]="true"
           *ngIf="p.action.isPongable && p.playerId === player.playerId"
@@ -136,7 +135,7 @@
 
         <!-- kong -->
         <p-button
-          [label]="'Kong'"
+          [label]="'ACTION.KONG' | translate"
           (onClick)="actionMahjong('kong', p)"
           [outlined]="true"
           *ngIf="p.action.isKongable"
@@ -144,7 +143,7 @@
 
         <!-- self kong -->
         <p-button
-          [label]="'Self Kong'"
+          [label]="'ACTION.SELF_KONG' | translate"
           (onClick)="actionMahjong('self-kong', p)"
           [outlined]="true"
           [disabled]="checkIsTileSelected(p)"
@@ -153,7 +152,7 @@
 
         <!-- chow -->
         <p-button
-          [label]="'Chow'"
+          [label]="'ACTION.CHOW' | translate"
           (onClick)="actionMahjong('chow', p)"
           [outlined]="true"
           *ngIf="p.action.isChowable && p.playerId === player.playerId"
@@ -273,8 +272,15 @@
 
   <ng-template pTemplate="footer">
     <div class="tw-flex tw-justify-between">
-      <p-button [label]="'Cancel'" (onClick)="cancelChow()"></p-button>
-      <p-button [label]="'OK'" (onClick)="sendChow()"></p-button>
+      <p-button
+        [label]="'BUTTON.CANCEL' | translate"
+        (onClick)="cancelChow()"
+        [outlined]="true"
+      ></p-button>
+      <p-button
+        [label]="'BUTTON.OK' | translate"
+        (onClick)="sendChow()"
+      ></p-button>
     </div>
   </ng-template>
 </p-dialog>

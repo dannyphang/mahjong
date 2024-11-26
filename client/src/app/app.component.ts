@@ -12,7 +12,8 @@ export class AppComponent {
   constructor(
     private translateService: TranslateService
   ) {
-    this.translateService.use('en');
+    this.translateService.use('zh');
+
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
       const newColorScheme = event.matches ? "dark" : "light";
       console.log(newColorScheme)

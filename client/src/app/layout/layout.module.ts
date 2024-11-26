@@ -8,13 +8,15 @@ import { MaterialModule } from '../core/shared/modules/material.module';
 import { ComponentsModule } from '../core/shared/components/components.module';
 import { PrimeNgModule } from '../core/shared/modules/primeng.module';
 import { HelpToggleComponent } from './help-toggle/help-toggle.component';
+import { TranslateToggleComponent } from './translate-toggle/translate-toggle.component';
 
 @NgModule({
   declarations: [
     LayoutComponent,
     HeaderComponent,
     FooterComponent,
-    HelpToggleComponent
+    HelpToggleComponent,
+    TranslateToggleComponent
   ],
   imports: [
     CommonModule,
