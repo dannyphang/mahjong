@@ -9,6 +9,7 @@
     "DISCARD": "丢牌",
     "SORT": "整理",
     "START_GAME": "开始游戏",
+    "PASS": "过",
     "MESSAGE": {
       "SELECTE_TILE_DISCARD": "请选择一张麻将丢弃.",
       "SELECTE_TILE_KONG": "请选择一张麻将杠.",

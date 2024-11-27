@@ -63,7 +63,8 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                   isKongable: false,
                   isChowable: false,
                   isWinnable: false,
-                  isSelfKongable: false
+                  isSelfKongable: false,
+                  isSecondPongable: false,
                 },
                 drawAction: {
                   isDrawFlower: false,
@@ -133,7 +134,8 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                   isKongable: false,
                   isChowable: false,
                   isWinnable: false,
-                  isSelfKongable: false
+                  isSelfKongable: false,
+                  isSecondPongable: false,
                 },
                 drawAction: {
                   isDrawFlower: false,

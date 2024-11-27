@@ -133,6 +133,14 @@
           *ngIf="p.action.isPongable && p.playerId === player.playerId"
         ></p-button>
 
+        <!-- second pong -->
+        <p-button
+          [label]="'pong 2' | translate"
+          (onClick)="actionMahjong('pong-2', p)"
+          [outlined]="true"
+          *ngIf="p.action.isSecondPongable && p.playerId === player.playerId"
+        ></p-button>
+
         <!-- kong -->
         <p-button
           [label]="'ACTION.KONG' | translate"
@@ -171,6 +179,20 @@
           [label]="'Check'"
           (onClick)="checkPoint(p)"
           [outlined]="true"
+        ></p-button>
+
+        <!-- cancel action -->
+        <p-button
+          [label]="'ACTION.PASS' | translate"
+          (onClick)="checkPoint(p)"
+          [outlined]="true"
+          *ngIf="
+            p.playerId === player.playerId &&
+            (p.action.isChowable ||
+              p.action.isKongable ||
+              p.action.isPongable ||
+              p.action.isSecondPongable)
+          "
         ></p-button>
       </div>
 

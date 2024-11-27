@@ -108,6 +108,7 @@ export class MahjongDto {
 
 export class MahjongActionDto {
     isPongable: boolean;
+    isSecondPongable: boolean;
     isKongable: boolean;
     isChowable: boolean;
     isWinnable: boolean;

@@ -104,7 +104,9 @@ export class RoomComponent extends BaseCoreAbstract {
 
   recieveJoinedPlayers() {
     this.socketIoService.recieveJoinedPlayers().subscribe(roomU => {
-      this.popMessage(roomU.response.updateMessage, 'info');
+      if (roomU.response?.updateMessage) {
+        this.popMessage(roomU.response.updateMessage, 'info');
+      }
 
       let newRoom: RoomDto = {
         roomId: roomU.roomId,
@@ -136,8 +138,8 @@ export class RoomComponent extends BaseCoreAbstract {
   }
 
   startGame() {
-    // this.socketIoService.startGame(this.room);
-    this.socketIoService.startTestGame(this.room);
+    this.socketIoService.startGame(this.room);
+    // this.socketIoService.startTestGame(this.room);
   }
 
   updateRoom(room: RoomDto) {
