@@ -36,8 +36,38 @@ const io = new socketIo.Server(server, {
     },
 });
 
+const consoleColor = {
+    Reset: "\x1b[0m",
+    Bright: "\x1b[1m",
+    Dim: "\x1b[2m",
+    Underscore: "\x1b[4m",
+    Blink: "\x1b[5m",
+    Reverse: "\x1b[7m",
+    Hidden: "\x1b[8m",
+    FgBlack: "\x1b[30m",
+    FgRed: "\x1b[31m",
+    FgGreen: "\x1b[32m",
+    FgYellow: "\x1b[33m",
+    FgBlue: "\x1b[34m",
+    FgMagenta: "\x1b[35m",
+    FgCyan: "\x1b[36m",
+    FgWhite: "\x1b[37m",
+    FgGray: "\x1b[90m",
+    BgBlack: "\x1b[40m",
+    BgRed: "\x1b[41m",
+    BgGreen: "\x1b[42m",
+    BgYellow: "\x1b[43m",
+    BgBlue: "\x1b[44m",
+    BgMagenta: "\x1b[45m",
+    BgCyan: "\x1b[46m",
+    BgWhite: "\x1b[47m",
+    BgGray: "\x1b[100m",
+};
+
+const consoleStr = (color) => `${consoleColor[color]}%s\x1b[0m`;
+
 io.on("connection", (socket) => {
-    console.log("a user connected");
+    console.log(consoleStr("FgMagenta"), `A user connected at ${new Date().toLocaleTimeString()}`);
 
     socket.on("startGame", ({ room }) => {
         games.createGame(room).then((roomU) => {
@@ -111,32 +141,4 @@ io.on("connection", (socket) => {
     });
 });
 
-const consoleColor = {
-    Reset: "\x1b[0m",
-    Bright: "\x1b[1m",
-    Dim: "\x1b[2m",
-    Underscore: "\x1b[4m",
-    Blink: "\x1b[5m",
-    Reverse: "\x1b[7m",
-    Hidden: "\x1b[8m",
-    FgBlack: "\x1b[30m",
-    FgRed: "\x1b[31m",
-    FgGreen: "\x1b[32m",
-    FgYellow: "\x1b[33m",
-    FgBlue: "\x1b[34m",
-    FgMagenta: "\x1b[35m",
-    FgCyan: "\x1b[36m",
-    FgWhite: "\x1b[37m",
-    FgGray: "\x1b[90m",
-    BgBlack: "\x1b[40m",
-    BgRed: "\x1b[41m",
-    BgGreen: "\x1b[42m",
-    BgYellow: "\x1b[43m",
-    BgBlue: "\x1b[44m",
-    BgMagenta: "\x1b[45m",
-    BgCyan: "\x1b[46m",
-    BgWhite: "\x1b[47m",
-    BgGray: "\x1b[100m",
-};
-
-server.listen(PORT, () => console.log(`${consoleColor.FgCyan}%s\x1b[0m`, "Server is running on port " + PORT));
+server.listen(PORT, () => console.log(consoleStr("FgCyan"), "Server is running on port " + PORT));

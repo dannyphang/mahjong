@@ -108,6 +108,12 @@ function createGame(room) {
 
 function testGame(room) {
     return new Promise(async function (resolve, reject) {
+        const snapshot = await db.default.db.collection(mahjongCollectionName).orderBy("id").where("statusId", "==", 1).get();
+
+        const mahjongList = snapshot.docs.map((doc) => {
+            return doc.data();
+        });
+
         let playerOneHand = [
             {
                 id: 19,
@@ -557,6 +563,20 @@ function testGame(room) {
             },
         ];
 
+        let remainingTiles = mahjongList;
+
+        playerOneHand.forEach((h) => {
+            remainingTiles = remainingTiles.filter((m) => m.id != h.id);
+        });
+
+        playerTwoHand.forEach((h) => {
+            remainingTiles = remainingTiles.filter((m) => m.id != h.id);
+        });
+
+        playerThreeHand.forEach((h) => {
+            remainingTiles = remainingTiles.filter((m) => m.id != h.id);
+        });
+
         // shuffle directions
         const directions = [1, 2, 3];
         const shuffledDirections = shuffleArray(directions);
@@ -566,6 +586,11 @@ function testGame(room) {
         });
 
         room.playerList.forEach((p) => {
+            p.mahjong.flowerTiles = {
+                mahjongTile: [],
+                point: 0,
+            };
+            p.mahjong.publicTiles = [];
             if (p.direction === 1) {
                 p.mahjong.handTiles.mahjongTile = playerOneHand;
             } else if (p.direction === 2) {
@@ -581,6 +606,10 @@ function testGame(room) {
         assignWinnable(room).then((roomWin) => {
             room.playerList = roomWin.playerList;
         });
+
+        room.mahjong.remainingTiles = remainingTiles;
+        room.mahjong.discardTiles = [];
+        room.gameOrder = 1;
 
         updateRoom(room).then((roomU) => {
             resolve({
@@ -758,7 +787,6 @@ function discardMahjong(room, player, discardedMahjongTile) {
                         if (isNextPlayer(room, player, p)) {
                             const chowable = checkChow(p.mahjong.handTiles.mahjongTile, discardedMahjongTile);
                             p.action.isChowable = chowable;
-                            console.log(p.action);
                         } else {
                             p.action.isChowable = false;
                         }
@@ -810,31 +838,48 @@ function drawMahjong(room, player) {
         if ((player.mahjong.handTiles.mahjongTile.length - 2) % 3 !== 0) {
             let newMahjong;
             do {
+                // check is this mahjong tile is last tile from the remaining list
+                let isLastTile = room.mahjong.remainingTiles.length === 0;
+
                 newMahjong = room.mahjong.remainingTiles[0];
                 room.mahjong.remainingTiles.shift();
+
                 if (newMahjong.type !== "Flower") {
+                    // add mahjong to hand tile list
                     room.playerList.find((p) => p.playerId === player.playerId).mahjong.handTiles.mahjongTile.push(newMahjong);
                 } else {
+                    // flower tile list add mahjong tile
                     room.playerList.find((p) => p.playerId === player.playerId).mahjong.flowerTiles.mahjongTile.push(newMahjong);
+
+                    // add flower points
                     room.playerList.find((p) => p.playerId === player.playerId).mahjong.flowerTiles.point += calculateFlowerTilePoints(
                         newMahjong,
                         room.playerList.find((p) => p.playerId === player.playerId)
                     );
+
+                    room.playerList.find((p) => p.playerId === player.playerId).drawAction = {
+                        isDrawFlower: true,
+                        isDrawKong: false,
+                        isDrawSecondKong: false,
+                        isGetKong: false,
+                        isGetPong: false,
+                        isStealKong: false,
+                        isKaLong: false,
+                        isSoloPong: false,
+                        isDrawLastTile: isLastTile,
+                        isSoloDraw: true,
+                    };
                 }
             } while (newMahjong.type === "Flower");
 
-            // if the new draw tile is the kong able tile on hand set, then player.action.isKongable = true
-            if (isKongableFromHandSet(newMahjong, player.mahjong.handTiles.mahjongTile)) {
-                room.playerList.find((p) => p.playerId === player.playerId).action.isSelfKongable = true;
-            }
-
             room.playerList.forEach((p) => {
-                p.action.isPongable = false;
-                p.action.isKongable = false;
-                p.action.isChowable = false;
-                p.action.isSelfKongable = false;
-                p.action.isWinnable = false;
-
+                p.action = {
+                    isPongable: false,
+                    isKongable: false,
+                    isChowable: false,
+                    isSelfKongable: p.playerId === player.playerId && isKongableFromHandSet(newMahjong, player.mahjong.handTiles.mahjongTile),
+                    isWinnable: false,
+                };
                 updatePlayer(p).then((playerU) => {});
             });
 
@@ -927,6 +972,19 @@ function actions(action, room, player, selectedMahjong) {
                         }
 
                         p.mahjong.publicTiles.push({ mahjongTile: mahjongPongList });
+
+                        p.drawAction = {
+                            isDrawFlower: false,
+                            isDrawKong: false,
+                            isDrawSecondKong: false,
+                            isGetKong: false,
+                            isGetPong: true,
+                            isStealKong: false,
+                            isKaLong: false,
+                            isSoloPong: false,
+                            isDrawLastTile: false,
+                            isSoloDraw: false,
+                        };
                     }
                 });
                 break;
@@ -949,6 +1007,19 @@ function actions(action, room, player, selectedMahjong) {
                         p.mahjong.publicTiles.push({ mahjongTile: mahjongKongList });
 
                         drawMahjong(room, p).then((draw) => {});
+
+                        p.drawAction = {
+                            isDrawFlower: false,
+                            isDrawKong: false,
+                            isDrawSecondKong: false,
+                            isGetKong: true,
+                            isGetPong: false,
+                            isStealKong: false,
+                            isKaLong: false,
+                            isSoloPong: false,
+                            isDrawLastTile: false,
+                            isSoloDraw: false,
+                        };
                     }
                 });
                 break;
@@ -969,7 +1040,29 @@ function actions(action, room, player, selectedMahjong) {
                         mahjongSelfKongList.push(selectedMahjong);
                         p.mahjong.publicTiles.push({ mahjongTile: mahjongSelfKongList });
 
-                        drawMahjong(room, p).then((draw) => {});
+                        let isSecondKong = false;
+                        if (p.drawAction.isDrawKong || p.drawAction.isGetKong) {
+                            isSecondKong = true;
+                        }
+
+                        p.drawAction = {
+                            isDrawFlower: false,
+                            isDrawKong: true,
+                            isDrawSecondKong: isSecondKong,
+                            isGetKong: false,
+                            isGetPong: false,
+                            isStealKong: false,
+                            isKaLong: false,
+                            isSoloPong: false,
+                            isDrawLastTile: false,
+                            isSoloDraw: false,
+                        };
+
+                        drawMahjong(room, p).then((drawRoomU) => {
+                            room = {
+                                ...drawRoomU,
+                            };
+                        });
                     }
                 });
                 break;
@@ -1068,6 +1161,8 @@ function calculateMahjongSetPoints(mahjong, player) {
             isMenQianQing: false,
             isKongShangKong: false,
             isHaiDiLauYue: false,
+            isHuaShang: false,
+            isKongShang: false,
         };
 
         let mahjongList = [];
@@ -1093,71 +1188,51 @@ function calculateMahjongSetPoints(mahjong, player) {
         if (isWinningList(mahjongList)) {
             try {
                 // is 对对胡?
-                if (isDuiDuiHu(mahjongList)) {
-                    combination.isDuiDuiHu = true;
-                }
+                combination.isDuiDuiHu = isDuiDuiHu(mahjongList);
 
                 // check if 全同子?
                 // every() : Checks if all elements in the array satisfy the condition
                 let tempMahjongListForQuanTongZi = mahjongList.filter((m) => !m.joker);
-                if (tempMahjongListForQuanTongZi.every((m) => m.type === "Circles")) {
-                    combination.isQuanTongZi = true;
-                }
+                combination.isQuanTongZi = tempMahjongListForQuanTongZi.every((m) => m.type === "Circles");
 
                 // check if 平胡?
-                if (combination.isQuanTongZi && checkPingHu(mahjongList) && !player.drawAction.isKaLong) {
-                    combination.isPingHu = true;
-                }
+                combination.isPingHu = combination.isQuanTongZi && checkPingHu(mahjongList) && !player.drawAction.isKaLong;
 
                 // check if 全字?
                 let tempMahjongListForQuanZi = mahjongList.filter((m) => !m.joker);
-                if (tempMahjongListForQuanZi.every((m) => m.type !== "Circles")) {
-                    combination.isQuanZi = true;
-                }
+                combination.isQuanZi = tempMahjongListForQuanZi.every((m) => m.type !== "Circles");
 
-                if (isYaokyuu(mahjongList)) {
-                    combination.isYaoJiu = true;
-                }
+                // check if 幺九
+                combination.isYaoJiu = isYaokyuu(mahjongList);
 
                 // check if 大三元?
-                if (isBigThreeDragons(mahjongList)) {
-                    combination.isDaSanYuan = true;
-                }
+                combination.isDaSanYuan = isBigThreeDragons(mahjongList);
 
                 // check if 小三元?
-                if (isSmallThreeDragons(mahjongList)) {
-                    combination.isXiaoSanYuan = true;
-                }
+                combination.isXiaoSanYuan = isSmallThreeDragons(mahjongList);
 
                 // check if 大四喜?
-                if (isBigFourWinds(mahjongList)) {
-                    combination.isDaSiXi = true;
-                }
+                combination.isDaSiXi = isBigFourWinds(mahjongList);
 
                 // check if 小四喜?
-                if (isSmallFourWinds(mahjongList)) {
-                    combination.isXiaoSiXi = true;
-                }
+                combination.isXiaoSiXi = isSmallFourWinds(mahjongList);
 
                 // check if 门前清
-                if (player.mahjong.flowerTiles.mahjongTile.length === 0) {
-                    // combination.isMenQianQing = true;
-                }
+                combination.isMenQianQing = player.mahjong.flowerTiles.mahjongTile.length === 0;
 
                 // check if 坎坎胡
-                if (isDuiDuiHu(mahjongList) && (player.drawAction.isSoloDraw || player.drawAction.isSoloPong) && player.mahjong.publicTiles.mahjongTile.length === 0) {
-                    combination.isKanKanHu = true;
-                }
-
+                combination.isKanKanHu = isDuiDuiHu(mahjongList) && (player.drawAction.isSoloDraw || player.drawAction.isSoloPong) && player.mahjong.publicTiles.length === 0;
                 // check if 海底捞月
-                if (player.drawAction.isDrawLastTile) {
-                    combination.isHaiDiLauYue = true;
-                }
+                combination.isHaiDiLauYue = player.drawAction.isDrawLastTile;
 
                 // check if 扛上扛
-                if (player.drawAction.isDrawSecondKong) {
-                    combination.isKongShangKong = true;
-                }
+                combination.isKongShangKong = player.drawAction.isDrawSecondKong;
+
+                // check if 扛上
+                combination.isKongShang = player.drawAction.isDrawKong || player.drawAction.isGetKong;
+
+                // check if 花上
+                combination.isHuaShang = player.drawAction.isDrawFlower;
             } catch (err) {
                 console.log(err);
                 resolve({
@@ -1167,6 +1242,8 @@ function calculateMahjongSetPoints(mahjong, player) {
             }
 
             // check point
+            finalPoint += player.mahjong.flowerTiles.point;
+
             finalPoint += getPointsFromCanon(mahjongList, player);
 
             // check player draw action
@@ -1610,7 +1687,7 @@ function getPointsFromCanon(mahjongList, player) {
 
     for (let set of sets) {
         if (isValidSet(set, true)) {
-            set = set.sort((a, b) => a.order - b.order);
+            set = set.sort((a, b) => b.order - a.order);
             if (set[0].code === "east" && player.direction === 1) {
                 points += 2;
             } else if ((set[0].direction === 0 || set[0].direction === player.direction) && set[0].type !== "Circles" && !set[0].joker) {
@@ -1640,8 +1717,7 @@ function isKongableFromHandSet(drawedMahjong, mahjongList) {
             sameTile++;
         }
     });
-
-    return sameTile === 3;
+    return sameTile >= 3;
 }
 
 function checkChow(handTiles, discardedTile) {
