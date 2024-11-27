@@ -43,6 +43,10 @@ export class SocketioService {
         this.socket.emit('startGame', { room: room });
     }
 
+    startTestGame(room: RoomDto) {
+        this.socket.emit('testGame', { room: room });
+    }
+
     sendRoomUpdate(room: RoomDto) {
         this.socket.emit('roomUpdate', { room: room });
     }

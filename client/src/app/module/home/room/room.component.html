@@ -158,6 +158,14 @@
           *ngIf="p.action.isChowable && p.playerId === player.playerId"
         ></p-button>
 
+        <!-- win -->
+        <p-button
+          [label]="'ACTION.WIN' | translate"
+          (onClick)="actionMahjong('win', p)"
+          [outlined]="true"
+          *ngIf="p.playerId === player.playerId"
+        ></p-button>
+
         <!-- check point -->
         <p-button
           [label]="'Check'"

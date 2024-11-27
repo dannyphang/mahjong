@@ -3,7 +3,7 @@
     class="tw-relative"
     (click)="selectTile()"
     [ngClass]="{
-      'tw-top-[-10px]': mahjong.isSelected && !isHide,
+      'tw-top-[-10px]': selectable && mahjong.isSelected && !isHide,
       'tile-div': selectable
     }"
   >

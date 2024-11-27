@@ -126,6 +126,9 @@ export class MahjongCombinationDto {
     isDaSiXi: boolean;
     isXiaoSiXi: boolean;
     isMenQianQing: boolean;
+
+    isHuaShang: boolean;
+    isKongShang: boolean;
 }
 
 export class MahjongCombinationGroupDto extends MahjongCombinationDto {
@@ -136,6 +139,7 @@ export class MahjongDrawActionDto {
     isDrawFlower: boolean;
     isDrawKong: boolean;
     isDrawSecondKong: boolean;
+    isGetKong: boolean;
     isGetPong: boolean;
     isStealKong: boolean;
     isKaLong: boolean;
