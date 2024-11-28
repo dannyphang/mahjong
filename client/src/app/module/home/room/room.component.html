@@ -184,7 +184,7 @@
         <!-- cancel action -->
         <p-button
           [label]="'ACTION.PASS' | translate"
-          (onClick)="checkPoint(p)"
+          (onClick)="actionMahjong('pass', p)"
           [outlined]="true"
           *ngIf="
             p.playerId === player.playerId &&

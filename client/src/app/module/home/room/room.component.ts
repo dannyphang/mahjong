@@ -249,6 +249,8 @@ export class RoomComponent extends BaseCoreAbstract {
       case 'win':
         this.checkPoint(player)
         break;
+      case 'pass':
+        break;
     }
   }
 
