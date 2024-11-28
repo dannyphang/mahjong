@@ -138,8 +138,8 @@ export class RoomComponent extends BaseCoreAbstract {
   }
 
   startGame() {
-    this.socketIoService.startGame(this.room);
-    // this.socketIoService.startTestGame(this.room);
+    // this.socketIoService.startGame(this.room);
+    this.socketIoService.startTestGame(this.room);
   }
 
   updateRoom(room: RoomDto) {
