@@ -42,20 +42,19 @@ router.post("/", async (req, res) => {
 
 // get all mahjong
 router.get("/", async (req, res) => {
+    console.time("Fetch Mahjong Data");
     try {
         const snapshot = await db.default.db.collection(mahjongCollectionName).orderBy("order").where("statusId", "==", 1).get();
 
-        const list = snapshot.docs.map((doc) => {
-            return doc.data();
-        });
-
+        const list = snapshot.docs.map((doc) => doc.data());
+        console.timeEnd("Fetch Mahjong Data"); // Log duration
         res.status(200).json(responseModel({ data: list }));
     } catch (error) {
-        console.log("error", error);
+        console.error("Error fetching Mahjong data:", error);
         res.status(400).json(
             responseModel({
                 isSuccess: false,
-                responseMessage: error,
+                responseMessage: error.message,
             })
         );
     }
