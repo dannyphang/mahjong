@@ -1,5 +1,5 @@
 {
-    "name": "mahjong-socket-server",
+    "name": "mahjong-api-server",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
@@ -12,6 +12,7 @@
     "dependencies": {
         "express": "^4.17.1",
         "socket.io": "^3.0.4",
+        "firebase-admin": "^12.0.0",
         "cors": "^2.8.5",
         "dotenv": "^16.4.5"
     },
