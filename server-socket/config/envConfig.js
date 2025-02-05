@@ -1,7 +1,7 @@
 import env from "./environment.json" with { type: "json" };
 import envProd from "./environment.prod.json" with { type: "json" };
 
-let isDev = false;
+let isDev = true;
 
 const port = isDev ? env.port : envProd.port;
 
