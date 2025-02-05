@@ -1,56 +1,36 @@
 import * as config from "../config/envConfig.js";
-import http from "http";
-import https from "https";
+import axios from "axios";
 
-const port = config.apiBaseUrl.startsWith("https") ? https : http;
+const http = axios.create({
+    baseURL: config.apiBaseUrl,
+});
 
-function options(path, method) {
-    const { hostname, port, pathname } = new URL(`${config.apiBaseUrl}/${path}`);
-    return {
-        host: hostname, // Extract the hostname
-        port: port || config.port, // Extract the port or default to 80
-        path: pathname, // Extract the path
-        method: method,
-        headers: {
-            "Content-Type": "application/json",
-        },
-        timeout: 5000, // Set a timeout for requests
-    };
+function getMahjong() {
+    return http.get("mahjong");
 }
 
-async function callRESTAPI(path, method, retries = 3) {
-    while (retries > 0) {
-        try {
-            let req = port.request(options(path, method), (res) => {
-                let output = "";
-                res.setEncoding("utf8");
-                res.on("data", (chunk) => (output += chunk));
-                res.on("end", () => {
-                    resolve({
-                        statusCode: res.statusCode,
-                        data: JSON.parse(output),
-                    });
-                });
-            });
-
-            req.on("error", (err) => {
-                if (--retries === 0) {
-                    reject(new Error(`Request failed after retries: ${err.message}`));
-                }
-            });
-
-            req.setTimeout(10000, () => {
-                req.abort();
-                if (--retries === 0) {
-                    reject(new Error("Request timeout after retries"));
-                }
-            });
-
-            req.end();
-        } catch (error) {
-            if (--retries === 0) throw error;
-        }
-    }
+function updateRoom(room) {
+    return http.put("room", { room: room });
 }
 
-export { options, callRESTAPI };
+function updatePlayer(player) {
+    return http.put("player", { player: player });
+}
+
+function isNextPlayer(room, currentPlayer, targetPlayer) {
+    return http.post("mahjong/isNextPlayer", { room: room, currentPlayer: currentPlayer, targetPlayer: targetPlayer });
+}
+
+function checkChow(mahjongTile, discardedMahjongTile) {
+    return http.post("mahjong/checkChow", { mahjongTile: mahjongTile, discardedMahjongTile: discardedMahjongTile });
+}
+
+function calculateFlowerTilePoints(newMahjong, player) {
+    return http.post("mahjong/calculateFlowerTilePoints", { mahjong: newMahjong, player: player });
+}
+
+function isKongableFromHandSet(newMahjong, mahjongList) {
+    return http.post("mahjong/isKongableFromHandSet", { newMahjong: newMahjong, mahjongList: mahjongList });
+}
+
+export { getMahjong, updateRoom, updatePlayer, isNextPlayer, checkChow, calculateFlowerTilePoints, isKongableFromHandSet };

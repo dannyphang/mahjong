@@ -3,6 +3,7 @@ import express from "express";
 const router = Router();
 import * as db from "../firebase/firebase-admin.js";
 import responseModel from "../shared/function.js";
+import * as games from "../util/game.js";
 
 router.use(express.json());
 
@@ -42,12 +43,11 @@ router.post("/", async (req, res) => {
 
 // get all mahjong
 router.get("/", async (req, res) => {
-    console.time("Fetch Mahjong Data");
     try {
         const snapshot = await db.default.db.collection(mahjongCollectionName).orderBy("order").where("statusId", "==", 1).get();
 
         const list = snapshot.docs.map((doc) => doc.data());
-        console.timeEnd("Fetch Mahjong Data"); // Log duration
+
         res.status(200).json(responseModel({ data: list }));
     } catch (error) {
         console.error("Error fetching Mahjong data:", error);
@@ -122,6 +122,66 @@ router.post("/calculate_points", async (req, res) => {
             responseModel({
                 isSuccess: false,
                 responseMessage: error,
+            })
+        );
+    }
+});
+
+// get FlowerTilePoints
+router.post("/calculateFlowerTilePoints", async (req, res) => {
+    try {
+        res.status(200).json(responseModel({ data: games.calculateFlowerTilePoints(req.body.mahjong, req.body.player) }));
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(400).json(
+            responseModel({
+                isSuccess: false,
+                responseMessage: error.message,
+            })
+        );
+    }
+});
+
+// get kongableFromHandSet
+router.post("/isKongableFromHandSet", async (req, res) => {
+    try {
+        res.status(200).json(responseModel({ data: games.isKongableFromHandSet(req.body.newMahjong, req.body.mahjongList) }));
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(400).json(
+            responseModel({
+                isSuccess: false,
+                responseMessage: error.message,
+            })
+        );
+    }
+});
+
+// get checkChow
+router.post("/checkChow", async (req, res) => {
+    try {
+        res.status(200).json(responseModel({ data: games.checkChow(req.body.mahjongTile, req.body.discardedMahjongTile) }));
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(400).json(
+            responseModel({
+                isSuccess: false,
+                responseMessage: error.message,
+            })
+        );
+    }
+});
+
+// get isNextPlayer
+router.post("/isNextPlayer", async (req, res) => {
+    try {
+        res.status(200).json(responseModel({ data: games.isNextPlayer(req.body.room, req.body.currentPlayer, req.body.targetPlayer) }));
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(400).json(
+            responseModel({
+                isSuccess: false,
+                responseMessage: error.message,
             })
         );
     }

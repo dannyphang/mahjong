@@ -67,12 +67,6 @@ io.on("connection", (socket) => {
         });
     });
 
-    socket.on("testGame", ({ room }) => {
-        games.testGame(room).then((roomU) => {
-            io.in(roomU.roomId).emit("roomUpdate", roomU);
-        });
-    });
-
     socket.on("nextTurn", ({ room }) => {
         games.nextTurn(room).then((roomU) => {
             io.in(roomU.roomId).emit("roomUpdate", roomU);

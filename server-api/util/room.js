@@ -10,45 +10,64 @@ const roomCollectionName = "room";
 
 // create new room
 router.post("/", async (req, res) => {
-  try {
-    let newRef = db.default.db.collection(roomCollectionName).doc();
-    let room = {
-      roomId: newRef.id,
-      statusId: 1,
-      playerList: [],
-      gameStarted: true,
-      gameOrder: 0,
-      roomOwnerId: "",
-      mahjong: {
-        discardTiles: [],
-        remainingTiles: [],
-      },
-    };
+    try {
+        let newRef = db.default.db.collection(roomCollectionName).doc();
+        let room = {
+            roomId: newRef.id,
+            statusId: 1,
+            playerList: [],
+            gameStarted: true,
+            gameOrder: 0,
+            roomOwnerId: "",
+            mahjong: {
+                discardTiles: [],
+                remainingTiles: [],
+            },
+        };
 
-    await newRef.set(room);
+        await newRef.set(room);
 
-    res.status(200).json(responseModel({ data: room }));
-  } catch (error) {
-    console.log("error", error);
-    res.status(400).json(
-      responseModel({
-        isSuccess: false,
-        responseMessage: error,
-      })
-    );
-  }
+        res.status(200).json(responseModel({ data: room }));
+    } catch (error) {
+        console.log("error", error);
+        res.status(400).json(
+            responseModel({
+                isSuccess: false,
+                responseMessage: error,
+            })
+        );
+    }
 });
 
 // get room by id
 router.get("/:id", async (req, res) => {
-  const id = req.params.id;
-  try {
-    const snapshot = await db.default.db.collection(roomCollectionName).doc(id).get();
+    const id = req.params.id;
+    try {
+        const snapshot = await db.default.db.collection(roomCollectionName).doc(id).get();
 
-    const room = snapshot.data().statusId == 1 ? snapshot.data() : {};
+        const room = snapshot.data().statusId == 1 ? snapshot.data() : {};
 
-    res.status(200).json(responseModel({ data: room }));
-  } catch (error) {}
+        res.status(200).json(responseModel({ data: room }));
+    } catch (error) {}
+});
+
+// update room
+router.put("/", async (req, res) => {
+    try {
+        let room = req.body.room;
+        let newRef = db.default.db.collection(roomCollectionName).doc(room.roomId);
+        await newRef.update(room);
+
+        res.status(200).json(responseModel({ data: room }));
+    } catch (error) {
+        console.log("error", error);
+        res.status(400).json(
+            responseModel({
+                isSuccess: false,
+                responseMessage: error,
+            })
+        );
+    }
 });
 
 export default router;
