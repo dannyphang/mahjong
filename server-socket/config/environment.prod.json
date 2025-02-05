@@ -1,4 +1,4 @@
 {
-    "api": "https://mahjong-v2-me1t.vercel.app/",
-    "apiPort": 3000
+    "api": "https://mahjong-v2-me1t.vercel.app",
+    "apiPort": "3000"
 }

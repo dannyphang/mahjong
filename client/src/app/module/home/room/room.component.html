@@ -51,7 +51,7 @@
       </div>
     </div>
 
-    <!-- title area -->
+    <!-- Player turn area -->
     <div
       class="tw-flex tw-gap-[var(--content-gap)] tw-p-[var(--content-gap)] tw-justify-center tw-items-center"
     >
@@ -59,6 +59,7 @@
       <img
         [src]="'../../../../assets/images/mahjong/' + room.gameOrder + '.png'"
       />
+      <div>({{ returnPlayerTurnName() }})</div>
     </div>
 
     <!-- discard tile area -->

@@ -88,6 +88,9 @@ export class RoomComponent extends BaseCoreAbstract {
     this.socketIoService.sendPlayerQuitRoom(this.room, player);
   }
 
+  returnPlayerTurnName(): string {
+    return this.room.playerList.find(p => p.direction === this.room.gameOrder)?.playerName!;
+  }
 
   initRoom() {
     this.roomId = this.route.snapshot.paramMap.get('id') ?? 'undefined';
@@ -136,8 +139,8 @@ export class RoomComponent extends BaseCoreAbstract {
   }
 
   startGame() {
-    // this.socketIoService.startGame(this.room);
-    this.socketIoService.startTestGame(this.room);
+    this.socketIoService.startGame(this.room);
+    // this.socketIoService.startTestGame(this.room);
   }
 
   updateRoom(room: RoomDto) {
