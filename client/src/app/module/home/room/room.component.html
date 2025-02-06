@@ -159,6 +159,16 @@
           *ngIf="p.action.isChowable && p.playerId === player.playerId"
         ></p-button>
 
+        <!-- cancel -->
+        <p-button
+          [label]="'BUTTON.CANCEL' | translate"
+          (onClick)="actionMahjong('cancel', p)"
+          [outlined]="true"
+          *ngIf="
+            p.playerId === player.playerId && returnIsShowingCancelButton(p)
+          "
+        ></p-button>
+
         <!-- win -->
         <p-button
           [label]="'ACTION.WIN' | translate"
