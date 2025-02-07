@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { inject } from '@vercel/analytics';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,7 @@ export class AppComponent {
   constructor(
     private translateService: TranslateService
   ) {
+    inject();
     this.translateService.use('zh');
 
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
