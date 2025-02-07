@@ -7,9 +7,9 @@ export abstract class BaseCoreAbstract {
 
     }
 
-    popMessage(message: string, severity: string = 'success',) {
+    popMessage(message: string, severity: string = 'success', isLoading: boolean = false) {
         if (message.trim().length > 0) {
-            this.messageService.add({ severity: severity, detail: message });
+            this.messageService.add({ severity: isLoading ? 'info' : severity, detail: message, icon: isLoading ? "pi pi-spin pi-spinner" : undefined });
         }
     }
 }

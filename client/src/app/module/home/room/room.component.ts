@@ -142,6 +142,7 @@ export class RoomComponent extends BaseCoreAbstract {
   }
 
   startGame() {
+    this.popMessage(this.translateService.instant("ACTION.MESSAGE.STARTING_GAME"), "info", true);
     this.socketIoService.startGame(this.room);
     // this.socketIoService.startTestGame(this.room);
   }

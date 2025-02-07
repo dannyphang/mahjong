@@ -17,7 +17,8 @@
       "MUST_ENTER_PIN": "Must enter Pin.",
       "ENTERING_ROOM": "Entering room...",
       "USERNAME_CANNOT_EMPTY": "Must enter Username.",
-      "ROOM_MAX_PLAYER": "This room is fulled."
+      "ROOM_MAX_PLAYER": "This room is fulled.",
+      "STARTING_GAME": "Starting Game..."
     }
   },
   "ROOM": {

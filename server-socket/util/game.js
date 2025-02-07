@@ -1133,7 +1133,7 @@ function actions(action, room, player, selectedMahjong, selectedMahjongChow = []
                     if (room.waiting === 2) {
                         selectedMahjongChow = room.waitingChowTiles;
                     }
-                    console.log(selectedMahjongChow);
+
                     let list = selectedMahjongChow.concat(selectedMahjong);
                     list = list.sort((a, b) => a.code - b.code);
                     if ((await API.isConsecutive(list[0].code, list[1].code, list[2].code)).data.data) {
@@ -1148,7 +1148,7 @@ function actions(action, room, player, selectedMahjong, selectedMahjongChow = []
                         }
 
                         player.mahjong.publicTiles.push({ mahjongTile: newPublicGrpList });
-                        player.action.isChowable = false;
+                        player.action = {};
 
                         room.mahjong.discardTiles.find((m) => m.id === selectedMahjong.id).isTaken = true;
                         room.playerList.find((p) => p.playerId === player.playerId).mahjong = player.mahjong;
@@ -1178,10 +1178,6 @@ function actions(action, room, player, selectedMahjong, selectedMahjongChow = []
 
             // set the selected mahjong isTaken = true
             selectedMahjong.isTaken = action === "pong" || action === "kong" || action === "self-kong" || action === "chow";
-            let mahjongInDiscardTile = room.mahjong.discardTiles.find((m) => m.id === selectedMahjong.id);
-            if (mahjongInDiscardTile) {
-                mahjongInDiscardTile.isTaken = action === "pong" || action === "kong" || action === "self-kong" || action === "chow";
-            }
 
             if (action !== "cancel") {
                 room.playerList.forEach((p) => {
@@ -1202,6 +1198,11 @@ function actions(action, room, player, selectedMahjong, selectedMahjongChow = []
             room.waitingAction = action;
             room.waiting = 1;
             room.waitingChowTiles = selectedMahjongChow;
+
+            // reset action, so that the player cannot do any actions again
+            player.action = {};
+            room.playerList.find((p) => p.playerId === player.playerId).action = {};
+            updatePlayer(player);
         }
         updateRoom(room).then((roomU) => {
             resolve({
