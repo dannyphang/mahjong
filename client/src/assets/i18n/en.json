@@ -18,7 +18,8 @@
       "ENTERING_ROOM": "Entering room...",
       "USERNAME_CANNOT_EMPTY": "Must enter Username.",
       "ROOM_MAX_PLAYER": "This room is fulled.",
-      "STARTING_GAME": "Starting Game..."
+      "STARTING_GAME": "Starting Game...",
+      "DOING_ACTION": "Doing action: {{action}}..."
     }
   },
   "ROOM": {

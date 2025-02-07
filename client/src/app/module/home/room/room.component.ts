@@ -142,7 +142,7 @@ export class RoomComponent extends BaseCoreAbstract {
   }
 
   startGame() {
-    this.popMessage(this.translateService.instant("ACTION.MESSAGE.STARTING_GAME"), "info", true);
+    this.popMessage(this.translateService.instant("ACTION.MESSAGE.STARTING_GAME"), 'info', true);
     this.socketIoService.startGame(this.room);
     // this.socketIoService.startTestGame(this.room);
   }
@@ -227,6 +227,7 @@ export class RoomComponent extends BaseCoreAbstract {
   }
 
   actionMahjong(action: string, player: PlayerDto) {
+    this.popMessage(this.translateService.instant("ACTION.MESSAGE.DOING_ACTION", { action: action }), 'info');
     switch (action) {
       case 'pong':
         this.socketIoService.sendMahjongAction('pong', this.room, player, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
