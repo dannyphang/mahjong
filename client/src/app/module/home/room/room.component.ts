@@ -116,7 +116,10 @@ export class RoomComponent extends BaseCoreAbstract {
         gameStarted: roomU.gameStarted,
         roomOwnerId: roomU.roomOwnerId,
         gameOrder: roomU.gameOrder,
-        mahjong: roomU.mahjong
+        mahjong: roomU.mahjong,
+        waiting: roomU.waiting,
+        waitingPlayer: roomU.waitingPlayer,
+        waitingAction: roomU.waitingAction,
       }
 
       this.socketIoService.currentRoom = newRoom;
@@ -250,6 +253,10 @@ export class RoomComponent extends BaseCoreAbstract {
       case 'win':
         this.checkPoint(player)
         break;
+      case 'cancel':
+        this.socketIoService.sendMahjongAction('cancel', this.room, player, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
+        break;
+
     }
   }
 
@@ -282,5 +289,9 @@ export class RoomComponent extends BaseCoreAbstract {
       this.socketIoService.sendChow(this.room, this.player, this.selectedChowList, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
       this.cancelChow();
     }
+  }
+
+  returnIsShowingCancelButton(player: PlayerDto): boolean {
+    return (player.action.isChowable || player.action.isKongable || player.action.isPongable || player.action.isSelfKongable || player.action.isWinnable);
   }
 }

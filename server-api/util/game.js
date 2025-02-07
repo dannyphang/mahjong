@@ -625,4 +625,4 @@ function isNextPlayer(room, currentPlayer, targetPlayer) {
     return room.playerList[nextIndex].playerId === targetPlayer.playerId;
 }
 
-export { calculateFlowerTilePoints, calculateMahjongSetPoints, isKongableFromHandSet, checkChow, isNextPlayer };
+export { calculateFlowerTilePoints, calculateMahjongSetPoints, isKongableFromHandSet, checkChow, isNextPlayer, isConsecutive };

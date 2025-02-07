@@ -19,6 +19,8 @@ function createGame(room) {
             room.gameOrder = 1;
             room.mahjong.discardTiles = [];
             room.mahjong.remainingTiles = [];
+            room.waiting = 0;
+            room.waitingPlayer = {};
 
             // shuffle mahjong list
             const newMahjongList = shuffleArray(mahjongList);
@@ -107,526 +109,526 @@ function createGame(room) {
     });
 }
 
-// function testGame(room) {
-//     return new Promise(async function (resolve, reject) {
-//         try {
-//             getAllMahjong().then((list) => {
-//                 const mahjongList = list;
+function testGame(room) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            getAllMahjong().then((list) => {
+                const mahjongList = list;
 
-//                 console.log(mahjongList);
+                let playerOneHand = [
+                    {
+                        id: 19,
+                        order: 17,
+                        type: "joker",
+                        joker: true,
+                        name: "Joker",
+                        code: "joker",
+                        direction: 0,
+                        uid: "L0rOu9lDFAmC9LJ54l1B",
+                        statusId: 1,
+                    },
+                    {
+                        id: 69,
+                        order: 18,
+                        type: "Circles",
+                        joker: false,
+                        name: "1 Circle",
+                        code: "circle_1",
+                        direction: 0,
+                        uid: "2mnOpSjM9vYhc01lLfxo",
+                        statusId: 1,
+                    },
+                    {
+                        id: 53,
+                        order: 18,
+                        type: "Circles",
+                        joker: false,
+                        name: "1 Circle",
+                        code: "circle_1",
+                        direction: 0,
+                        uid: "aM1zvpSANLK7oMJddhxC",
+                        statusId: 1,
+                    },
+                    {
+                        id: 37,
+                        order: 18,
+                        type: "Circles",
+                        joker: false,
+                        name: "1 Circle",
+                        code: "circle_1",
+                        direction: 0,
+                        uid: "jpqhUVUXonb9Myf2YUbw",
+                        statusId: 1,
+                    },
+                    {
+                        id: 38,
+                        order: 19,
+                        type: "Circles",
+                        joker: false,
+                        name: "2 Circle",
+                        code: "circle_2",
+                        direction: 0,
+                        uid: "RRpGX0p60t8dKtgYYQqM",
+                        statusId: 1,
+                    },
+                    {
+                        id: 22,
+                        order: 19,
+                        type: "Circles",
+                        joker: false,
+                        name: "2 Circle",
+                        code: "circle_2",
+                        direction: 0,
+                        uid: "Y47cBGXNTFoiFRNGC25d",
+                        statusId: 1,
+                    },
+                    {
+                        id: 54,
+                        order: 19,
+                        type: "Circles",
+                        joker: false,
+                        name: "2 Circle",
+                        code: "circle_2",
+                        direction: 0,
+                        uid: "vygvhjggvOA9L8I7VL2O",
+                        statusId: 1,
+                    },
+                    {
+                        id: 71,
+                        order: 20,
+                        type: "Circles",
+                        joker: false,
+                        name: "3 Circle",
+                        code: "circle_3",
+                        direction: 0,
+                        uid: "MBxdGVSKBspUFrDbQ8Gf",
+                        statusId: 1,
+                    },
+                    {
+                        id: 55,
+                        order: 20,
+                        type: "Circles",
+                        joker: false,
+                        name: "3 Circle",
+                        code: "circle_3",
+                        direction: 0,
+                        uid: "MO7ZVRZmUSYHhQIRntV3",
+                        statusId: 1,
+                    },
+                    {
+                        id: 23,
+                        order: 20,
+                        type: "Circles",
+                        joker: false,
+                        name: "3 Circle",
+                        code: "circle_3",
+                        direction: 0,
+                        uid: "Plbvk0YFEJuU5lHQE08r",
+                        statusId: 1,
+                    },
+                    {
+                        id: 24,
+                        order: 21,
+                        type: "Circles",
+                        joker: false,
+                        name: "4 Circle",
+                        code: "circle_4",
+                        direction: 0,
+                        uid: "WJlyo2bYsiKi0yThAFWM",
+                        statusId: 1,
+                    },
+                    {
+                        id: 56,
+                        order: 21,
+                        type: "Circles",
+                        joker: false,
+                        name: "4 Circle",
+                        code: "circle_4",
+                        direction: 0,
+                        uid: "fIFNuQbkfZ8xMFCSwFZe",
+                        statusId: 1,
+                    },
+                    {
+                        id: 40,
+                        order: 21,
+                        type: "Circles",
+                        joker: false,
+                        name: "4 Circle",
+                        code: "circle_4",
+                        direction: 0,
+                        uid: "wXzTYMysrJmFacQmnHRQ",
+                        statusId: 1,
+                    },
+                    {
+                        id: 73,
+                        order: 22,
+                        type: "Circles",
+                        joker: false,
+                        name: "5 Circle",
+                        code: "circle_5",
+                        direction: 0,
+                        uid: "5dQUHAdFXssznn5bnXeZ",
+                        statusId: 1,
+                    },
+                ];
 
-//                 let playerOneHand = [
-//                     {
-//                         id: 19,
-//                         order: 17,
-//                         type: "joker",
-//                         joker: true,
-//                         name: "Joker",
-//                         code: "joker",
-//                         direction: 0,
-//                         uid: "L0rOu9lDFAmC9LJ54l1B",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 69,
-//                         order: 18,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "1 Circle",
-//                         code: "circle_1",
-//                         direction: 0,
-//                         uid: "2mnOpSjM9vYhc01lLfxo",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 53,
-//                         order: 18,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "1 Circle",
-//                         code: "circle_1",
-//                         direction: 0,
-//                         uid: "aM1zvpSANLK7oMJddhxC",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 37,
-//                         order: 18,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "1 Circle",
-//                         code: "circle_1",
-//                         direction: 0,
-//                         uid: "jpqhUVUXonb9Myf2YUbw",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 38,
-//                         order: 19,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "2 Circle",
-//                         code: "circle_2",
-//                         direction: 0,
-//                         uid: "RRpGX0p60t8dKtgYYQqM",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 22,
-//                         order: 19,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "2 Circle",
-//                         code: "circle_2",
-//                         direction: 0,
-//                         uid: "Y47cBGXNTFoiFRNGC25d",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 54,
-//                         order: 19,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "2 Circle",
-//                         code: "circle_2",
-//                         direction: 0,
-//                         uid: "vygvhjggvOA9L8I7VL2O",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 71,
-//                         order: 20,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "3 Circle",
-//                         code: "circle_3",
-//                         direction: 0,
-//                         uid: "MBxdGVSKBspUFrDbQ8Gf",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 55,
-//                         order: 20,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "3 Circle",
-//                         code: "circle_3",
-//                         direction: 0,
-//                         uid: "MO7ZVRZmUSYHhQIRntV3",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 23,
-//                         order: 20,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "3 Circle",
-//                         code: "circle_3",
-//                         direction: 0,
-//                         uid: "Plbvk0YFEJuU5lHQE08r",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 24,
-//                         order: 21,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "4 Circle",
-//                         code: "circle_4",
-//                         direction: 0,
-//                         uid: "WJlyo2bYsiKi0yThAFWM",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 56,
-//                         order: 21,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "4 Circle",
-//                         code: "circle_4",
-//                         direction: 0,
-//                         uid: "fIFNuQbkfZ8xMFCSwFZe",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 40,
-//                         order: 21,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "4 Circle",
-//                         code: "circle_4",
-//                         direction: 0,
-//                         uid: "wXzTYMysrJmFacQmnHRQ",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 73,
-//                         order: 22,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "5 Circle",
-//                         code: "circle_5",
-//                         direction: 0,
-//                         uid: "5dQUHAdFXssznn5bnXeZ",
-//                         statusId: 1,
-//                     },
-//                 ];
+                let playerTwoHand = [
+                    {
+                        id: 18,
+                        order: 17,
+                        type: "joker",
+                        joker: true,
+                        name: "Joker",
+                        code: "joker",
+                        direction: 0,
+                        uid: "WbrzzlCmwF2bOK09KO4J",
+                        statusId: 1,
+                    },
+                    {
+                        id: 21,
+                        order: 18,
+                        type: "Circles",
+                        joker: false,
+                        name: "1 Circle",
+                        code: "circle_1",
+                        direction: 0,
+                        uid: "t8NvErq9eSIKD1AaAfmj",
+                        statusId: 1,
+                    },
+                    {
+                        id: 70,
+                        order: 19,
+                        type: "Circles",
+                        joker: false,
+                        name: "2 Circle",
+                        code: "circle_2",
+                        direction: 0,
+                        uid: "3mvdQhog5IoUZuUe9vEc",
+                        statusId: 1,
+                    },
+                    {
+                        id: 39,
+                        order: 20,
+                        type: "Circles",
+                        joker: false,
+                        name: "3 Circle",
+                        code: "circle_3",
+                        direction: 0,
+                        uid: "g6ux22H0zwWkcTNe6eDZ",
+                        statusId: 1,
+                    },
+                    {
+                        id: 72,
+                        order: 21,
+                        type: "Circles",
+                        joker: false,
+                        name: "4 Circle",
+                        code: "circle_4",
+                        direction: 0,
+                        uid: "JPqx5tnoikmXfg9376EP",
+                        statusId: 1,
+                    },
+                    {
+                        id: 25,
+                        order: 22,
+                        type: "Circles",
+                        joker: false,
+                        name: "5 Circle",
+                        code: "circle_5",
+                        direction: 0,
+                        uid: "31q7fTYIER8D4D9Hcw3w",
+                        statusId: 1,
+                    },
+                    {
+                        id: 50,
+                        order: 31,
+                        type: "Dragons",
+                        joker: false,
+                        name: "Red",
+                        code: "red",
+                        direction: 0,
+                        uid: "6goDQz6Ncz0Y712gl1ru",
+                        statusId: 1,
+                    },
+                    {
+                        id: 82,
+                        order: 31,
+                        type: "Dragons",
+                        joker: false,
+                        name: "Red",
+                        code: "red",
+                        direction: 0,
+                        uid: "AM7ly2gAZcAo7Jw8RWyr",
+                        statusId: 1,
+                    },
+                    {
+                        id: 66,
+                        order: 31,
+                        type: "Dragons",
+                        joker: false,
+                        name: "Red",
+                        code: "red",
+                        direction: 0,
+                        uid: "ClATKlda2F0B10OaSa5Q",
+                        statusId: 1,
+                    },
+                    {
+                        id: 51,
+                        order: 32,
+                        type: "Dragons",
+                        joker: false,
+                        name: "Green",
+                        code: "green",
+                        direction: 0,
+                        uid: "8eWK1btVQgfdStz8AoSy",
+                        statusId: 1,
+                    },
+                    {
+                        id: 35,
+                        order: 32,
+                        type: "Dragons",
+                        joker: false,
+                        name: "Green",
+                        code: "green",
+                        direction: 0,
+                        uid: "SoDyQ4bY71uyNgYAaNds",
+                        statusId: 1,
+                    },
+                    {
+                        id: 36,
+                        order: 33,
+                        type: "Dragons",
+                        joker: false,
+                        name: "White",
+                        code: "white",
+                        direction: 0,
+                        uid: "5Ulfr9WRNwzmnSkscwhf",
+                        statusId: 1,
+                    },
+                    {
+                        id: 68,
+                        order: 33,
+                        type: "Dragons",
+                        joker: false,
+                        name: "White",
+                        code: "white",
+                        direction: 0,
+                        uid: "FyoRuw1F5mGIhllbOFaC",
+                        statusId: 1,
+                    },
+                ];
 
-//                 let playerTwoHand = [
-//                     {
-//                         id: 18,
-//                         order: 17,
-//                         type: "joker",
-//                         joker: true,
-//                         name: "Joker",
-//                         code: "joker",
-//                         direction: 0,
-//                         uid: "WbrzzlCmwF2bOK09KO4J",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 21,
-//                         order: 18,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "1 Circle",
-//                         code: "circle_1",
-//                         direction: 0,
-//                         uid: "t8NvErq9eSIKD1AaAfmj",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 70,
-//                         order: 19,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "2 Circle",
-//                         code: "circle_2",
-//                         direction: 0,
-//                         uid: "3mvdQhog5IoUZuUe9vEc",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 39,
-//                         order: 20,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "3 Circle",
-//                         code: "circle_3",
-//                         direction: 0,
-//                         uid: "g6ux22H0zwWkcTNe6eDZ",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 72,
-//                         order: 21,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "4 Circle",
-//                         code: "circle_4",
-//                         direction: 0,
-//                         uid: "JPqx5tnoikmXfg9376EP",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 25,
-//                         order: 22,
-//                         type: "Circles",
-//                         joker: false,
-//                         name: "5 Circle",
-//                         code: "circle_5",
-//                         direction: 0,
-//                         uid: "31q7fTYIER8D4D9Hcw3w",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 50,
-//                         order: 31,
-//                         type: "Dragons",
-//                         joker: false,
-//                         name: "Red",
-//                         code: "red",
-//                         direction: 0,
-//                         uid: "6goDQz6Ncz0Y712gl1ru",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 82,
-//                         order: 31,
-//                         type: "Dragons",
-//                         joker: false,
-//                         name: "Red",
-//                         code: "red",
-//                         direction: 0,
-//                         uid: "AM7ly2gAZcAo7Jw8RWyr",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 66,
-//                         order: 31,
-//                         type: "Dragons",
-//                         joker: false,
-//                         name: "Red",
-//                         code: "red",
-//                         direction: 0,
-//                         uid: "ClATKlda2F0B10OaSa5Q",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 51,
-//                         order: 32,
-//                         type: "Dragons",
-//                         joker: false,
-//                         name: "Green",
-//                         code: "green",
-//                         direction: 0,
-//                         uid: "8eWK1btVQgfdStz8AoSy",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 35,
-//                         order: 32,
-//                         type: "Dragons",
-//                         joker: false,
-//                         name: "Green",
-//                         code: "green",
-//                         direction: 0,
-//                         uid: "SoDyQ4bY71uyNgYAaNds",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 36,
-//                         order: 33,
-//                         type: "Dragons",
-//                         joker: false,
-//                         name: "White",
-//                         code: "white",
-//                         direction: 0,
-//                         uid: "5Ulfr9WRNwzmnSkscwhf",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 68,
-//                         order: 33,
-//                         type: "Dragons",
-//                         joker: false,
-//                         name: "White",
-//                         code: "white",
-//                         direction: 0,
-//                         uid: "FyoRuw1F5mGIhllbOFaC",
-//                         statusId: 1,
-//                     },
-//                 ];
+                let playerThreeHand = [
+                    {
+                        id: 20,
+                        order: 17,
+                        type: "joker",
+                        joker: true,
+                        name: "Joker",
+                        code: "joker",
+                        direction: 0,
+                        uid: "hrxs8fPTP46Z7GxMrShB",
+                        statusId: 1,
+                    },
+                    {
+                        id: 41,
+                        order: 22,
+                        type: "Circles",
+                        joker: false,
+                        name: "5 Circle",
+                        code: "circle_5",
+                        direction: 0,
+                        uid: "UwRnt75Zvu5cZ93WCbWi",
+                        statusId: 1,
+                    },
+                    {
+                        id: 46,
+                        order: 27,
+                        type: "Winds",
+                        joker: false,
+                        name: "East",
+                        code: "east",
+                        direction: 1,
+                        uid: "9FtzRW64cvUU27HC3IPC",
+                        statusId: 1,
+                    },
+                    {
+                        id: 78,
+                        order: 27,
+                        type: "Winds",
+                        joker: false,
+                        name: "East",
+                        code: "east",
+                        direction: 1,
+                        uid: "AaF9iFhMZgmlpVzNhmTs",
+                        statusId: 1,
+                    },
+                    {
+                        id: 30,
+                        order: 27,
+                        type: "Winds",
+                        joker: false,
+                        name: "East",
+                        code: "east",
+                        direction: 1,
+                        uid: "qQYHU5c7ubZNqzwbtzJa",
+                        statusId: 1,
+                    },
+                    {
+                        id: 79,
+                        order: 28,
+                        type: "Winds",
+                        joker: false,
+                        name: "South",
+                        code: "south",
+                        direction: 2,
+                        uid: "PekTBkxY58qJ5BIMTYUK",
+                        statusId: 1,
+                    },
+                    {
+                        id: 47,
+                        order: 28,
+                        type: "Winds",
+                        joker: false,
+                        name: "South",
+                        code: "south",
+                        direction: 2,
+                        uid: "SAFeBKfZch8kbxR80z97",
+                        statusId: 1,
+                    },
+                    {
+                        id: 31,
+                        order: 28,
+                        type: "Winds",
+                        joker: false,
+                        name: "South",
+                        code: "south",
+                        direction: 2,
+                        uid: "Tyx03ownCDLDhpM6zsSr",
+                        statusId: 1,
+                    },
+                    {
+                        id: 48,
+                        order: 29,
+                        type: "Winds",
+                        joker: false,
+                        name: "West",
+                        code: "west",
+                        direction: 3,
+                        uid: "47QftjV7lOGmyYqMc5aY",
+                        statusId: 1,
+                    },
+                    {
+                        id: 64,
+                        order: 29,
+                        type: "Winds",
+                        joker: false,
+                        name: "West",
+                        code: "west",
+                        direction: 3,
+                        uid: "ELTnKq3VAXi3HPeH1Xw3",
+                        statusId: 1,
+                    },
+                    {
+                        id: 32,
+                        order: 29,
+                        type: "Winds",
+                        joker: false,
+                        name: "West",
+                        code: "west",
+                        direction: 3,
+                        uid: "PSH5JmSswJzjuPEQCFLf",
+                        statusId: 1,
+                    },
+                    {
+                        id: 49,
+                        order: 30,
+                        type: "Winds",
+                        joker: false,
+                        name: "North",
+                        code: "north",
+                        direction: 0,
+                        uid: "D5NxetC3AILl1nc9RuKX",
+                        statusId: 1,
+                    },
+                    {
+                        id: 17,
+                        order: 17,
+                        type: "joker",
+                        joker: true,
+                        name: "Joker",
+                        code: "joker",
+                        direction: 0,
+                        uid: "lsJgbn47P96ipbQzYgCS",
+                        statusId: 1,
+                    },
+                ];
 
-//                 let playerThreeHand = [
-//                     {
-//                         id: 20,
-//                         order: 17,
-//                         type: "joker",
-//                         joker: true,
-//                         name: "Joker",
-//                         code: "joker",
-//                         direction: 0,
-//                         uid: "hrxs8fPTP46Z7GxMrShB",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 84,
-//                         order: 33,
-//                         type: "Dragons",
-//                         joker: false,
-//                         name: "White",
-//                         code: "white",
-//                         direction: 0,
-//                         uid: "kutusocsDgONXGMUtObJ",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 46,
-//                         order: 27,
-//                         type: "Winds",
-//                         joker: false,
-//                         name: "East",
-//                         code: "east",
-//                         direction: 1,
-//                         uid: "9FtzRW64cvUU27HC3IPC",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 78,
-//                         order: 27,
-//                         type: "Winds",
-//                         joker: false,
-//                         name: "East",
-//                         code: "east",
-//                         direction: 1,
-//                         uid: "AaF9iFhMZgmlpVzNhmTs",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 30,
-//                         order: 27,
-//                         type: "Winds",
-//                         joker: false,
-//                         name: "East",
-//                         code: "east",
-//                         direction: 1,
-//                         uid: "qQYHU5c7ubZNqzwbtzJa",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 79,
-//                         order: 28,
-//                         type: "Winds",
-//                         joker: false,
-//                         name: "South",
-//                         code: "south",
-//                         direction: 2,
-//                         uid: "PekTBkxY58qJ5BIMTYUK",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 47,
-//                         order: 28,
-//                         type: "Winds",
-//                         joker: false,
-//                         name: "South",
-//                         code: "south",
-//                         direction: 2,
-//                         uid: "SAFeBKfZch8kbxR80z97",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 31,
-//                         order: 28,
-//                         type: "Winds",
-//                         joker: false,
-//                         name: "South",
-//                         code: "south",
-//                         direction: 2,
-//                         uid: "Tyx03ownCDLDhpM6zsSr",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 48,
-//                         order: 29,
-//                         type: "Winds",
-//                         joker: false,
-//                         name: "West",
-//                         code: "west",
-//                         direction: 3,
-//                         uid: "47QftjV7lOGmyYqMc5aY",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 64,
-//                         order: 29,
-//                         type: "Winds",
-//                         joker: false,
-//                         name: "West",
-//                         code: "west",
-//                         direction: 3,
-//                         uid: "ELTnKq3VAXi3HPeH1Xw3",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 32,
-//                         order: 29,
-//                         type: "Winds",
-//                         joker: false,
-//                         name: "West",
-//                         code: "west",
-//                         direction: 3,
-//                         uid: "PSH5JmSswJzjuPEQCFLf",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 49,
-//                         order: 30,
-//                         type: "Winds",
-//                         joker: false,
-//                         name: "North",
-//                         code: "north",
-//                         direction: 0,
-//                         uid: "D5NxetC3AILl1nc9RuKX",
-//                         statusId: 1,
-//                     },
-//                     {
-//                         id: 17,
-//                         order: 17,
-//                         type: "joker",
-//                         joker: true,
-//                         name: "Joker",
-//                         code: "joker",
-//                         direction: 0,
-//                         uid: "lsJgbn47P96ipbQzYgCS",
-//                         statusId: 1,
-//                     },
-//                 ];
+                let remainingTiles = mahjongList;
 
-//                 let remainingTiles = mahjongList;
+                playerOneHand.forEach((h) => {
+                    remainingTiles = remainingTiles.filter((m) => m.id != h.id);
+                });
 
-//                 playerOneHand.forEach((h) => {
-//                     remainingTiles = remainingTiles.filter((m) => m.id != h.id);
-//                 });
+                playerTwoHand.forEach((h) => {
+                    remainingTiles = remainingTiles.filter((m) => m.id != h.id);
+                });
 
-//                 playerTwoHand.forEach((h) => {
-//                     remainingTiles = remainingTiles.filter((m) => m.id != h.id);
-//                 });
+                playerThreeHand.forEach((h) => {
+                    remainingTiles = remainingTiles.filter((m) => m.id != h.id);
+                });
 
-//                 playerThreeHand.forEach((h) => {
-//                     remainingTiles = remainingTiles.filter((m) => m.id != h.id);
-//                 });
+                // shuffle directions
+                const directions = [1, 2, 3];
+                const shuffledDirections = shuffleArray(directions);
 
-//                 // shuffle directions
-//                 const directions = [1, 2, 3];
-//                 const shuffledDirections = shuffleArray(directions);
+                room.playerList.forEach((player, index) => {
+                    player.direction = shuffledDirections[index];
+                    player.action = {};
+                    player.drawAction = {};
+                });
 
-//                 room.playerList.forEach((player, index) => {
-//                     player.direction = shuffledDirections[index];
-//                 });
+                room.playerList.forEach((p) => {
+                    p.mahjong.flowerTiles = {
+                        mahjongTile: [],
+                        point: 0,
+                    };
+                    p.mahjong.publicTiles = [];
+                    if (p.direction === 1) {
+                        p.mahjong.handTiles.mahjongTile = playerOneHand;
+                    } else if (p.direction === 2) {
+                        p.mahjong.handTiles.mahjongTile = playerTwoHand;
+                    } else if (p.direction === 3) {
+                        p.mahjong.handTiles.mahjongTile = playerThreeHand;
+                    }
+                    updatePlayer(p).then((playerU) => {});
+                });
+                // sort player by direction
+                room.playerList.sort((a, b) => a.direction - b.direction);
 
-//                 room.playerList.forEach((p) => {
-//                     p.mahjong.flowerTiles = {
-//                         mahjongTile: [],
-//                         point: 0,
-//                     };
-//                     p.mahjong.publicTiles = [];
-//                     if (p.direction === 1) {
-//                         p.mahjong.handTiles.mahjongTile = playerOneHand;
-//                     } else if (p.direction === 2) {
-//                         p.mahjong.handTiles.mahjongTile = playerTwoHand;
-//                     } else if (p.direction === 3) {
-//                         p.mahjong.handTiles.mahjongTile = playerThreeHand;
-//                     }
-//                     updatePlayer(p).then((playerU) => {});
-//                 });
-//                 // sort player by direction
-//                 room.playerList.sort((a, b) => a.direction - b.direction);
+                // assignWinnable(room).then((roomWin) => {
+                //   room.playerList = roomWin.playerList;
+                // });
 
-//                 assignWinnable(room).then((roomWin) => {
-//                     room.playerList = roomWin.playerList;
-//                 });
+                room.mahjong.remainingTiles = remainingTiles;
+                room.mahjong.discardTiles = [];
+                room.gameOrder = 1;
 
-//                 room.mahjong.remainingTiles = remainingTiles;
-//                 room.mahjong.discardTiles = [];
-//                 room.gameOrder = 1;
-
-//                 updateRoom(room).then((roomU) => {
-//                     resolve({
-//                         ...roomU,
-//                         response: {
-//                             isSuccess: true,
-//                             updateMessage: `Game started!`,
-//                         },
-//                     });
-//                 });
-//             });
-//         } catch (error) {
-//             console.log(error);
-//         }
-//     });
-// }
+                updateRoom(room).then((roomU) => {
+                    resolve({
+                        ...roomU,
+                        response: {
+                            isSuccess: true,
+                            updateMessage: `Game started!`,
+                        },
+                    });
+                });
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    });
+}
 
 function assignWinnable(room) {
     return new Promise(async function (resolve, reject) {
@@ -717,6 +719,11 @@ function playerQuitRoom(room, player) {
 
 function discardMahjong(room, player, discardedMahjongTile) {
     return new Promise(async function (resolve, reject) {
+        // reset waiting object
+        room.waiting = 0;
+        room.waitingPlayer = {};
+        room.waitingAction = "";
+
         // check player handtile number
         if ((player.mahjong.handTiles.mahjongTile.length - 2) % 3 === 0) {
             // check if discarded tile is joker
@@ -745,49 +752,56 @@ function discardMahjong(room, player, discardedMahjongTile) {
                     });
                 });
             } else {
+                let isActionWillBeTrigger = false;
+
                 // check if other player can do any action
-                room.playerList.forEach(async (p) => {
-                    if (p.playerId !== player.playerId) {
-                        // reset player action & drawAction
-                        player.action = {};
-                        player.drawAction = {};
+                await Promise.all(
+                    room.playerList.map(async (p) => {
+                        if (p.playerId !== player.playerId) {
+                            // reset player action & drawAction
+                            player.action = {};
+                            player.drawAction = {};
 
-                        let jokerCount = 0;
-                        let sameMahjongCount = 0;
+                            let jokerCount = 0;
+                            let sameMahjongCount = 0;
 
-                        p.mahjong.handTiles.mahjongTile.forEach((m) => {
-                            if (m.joker) {
-                                jokerCount++;
+                            p.mahjong.handTiles.mahjongTile.forEach((m) => {
+                                if (m.joker) {
+                                    jokerCount++;
+                                }
+                                if (m.code === discardedMahjongTile.code) {
+                                    sameMahjongCount++;
+                                }
+                            });
+
+                            // pong
+                            if (sameMahjongCount >= 2 || (jokerCount >= 1 && sameMahjongCount >= 1)) {
+                                p.action.isPongable = true;
+                                isActionWillBeTrigger = true;
+                            } else {
+                                p.action.isPongable = false;
                             }
-                            if (m.code === discardedMahjongTile.code) {
-                                sameMahjongCount++;
+
+                            // kong (hand)
+                            if (sameMahjongCount === 3) {
+                                p.action.isKongable = true;
+                                isActionWillBeTrigger = true;
+                            } else {
+                                p.action.isKongable = false;
                             }
-                        });
 
-                        // pong
-                        if (sameMahjongCount >= 2 || (jokerCount >= 1 && sameMahjongCount >= 1)) {
-                            p.action.isPongable = true;
-                        } else {
-                            p.action.isPongable = false;
+                            // Chow (only for the next player in sequence)
+                            const isNext = (await API.isNextPlayer(room, player, p)).data.data;
+                            if (isNext) {
+                                const chowable = (await API.checkChow(p.mahjong.handTiles.mahjongTile, discardedMahjongTile)).data.data;
+                                p.action.isChowable = chowable;
+                                isActionWillBeTrigger = chowable;
+                            } else {
+                                p.action.isChowable = false;
+                            }
                         }
-
-                        // kong (hand)
-                        if (sameMahjongCount === 3) {
-                            p.action.isKongable = true;
-                        } else {
-                            p.action.isKongable = false;
-                        }
-
-                        // Chow (only for the next player in sequence)
-                        // console.log(p);
-                        if ((await API.isNextPlayer(room, player, p)).data.data) {
-                            const chowable = (await API.checkChow(p.mahjong.handTiles.mahjongTile, discardedMahjongTile)).data.data;
-                            p.action.isChowable = chowable;
-                        } else {
-                            p.action.isChowable = false;
-                        }
-                    }
-                });
+                    })
+                );
 
                 // TODO: win
 
@@ -802,9 +816,19 @@ function discardMahjong(room, player, discardedMahjongTile) {
 
                 player = room.playerList.find((p) => p.playerId === player.playerId);
 
-                updatePlayer(player).then((playerU) => {
-                    updateRoom(room).then((roomU) => {
+                await updatePlayer(player);
+                updateRoom(room).then((roomU) => {
+                    if (isActionWillBeTrigger) {
+                        resolve({
+                            ...roomU,
+                            response: {
+                                isSuccess: true,
+                                updateMessage: `${player.playerName} discarded ${discardedMahjongTile.name}.`,
+                            },
+                        });
+                    } else {
                         nextTurn(roomU).then((roomNU) => {
+                            console.log("trigger here");
                             resolve({
                                 ...roomNU,
                                 response: {
@@ -813,7 +837,7 @@ function discardMahjong(room, player, discardedMahjongTile) {
                                 },
                             });
                         });
-                    });
+                    }
                 });
             }
         } else {
@@ -919,154 +943,266 @@ function nextTurn(room) {
     });
 }
 
-function actions(action, room, player, selectedMahjong) {
+function actions(action, room, player, selectedMahjong, selectedMahjongChow = []) {
     return new Promise(async function (resolve, reject) {
-        // set the selected mahjong isTaken = true
-        selectedMahjong.isTaken = true;
-        let mahjongInDiscardTile = room.mahjong.discardTiles.find((m) => m.id === selectedMahjong.id);
-        if (mahjongInDiscardTile) {
-            mahjongInDiscardTile.isTaken = true;
+        // if current action is chow, but the pong is in waitingAction, then set current action to cancel
+        if (action === "chow" && room.waitingAction === "pong") {
+            action = "cancel";
         }
 
-        switch (action) {
-            case "pong":
-                room.playerList.forEach((p) => {
-                    if (p.playerId === player.playerId) {
-                        let mahjongPongList = [];
+        // check if the action is 'cancel'
+        // if yes, then check if other player is pongable
+        //  - if yes, then wait for the player do the action
+        //  - else next turn
+        if (action === "cancel") {
+            let otherPlayer = room.waitingPlayer ?? room.playerList.find((op) => op.direction !== room.gameOrder && op.playerId !== player.playerId);
 
-                        // reset isPongable
-                        p.action.isPongable = false;
-                        p.action.isKongable = false;
-                        p.action.isChowable = false;
+            // reset player action after cancelled
+            player.action = {};
+            room.playerList.find((p) => p.playerId === player.playerId).action = {};
 
-                        let sameTileCount = 0;
-                        // priotize 2 same tile then only come to pong with joker
-                        p.mahjong.handTiles.mahjongTile.forEach((m) => {
-                            if (m.code === selectedMahjong.code) {
-                                sameTileCount++;
-                            }
-                        });
+            await updatePlayer(player);
+            await updateRoom(room);
 
-                        mahjongPongList.push(selectedMahjong);
+            if (room.waiting === 2) {
+                // now both player also cancel
+                nextTurn(room).then((roomNU) => {
+                    resolve({
+                        ...roomNU,
+                        response: {
+                            isSuccess: true,
+                            // updateMessage: `${player.playerName} discarded ${discardedMahjongTile.name}.`,
+                        },
+                    });
+                });
+            } else if (room.waiting === 1) {
+                // if current player is cancel then other player is alr waiting, then trigger the action function
+                player = otherPlayer;
+                action = room.waitingAction;
+                room.waiting = 2;
+            } else {
+                // if current player is cancel then other player is pending to confirm the action, then room.waiting set to cancelled
+                room.waiting = 2;
+                updateRoom(room).then((roomU) => {
+                    resolve({
+                        ...roomU,
+                        response: {
+                            isSuccess: true,
+                        },
+                    });
+                });
+            }
+        }
 
-                        // check if got 2 same tiles, else use joker
-                        if (sameTileCount >= 2) {
-                            // push to public tile set
-                            for (let i = 0; i < 2; i++) {
+        // check if the player is top prior to do this action or not
+        // yes, then no need to wait for others player and do the action function
+        if (room.waiting === 2 || (await checkActionPriority(action, room, player, selectedMahjong))) {
+            switch (action) {
+                case "pong":
+                    room.playerList.forEach((p) => {
+                        if (p.playerId === player.playerId) {
+                            let mahjongPongList = [];
+
+                            // reset
+                            p.action = {};
+
+                            let sameTileCount = 0;
+                            // priotize 2 same tile then only come to pong with joker
+                            p.mahjong.handTiles.mahjongTile.forEach((m) => {
+                                if (m.code === selectedMahjong.code) {
+                                    sameTileCount++;
+                                }
+                            });
+
+                            mahjongPongList.push(selectedMahjong);
+
+                            // check if got 2 same tiles, else use joker
+                            if (sameTileCount >= 2) {
+                                // push to public tile set
+                                for (let i = 0; i < 2; i++) {
+                                    let pongTileInHand = p.mahjong.handTiles.mahjongTile.find((m) => m.code === selectedMahjong.code);
+                                    p.mahjong.handTiles.mahjongTile = p.mahjong.handTiles.mahjongTile.filter((m) => m.id !== pongTileInHand.id);
+                                    mahjongPongList.push(pongTileInHand);
+                                }
+                            } else {
+                                // use joker
                                 let pongTileInHand = p.mahjong.handTiles.mahjongTile.find((m) => m.code === selectedMahjong.code);
                                 p.mahjong.handTiles.mahjongTile = p.mahjong.handTiles.mahjongTile.filter((m) => m.id !== pongTileInHand.id);
                                 mahjongPongList.push(pongTileInHand);
+
+                                let jokerTileInHand = p.mahjong.handTiles.mahjongTile.find((m) => m.joker);
+                                p.mahjong.handTiles.mahjongTile = p.mahjong.handTiles.mahjongTile.filter((m) => m.id !== jokerTileInHand.id);
+                                mahjongPongList.push(jokerTileInHand);
                             }
-                        } else {
-                            // use joker
-                            let pongTileInHand = p.mahjong.handTiles.mahjongTile.find((m) => m.code === selectedMahjong.code);
-                            p.mahjong.handTiles.mahjongTile = p.mahjong.handTiles.mahjongTile.filter((m) => m.id !== pongTileInHand.id);
-                            mahjongPongList.push(pongTileInHand);
 
-                            let jokerTileInHand = p.mahjong.handTiles.mahjongTile.find((m) => m.joker);
-                            p.mahjong.handTiles.mahjongTile = p.mahjong.handTiles.mahjongTile.filter((m) => m.id !== jokerTileInHand.id);
-                            mahjongPongList.push(jokerTileInHand);
-                        }
+                            p.mahjong.publicTiles.push({ mahjongTile: mahjongPongList });
 
-                        p.mahjong.publicTiles.push({ mahjongTile: mahjongPongList });
-
-                        p.drawAction = {
-                            isDrawFlower: false,
-                            isDrawKong: false,
-                            isDrawSecondKong: false,
-                            isGetKong: false,
-                            isGetPong: true,
-                            isStealKong: false,
-                            isKaLong: false,
-                            isSoloPong: false,
-                            isDrawLastTile: false,
-                            isSoloDraw: false,
-                        };
-                    }
-                });
-                break;
-            case "kong":
-                let mahjongKongList = [];
-                room.playerList.forEach((p) => {
-                    if (p.playerId === player.playerId) {
-                        // reset isPongable
-                        p.action.isPongable = false;
-                        p.action.isKongable = false;
-                        p.action.isChowable = false;
-
-                        for (let i = 0; i < 3; i++) {
-                            let kongTileInHand = p.mahjong.handTiles.mahjongTile.find((m) => m.code === selectedMahjong.code);
-                            p.mahjong.handTiles.mahjongTile = p.mahjong.handTiles.mahjongTile.filter((m) => m.id !== kongTileInHand.id);
-                            mahjongKongList.push(kongTileInHand);
-                        }
-
-                        mahjongKongList.push(selectedMahjong);
-                        p.mahjong.publicTiles.push({ mahjongTile: mahjongKongList });
-
-                        drawMahjong(room, p).then((draw) => {});
-
-                        p.drawAction = {
-                            isDrawFlower: false,
-                            isDrawKong: false,
-                            isDrawSecondKong: false,
-                            isGetKong: true,
-                            isGetPong: false,
-                            isStealKong: false,
-                            isKaLong: false,
-                            isSoloPong: false,
-                            isDrawLastTile: false,
-                            isSoloDraw: false,
-                        };
-                    }
-                });
-                break;
-            case "self-kong":
-                let mahjongSelfKongList = [];
-                room.playerList.forEach((p) => {
-                    if (p.playerId === player.playerId) {
-                        p.action.isSelfKongable = false;
-
-                        for (let i = 0; i < 3; i++) {
-                            let kongTileInHand = p.mahjong.handTiles.mahjongTile.find((m) => m.code === selectedMahjong.code);
-                            p.mahjong.handTiles.mahjongTile = p.mahjong.handTiles.mahjongTile.filter((m) => m.id !== kongTileInHand.id);
-                            mahjongSelfKongList.push(kongTileInHand);
-                        }
-                        let kongTileInHand = p.mahjong.handTiles.mahjongTile.find((m) => m.code === selectedMahjong.code);
-                        p.mahjong.handTiles.mahjongTile = p.mahjong.handTiles.mahjongTile.filter((m) => m.id !== kongTileInHand.id);
-
-                        mahjongSelfKongList.push(selectedMahjong);
-                        p.mahjong.publicTiles.push({ mahjongTile: mahjongSelfKongList });
-
-                        let isSecondKong = false;
-                        if (p.drawAction.isDrawKong || p.drawAction.isGetKong) {
-                            isSecondKong = true;
-                        }
-
-                        p.drawAction = {
-                            isDrawFlower: false,
-                            isDrawKong: true,
-                            isDrawSecondKong: isSecondKong,
-                            isGetKong: false,
-                            isGetPong: false,
-                            isStealKong: false,
-                            isKaLong: false,
-                            isSoloPong: false,
-                            isDrawLastTile: false,
-                            isSoloDraw: false,
-                        };
-
-                        drawMahjong(room, p).then((drawRoomU) => {
-                            room = {
-                                ...drawRoomU,
+                            p.drawAction = {
+                                isDrawFlower: false,
+                                isDrawKong: false,
+                                isDrawSecondKong: false,
+                                isGetKong: false,
+                                isGetPong: true,
+                                isStealKong: false,
+                                isKaLong: false,
+                                isSoloPong: false,
+                                isDrawLastTile: false,
+                                isSoloDraw: false,
                             };
+                        }
+                    });
+                    break;
+                case "kong":
+                    let mahjongKongList = [];
+                    room.playerList.forEach((p) => {
+                        if (p.playerId === player.playerId) {
+                            // reset
+                            p.action = {};
+
+                            for (let i = 0; i < 3; i++) {
+                                let kongTileInHand = p.mahjong.handTiles.mahjongTile.find((m) => m.code === selectedMahjong.code);
+                                p.mahjong.handTiles.mahjongTile = p.mahjong.handTiles.mahjongTile.filter((m) => m.id !== kongTileInHand.id);
+                                mahjongKongList.push(kongTileInHand);
+                            }
+
+                            mahjongKongList.push(selectedMahjong);
+                            p.mahjong.publicTiles.push({ mahjongTile: mahjongKongList });
+
+                            drawMahjong(room, p).then((draw) => {});
+
+                            p.drawAction = {
+                                isDrawFlower: false,
+                                isDrawKong: false,
+                                isDrawSecondKong: false,
+                                isGetKong: true,
+                                isGetPong: false,
+                                isStealKong: false,
+                                isKaLong: false,
+                                isSoloPong: false,
+                                isDrawLastTile: false,
+                                isSoloDraw: false,
+                            };
+                        }
+                    });
+                    break;
+                case "self-kong":
+                    let mahjongSelfKongList = [];
+                    room.playerList.forEach((p) => {
+                        if (p.playerId === player.playerId) {
+                            // reset
+                            p.action = {};
+
+                            for (let i = 0; i < 3; i++) {
+                                let kongTileInHand = p.mahjong.handTiles.mahjongTile.find((m) => m.code === selectedMahjong.code);
+                                p.mahjong.handTiles.mahjongTile = p.mahjong.handTiles.mahjongTile.filter((m) => m.id !== kongTileInHand.id);
+                                mahjongSelfKongList.push(kongTileInHand);
+                            }
+                            let kongTileInHand = p.mahjong.handTiles.mahjongTile.find((m) => m.code === selectedMahjong.code);
+                            p.mahjong.handTiles.mahjongTile = p.mahjong.handTiles.mahjongTile.filter((m) => m.id !== kongTileInHand.id);
+
+                            mahjongSelfKongList.push(selectedMahjong);
+                            p.mahjong.publicTiles.push({ mahjongTile: mahjongSelfKongList });
+
+                            let isSecondKong = false;
+                            if (p.drawAction.isDrawKong || p.drawAction.isGetKong) {
+                                isSecondKong = true;
+                            }
+
+                            p.drawAction = {
+                                isDrawFlower: false,
+                                isDrawKong: true,
+                                isDrawSecondKong: isSecondKong,
+                                isGetKong: false,
+                                isGetPong: false,
+                                isStealKong: false,
+                                isKaLong: false,
+                                isSoloPong: false,
+                                isDrawLastTile: false,
+                                isSoloDraw: false,
+                            };
+
+                            drawMahjong(room, p).then((drawRoomU) => {
+                                room = {
+                                    ...drawRoomU,
+                                };
+                            });
+                        }
+                    });
+                    break;
+                case "chow":
+                    if (room.waiting === 2) {
+                        selectedMahjongChow = room.waitingChowTiles;
+                    }
+                    console.log(selectedMahjongChow);
+                    let list = selectedMahjongChow.concat(selectedMahjong);
+                    list = list.sort((a, b) => a.code - b.code);
+                    if ((await API.isConsecutive(list[0].code, list[1].code, list[2].code)).data.data) {
+                        player.mahjong.handTiles.mahjongTile = player.mahjong.handTiles.mahjongTile.filter((m) => m.id !== selectedMahjongChow[0].id && m.id !== selectedMahjongChow[1].id);
+
+                        // add to public list
+                        let newPublicGrpList = [];
+                        for (let i = 0; i < 3; i++) {
+                            list[i].isSelected = false;
+                            list[i].isTaken = list[i].id === selectedMahjong.id ? true : false;
+                            newPublicGrpList.push(list[i]);
+                        }
+
+                        player.mahjong.publicTiles.push({ mahjongTile: newPublicGrpList });
+                        player.action.isChowable = false;
+
+                        room.mahjong.discardTiles.find((m) => m.id === selectedMahjong.id).isTaken = true;
+                        room.playerList.find((p) => p.playerId === player.playerId).mahjong = player.mahjong;
+                        room.playerList.find((p) => p.playerId === player.playerId).action = player.action;
+                        room.gameOrder = player.direction;
+
+                        updatePlayer(player).then((up) => {});
+                        updateRoom(room).then((roomU) => {
+                            resolve({
+                                ...roomU,
+                                response: {
+                                    isSuccess: true,
+                                },
+                            });
+                        });
+                    } else {
+                        resolve({
+                            ...room,
+                            response: {
+                                isSuccess: false,
+                                updateMessage: "Selected tiles is not able to Chow.",
+                            },
                         });
                     }
-                });
-                break;
-        }
+                    break;
+            }
 
-        room.gameOrder = player.direction;
-        updatePlayer(room.playerList.find((p) => p.playerId === player.playerId)).then((up) => {});
+            // set the selected mahjong isTaken = true
+            selectedMahjong.isTaken = action === "pong" || action === "kong" || action === "self-kong" || action === "chow";
+            let mahjongInDiscardTile = room.mahjong.discardTiles.find((m) => m.id === selectedMahjong.id);
+            if (mahjongInDiscardTile) {
+                mahjongInDiscardTile.isTaken = action === "pong" || action === "kong" || action === "self-kong" || action === "chow";
+            }
+
+            if (action !== "cancel") {
+                room.playerList.forEach((p) => {
+                    p.action = {};
+                    if (p.playerId !== player.playerId) {
+                        p.drawAction = {};
+                    }
+                });
+            }
+
+            room.waitingPlayer = {};
+            room.gameOrder = action === "cancel" ? room.gameOrder : player.direction;
+            updatePlayer(room.playerList.find((p) => p.playerId === player.playerId)).then((up) => {});
+        } else {
+            // reach here means other player also got fake or real set
+            // but the current player trigger here 1st and also not next player
+            room.waitingPlayer = player;
+            room.waitingAction = action;
+            room.waiting = 1;
+            room.waitingChowTiles = selectedMahjongChow;
+        }
         updateRoom(room).then((roomU) => {
             resolve({
                 ...roomU,
@@ -1080,45 +1216,7 @@ function actions(action, room, player, selectedMahjong) {
 
 function chowAction(room, player, selectedMahjongChow, selectedMahjong) {
     return new Promise(async function (resolve, reject) {
-        let list = selectedMahjongChow.concat(selectedMahjong);
-        list = list.sort((a, b) => a.code - b.code);
-        if (isConsecutive(list[0].code, list[1].code, list[2].code)) {
-            player.mahjong.handTiles.mahjongTile = player.mahjong.handTiles.mahjongTile.filter((m) => m.id !== selectedMahjongChow[0].id && m.id !== selectedMahjongChow[1].id);
-
-            // add to public list
-            let newPublicGrpList = [];
-            for (let i = 0; i < 3; i++) {
-                list[i].isSelected = false;
-                list[i].isTaken = list[i].id === selectedMahjong.id ? true : false;
-                newPublicGrpList.push(list[i]);
-            }
-
-            player.mahjong.publicTiles.push({ mahjongTile: newPublicGrpList });
-            player.action.isChowable = false;
-
-            room.mahjong.discardTiles.find((m) => m.id === selectedMahjong.id).isTaken = true;
-            room.playerList.find((p) => p.playerId === player.playerId).mahjong = player.mahjong;
-            room.playerList.find((p) => p.playerId === player.playerId).action = player.action;
-            room.gameOrder = player.direction;
-
-            updatePlayer(player).then((up) => {});
-            updateRoom(room).then((roomU) => {
-                resolve({
-                    ...roomU,
-                    response: {
-                        isSuccess: true,
-                    },
-                });
-            });
-        } else {
-            resolve({
-                ...room,
-                response: {
-                    isSuccess: false,
-                    updateMessage: "Selected tiles is not able to Chow.",
-                },
-            });
-        }
+        actions("chow", room, player, selectedMahjong, selectedMahjongChow).then((res) => resolve(res));
     });
 }
 
@@ -1131,4 +1229,60 @@ function shuffleArray(array) {
     return array;
 }
 
-export { createGame, playerJoinRoom, updateRoom, playerQuitRoom, discardMahjong, nextTurn, drawMahjong, updatePlayer, actions, chowAction };
+async function checkActionPriority(action, room, player, selectedMahjong) {
+    let currentPlayerSameTileCount = 0;
+    let otherPlayerSameTileCount = 0;
+
+    player.mahjong.handTiles.mahjongTile.forEach((m) => {
+        if (m.code === selectedMahjong.code) {
+            currentPlayerSameTileCount++;
+        }
+    });
+
+    // check if its real set or fake set
+    // if real set then return true
+    if (action === "pong" && currentPlayerSameTileCount >= 2) {
+        return true;
+    }
+
+    if (action === "chow" && room.waitingAction === "pong") {
+        return false;
+    }
+
+    // if the code come to here, means it is fake set
+    // then check if other player got the fake or real set,
+    // if no (means other player no fake and real set), then return true
+    // if yes (means both player also fake set), then if this current player is next player then return true
+    // else return false
+    let otherPlayer = room.playerList.find((op) => op.direction !== room.gameOrder && op.playerId !== player.playerId);
+    otherPlayer.mahjong.handTiles.mahjongTile.forEach((m) => {
+        if (m.code === selectedMahjong.code) {
+            otherPlayerSameTileCount++;
+        }
+    });
+    // check if other player is real set
+    if (otherPlayerSameTileCount === 2) {
+        // other player no fake and real set
+        return false;
+    } else if (otherPlayerSameTileCount === 0) {
+        // other player no fake and real set
+        return true;
+    } else {
+        let currentPlayer = player;
+        let checkingPlayer = otherPlayer;
+        if (action === "chow") {
+            checkingPlayer = player;
+            currentPlayer = room.playerList.find((op) => op.direction === room.gameOrder);
+        }
+
+        if (otherPlayerSameTileCount === 1 && otherPlayer.mahjong.handTiles.mahjongTile.find((m) => m.joker === true) && (await API.isNextPlayer(room, currentPlayer, checkingPlayer)).data.data) {
+            // both also fake set but current player is next player so return true
+            return true;
+        }
+    }
+
+    // reach here means current player is not next player but also fake set
+    return false;
+}
+
+export { createGame, playerJoinRoom, updateRoom, playerQuitRoom, discardMahjong, nextTurn, drawMahjong, updatePlayer, actions, chowAction, testGame };
