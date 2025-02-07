@@ -187,4 +187,19 @@ router.post("/isNextPlayer", async (req, res) => {
     }
 });
 
+// get isConsecutive
+router.post("/isConsecutive", async (req, res) => {
+    try {
+        res.status(200).json(responseModel({ data: games.isConsecutive(req.body.code1, req.body.code2, req.body.code3) }));
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(400).json(
+            responseModel({
+                isSuccess: false,
+                responseMessage: error.message,
+            })
+        );
+    }
+});
+
 export default router;

@@ -33,4 +33,8 @@ function isKongableFromHandSet(newMahjong, mahjongList) {
     return http.post("mahjong/isKongableFromHandSet", { newMahjong: newMahjong, mahjongList: mahjongList });
 }
 
-export { getMahjong, updateRoom, updatePlayer, isNextPlayer, checkChow, calculateFlowerTilePoints, isKongableFromHandSet };
+function isConsecutive(code1, code2, code3) {
+    return http.post("mahjong/isConsecutive", { code1: code1, code2: code2, code3: code3 });
+}
+
+export { getMahjong, updateRoom, updatePlayer, isNextPlayer, checkChow, calculateFlowerTilePoints, isKongableFromHandSet, isConsecutive };
