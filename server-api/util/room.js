@@ -14,6 +14,7 @@ router.post("/", async (req, res) => {
         let newRef = db.default.db.collection(roomCollectionName).doc();
         let room = {
             roomId: newRef.id,
+            roomCode: Math.floor(100000 + Math.random() * 900000).toString(),
             statusId: 1,
             playerList: [],
             gameStarted: true,
@@ -39,16 +40,34 @@ router.post("/", async (req, res) => {
     }
 });
 
-// get room by id
+// get room by room code
 router.get("/:id", async (req, res) => {
-    const id = req.params.id;
+    const code = req.params.id;
     try {
-        const snapshot = await db.default.db.collection(roomCollectionName).doc(id).get();
+        const snapshot = await db.default.db.collection(roomCollectionName).where("statusId", "==", 1).where("roomCode", "==", code).get();
 
-        const room = snapshot.data().statusId == 1 ? snapshot.data() : {};
+        const list = snapshot.docs.map((doc) => {
+            return doc.data();
+        });
 
-        res.status(200).json(responseModel({ data: room }));
-    } catch (error) {}
+        if (list.length > 0) {
+            res.status(200).json(responseModel({ data: list[0] }));
+        } else {
+            res.status(400).json(
+                responseModel({
+                    isSuccess: false,
+                    responseMessage: "Room is not found.",
+                })
+            );
+        }
+    } catch (error) {
+        res.status(400).json(
+            responseModel({
+                isSuccess: false,
+                responseMessage: error,
+            })
+        );
+    }
 });
 
 // update room
