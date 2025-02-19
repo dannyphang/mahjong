@@ -81,7 +81,7 @@ export class RoomUpdateDto extends RoomDto {
 
 export class MahjongGroupDto {
     handTiles: MahjongTileSetDto;
-    publicTiles: MahjongTileSetDto[];
+    publicTiles: [{ mahjongTile: MahjongDto[] }];
     flowerTiles: MahjongTileSetDto;
 }
 

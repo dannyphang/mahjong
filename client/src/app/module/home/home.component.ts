@@ -51,7 +51,7 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                     mahjongTile: [],
                     point: 0
                   },
-                  publicTiles: [],
+                  publicTiles: [{ mahjongTile: [] }],
                   flowerTiles: {
                     mahjongTile: [],
                     point: 0
@@ -121,7 +121,7 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                     mahjongTile: [],
                     point: 0
                   },
-                  publicTiles: [],
+                  publicTiles: [{ mahjongTile: [] }],
                   flowerTiles: {
                     mahjongTile: [],
                     point: 0
