@@ -13,7 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent extends BaseCoreAbstract implements OnInit {
-  roomIdFormControl: FormControl = new FormControl('4XVPqIQ8BaTHw4ZvVgtn');
+  roomIdFormControl: FormControl = new FormControl('123456');
   usernameFormControl: FormControl = new FormControl('');
   pinFormControl: FormControl<number> = new FormControl();
   constructor(
@@ -177,25 +177,35 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
 
   navigateToRoom(isCreateRoom = false) {
     if (isCreateRoom) {
-      this.gameService.createRoom().subscribe(res2 => {
-        if (res2.isSuccess) {
-          this.socketIoService.room = res2.data;
-          this.socketIoService.room.roomOwnerId = this.socketIoService.player.playerId;
+      this.gameService.createRoom().subscribe({
+        next: res2 => {
+          if (res2.isSuccess) {
+            this.socketIoService.room = res2.data;
+            this.socketIoService.room.roomOwnerId = this.socketIoService.player.playerId;
 
-          this.router.navigate(['/room', res2.data.roomId]);
+            this.router.navigate(['/room', res2.data.roomId]);
+          }
+        },
+        error: error => {
+          this.popMessage(this.translateService.instant('ROOM.NOT_FOUND'), "error");
         }
       });
     }
     else {
-      this.gameService.getRoomById(this.roomIdFormControl.value).subscribe(res2 => {
-        if (res2.isSuccess) {
-          if (res2.data.playerList.length < 3 || res2.data.playerList.find(p => p.playerId === this.socketIoService.player.playerId)) {
-            this.socketIoService.room = res2.data;
-            this.router.navigate(['/room', this.roomIdFormControl.value]);
+      this.gameService.getRoomById(this.roomIdFormControl.value).subscribe({
+        next: res2 => {
+          if (res2.isSuccess) {
+            if (res2.data.playerList.length < 3 || res2.data.playerList.find(p => p.playerId === this.socketIoService.player.playerId)) {
+              this.socketIoService.room = res2.data;
+              this.router.navigate(['/room', this.roomIdFormControl.value]);
+            }
+            else {
+              this.popMessage(this.translateService.instant('ACTION.MESSAGE.ROOM_MAX_PLAYER'), "error")
+            }
           }
-          else {
-            this.popMessage(this.translateService.instant('ACTION.MESSAGE.ROOM_MAX_PLAYER'), "error")
-          }
+        },
+        error: error => {
+          this.popMessage(this.translateService.instant('ROOM.NOT_FOUND'), "error");
         }
       });
     }

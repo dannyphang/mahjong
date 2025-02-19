@@ -21,7 +21,8 @@
     }
   },
   "ROOM": {
-    "GAME_TURN": "Game Turn: "
+    "GAME_TURN": "Game Turn: ",
+    "NOT_FOUND": "Room not found"
   },
   "BUTTON": {
     "CANCEL": "Cancel",

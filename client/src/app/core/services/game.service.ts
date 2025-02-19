@@ -50,6 +50,7 @@ export class GameService {
 
 export class RoomDto {
     roomId: string;
+    roomCode: string;
     statusId: number;
     playerList: PlayerDto[];
     gameStarted: boolean;

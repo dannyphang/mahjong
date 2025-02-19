@@ -111,6 +111,7 @@ export class RoomComponent extends BaseCoreAbstract {
 
       let newRoom: RoomDto = {
         roomId: roomU.roomId,
+        roomCode: roomU.roomCode,
         statusId: 1,
         playerList: roomU.playerList,
         gameStarted: roomU.gameStarted,
