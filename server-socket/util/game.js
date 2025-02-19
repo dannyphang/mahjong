@@ -854,6 +854,7 @@ function discardMahjong(room, player, discardedMahjongTile) {
 
 function drawMahjong(room, player) {
     return new Promise(async function (resolve, reject) {
+        let raiseJoker = false;
         // check if the player is drawable
         if ((player.mahjong.handTiles.mahjongTile.length - 2) % 3 !== 0) {
             let newMahjong;
@@ -865,6 +866,19 @@ function drawMahjong(room, player) {
                 room.mahjong.remainingTiles.shift();
 
                 if (newMahjong.type !== "Flower") {
+                    // check if the draw tile is the mahjong that match to public tile list that pong with joker
+                    // if so can raise joker
+                    room.playerList
+                        .find((p) => p.playerId === player.playerId)
+                        .mahjong.publicTiles.forEach((list) => {
+                            if (list.mahjongTile.find((m) => m.joker) && list.mahjongTile.filter((tile) => tile.code === newMahjong.code).length === 2) {
+                                raiseJoker = true;
+                                list.mahjongTile.push(newMahjong);
+                                newMahjong = list.mahjongTile.find((m) => m.joker);
+                                list.mahjongTile = list.mahjongTile.filter((m) => !m.joker);
+                            }
+                        });
+
                     // add mahjong to hand tile list
                     room.playerList.find((p) => p.playerId === player.playerId).mahjong.handTiles.mahjongTile.push(newMahjong);
                 } else {
@@ -909,6 +923,7 @@ function drawMahjong(room, player) {
                     ...roomU,
                     response: {
                         isSuccess: true,
+                        updateMessage: "Raise Joker!",
                     },
                 });
             });

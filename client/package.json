@@ -25,6 +25,7 @@
     "@ngx-translate/core": "^15.0.0",
     "@ngx-translate/http-loader": "^8.0.0",
     "@types/file-saver": "^2.0.7",
+    "@vercel/analytics": "^1.4.1",
     "blobity": "^0.2.3",
     "dayjs": "^1.11.11",
     "dotenv": "^16.4.5",
