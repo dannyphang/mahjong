@@ -1,0 +1,52 @@
+<div class="mahjong-table-div">
+  <!-- discard tile area -->
+  <div class="discard-area-div">
+    <app-discard-area [room]="room"></app-discard-area>
+  </div>
+
+  <!-- mahjong, player area -->
+  <div
+    *ngFor="let p of room.playerList"
+    [ngClass]="{
+      'tw-border-red-400 tw-border-solid': p.playerId === player.playerId, 
+      'tw-rotate-90': p.direction === returnPlayerDirectionLabel(1), 
+      'nextPlayer':  p.direction === returnPlayerDirectionLabel(1), 
+      '-tw-rotate-90': p.direction === returnPlayerDirectionLabel(2), 
+      'prevPlayer':  p.direction === returnPlayerDirectionLabel(2), 
+      'currentPlayer':  p.direction === returnPlayerDirectionLabel(0), 
+    }"
+  >
+    <!-- prev player -->
+    <div
+      *ngIf="p.direction === returnPlayerDirectionLabel(2)"
+      class="tw-w-[800px]"
+    >
+      <app-player-mahjong
+        [room]="room"
+        [player]="p"
+        [playerPosition]="'prev'"
+      ></app-player-mahjong>
+    </div>
+
+    <!-- next player -->
+    <div
+      *ngIf="p.direction === returnPlayerDirectionLabel(1)"
+      class="tw-w-[800px]"
+    >
+      <app-player-mahjong
+        [room]="room"
+        [player]="p"
+        [playerPosition]="'next'"
+      ></app-player-mahjong>
+    </div>
+
+    <div *ngIf="p.playerId === player.playerId" class="tw-w-[800px]">
+      <app-player-mahjong
+        [room]="room"
+        [player]="p"
+        [currentPlayer]="true"
+        [playerPosition]="'current'"
+      ></app-player-mahjong>
+    </div>
+  </div>
+</div>

@@ -11,6 +11,10 @@ import { RoomComponent } from './room/room.component';
 import { MahjongDisplayComponent } from './mahjong-display/mahjong-display.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
+import { GameTurnComponent } from './game-turn/game-turn.component';
+import { DiscardAreaComponent } from './discard-area/discard-area.component';
+import { MahjongTableComponent } from './mahjong-table/mahjong-table.component';
+import { PlayerMahjongComponent } from './player-mahjong/player-mahjong.component';
 
 
 @NgModule({
@@ -18,6 +22,10 @@ import { BrowserModule } from '@angular/platform-browser';
     HomeComponent,
     RoomComponent,
     MahjongDisplayComponent,
+    GameTurnComponent,
+    DiscardAreaComponent,
+    MahjongTableComponent,
+    PlayerMahjongComponent,
   ],
   imports: [
     CommonModule,

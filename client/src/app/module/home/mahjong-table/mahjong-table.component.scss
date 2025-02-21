@@ -1,0 +1,25 @@
+.mahjong-table-div {
+  display: grid;
+  grid-template-areas:
+    "prevPlayer discard-area-div discard-area-div nextPlayer"
+    "prevPlayer discard-area-div discard-area-div nextPlayer"
+    "prevPlayer discard-area-div discard-area-div nextPlayer"
+    "currentPlayer currentPlayer currentPlayer currentPlayer";
+  grid-template-columns: 30% 20% 20% 30%;
+}
+
+.prevPlayer {
+  grid-area: prevPlayer;
+}
+
+.discard-area-div {
+  grid-area: discard-area-div;
+}
+
+.nextPlayer {
+  grid-area: nextPlayer;
+}
+
+.currentPlayer {
+  grid-area: currentPlayer;
+}
