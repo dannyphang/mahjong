@@ -1,7 +1,13 @@
-<div>
+<div
+  class="tw-border tw-border-solid tw-h-full tw-rounded-md"
+  [ngStyle]="{
+    backgroundImage: discardMapBackground,
+    borderColor: woodColor,
+    borderWidth: '10px'
+  }"
+>
   <div
-    class="tw-flex tw-flex-wrap tw-gap-[var(--content-gap)] tw-p-[var(--content-gap)] tw-justify-center tw-items-center tw-border-[thin] tw-border-l-zinc-400"
-    [ngClass]="{ 'tw-border-dashed': room.mahjong.discardTiles!.length > 0 }"
+    class="tw-flex tw-flex-wrap tw-gap-[var(--content-gap)] tw-p-[var(--content-gap)] tw-justify-center tw-h-full"
   >
     <div
       *ngFor="let mahjong of room.mahjong.discardTiles; let i = index"

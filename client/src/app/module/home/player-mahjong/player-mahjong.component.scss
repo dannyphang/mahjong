@@ -1,0 +1,69 @@
+.player-mahjong-div {
+  display: grid;
+  grid-template-areas:
+    "playerInfo"
+    "otherSet"
+    "flowerSet";
+}
+
+.reverse-player-mahjong-div {
+  display: grid;
+  grid-template-areas:
+    "flower-set-info"
+    "other-set-info"
+    "player-info";
+}
+
+.player-info {
+  grid-area: playerInfo;
+  grid-template-areas: "playerLabel directionIcon points actionDiv";
+  justify-content: start;
+}
+
+.reverse-player-info {
+  grid-area: playerInfo;
+  grid-template-areas: "points directionIcon playerLabel";
+  justify-content: end;
+}
+
+.flower-set-div {
+  grid-area: flowerSet;
+  height: 100px;
+}
+
+.other-set-div {
+  grid-area: otherSet;
+  height: 70px;
+  grid-template-areas: "handSet publicSet";
+}
+
+.reverse-other-set-div {
+  grid-area: otherSet;
+  height: 70px;
+  grid-template-areas: "publicSet handSet";
+}
+
+.player-label {
+  grid-area: playerLabel;
+}
+
+.direction-icon {
+  grid-area: directionIcon;
+}
+
+.points {
+  grid-area: points;
+}
+
+.action-div {
+  grid-area: actionDiv;
+}
+
+.hand-set {
+  grid-area: handSet;
+  justify-content: end;
+}
+
+.public-set {
+  grid-area: publicSet;
+}

@@ -33,7 +33,7 @@
   <!-- display mahjong section -->
   <section class="display-mahjong-div">
     <!-- testing area (remaining mahjong) -->
-    <!-- <div
+    <div
       class="tw-flex tw-flex-wrap tw-gap-[var(--content-gap)] tw-p-[var(--content-gap)] tw-justify-center tw-items-center"
       cdkDropList
       cdkDropListOrientation="horizontal"
@@ -49,7 +49,7 @@
           cdkDrag
         ></app-mahjong>
       </div>
-    </div> -->
+    </div>
 
     <!-- Player turn area -->
     <div
@@ -58,7 +58,11 @@
       <app-game-turn [room]="room" [player]="player"></app-game-turn>
     </div>
 
-    <app-mahjong-table [room]="room" [player]="player"></app-mahjong-table>
+    <app-mahjong-table
+      [room]="room"
+      [player]="player"
+      class="room-table-div"
+    ></app-mahjong-table>
   </section>
 </div>
 

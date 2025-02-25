@@ -1,9 +1,17 @@
-<div>
+<div class="tw-w-full tw-grid player-mahjong-div">
   <!-- player info, action -->
   <div
-    class="tw-flex tw-p-[var(--content-gap)] tw-gap-[var(--content-gap)] tw-items-center"
+    class="tw-grid tw-p-[var(--content-gap)] tw-gap-[var(--content-gap)] tw-items-center"
+    [ngClass]="{
+      'player-info': playerPosition !== 'prev', 
+      'reverse-player-info': playerPosition === 'prev', 
+    }"
   >
-    <app-chip [label]="player.playerName" [removable]="false"></app-chip>
+    <app-chip
+      [label]="player.playerName"
+      [removable]="false"
+      class="player-label"
+    ></app-chip>
 
     <img
       class="direction-icon"
@@ -12,10 +20,11 @@
 
     <app-base-label
       [label]="'(' + player.mahjong.flowerTiles.point.toString() + ')'"
+      class="points"
     ></app-base-label>
 
     <!-- actions -->
-    <div class="tw-flex tw-gap-[15px]" *ngIf="currentPlayer">
+    <div class="tw-flex tw-gap-[15px] action-div" *ngIf="currentPlayer">
       <!-- sort -->
       <p-button
         [label]="'ACTION.SORT' | translate"
@@ -99,7 +108,12 @@
   </div>
 
   <!-- flower set -->
-  <div class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap">
+  <div
+    class="tw-p-[var(--content-gap)] tw-flex flower-set-div"
+    [ngClass]="{
+    'tw-justify-end': playerPosition === 'prev', 
+  }"
+  >
     <div
       *ngFor="
         let mahjong of player.mahjong.flowerTiles.mahjongTile;
@@ -111,10 +125,16 @@
     </div>
   </div>
 
-  <div class="tw-flex tw-gap-[var(--content-gap-xl)] tw-flex-wrap">
+  <div
+    class="tw-px-[var(--content-gap)] tw-grid tw-gap-[15px] tw-w-full"
+    [ngClass]="{
+      'other-set-div': playerPosition !== 'prev', 
+      'reverse-other-set-div': playerPosition === 'prev', 
+    }"
+  >
     <!-- hand set -->
     <div
-      class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap"
+      class="tw-flex hand-set"
       cdkDropList
       cdkDropListOrientation="horizontal"
       (cdkDropListDropped)="drop($event, player.mahjong.handTiles.mahjongTile)"
@@ -143,10 +163,11 @@
     </div>
 
     <!-- public set -->
-    <div
-      class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap tw-gap-[var(--content-gap)]"
-    >
-      <div *ngFor="let group of player.mahjong.publicTiles" class="tw-flex">
+    <div class="tw-flex tw-gap-[var(--content-gap)]">
+      <div
+        *ngFor="let group of player.mahjong.publicTiles"
+        class="tw-flex public-set"
+      >
         <div
           *ngFor="let mahjong of group.mahjongTile; let i = index"
           class="tw-mx-[-4px]"

@@ -1,25 +1,41 @@
 .mahjong-table-div {
   display: grid;
   grid-template-areas:
-    "prevPlayer discard-area-div discard-area-div nextPlayer"
-    "prevPlayer discard-area-div discard-area-div nextPlayer"
-    "prevPlayer discard-area-div discard-area-div nextPlayer"
-    "currentPlayer currentPlayer currentPlayer currentPlayer";
-  grid-template-columns: 30% 20% 20% 30%;
+    "prevPlayer discard-area-div nextPlayer"
+    "prevPlayer discard-area-div nextPlayer"
+    "prevPlayer discard-area-div nextPlayer"
+    "... currentPlayer ...";
+  grid-template-columns: 240px 1fr 240px;
+  grid-template-rows: 700px auto;
+  min-width: 60%;
+  max-width: 80%;
+  aspect-ratio: 1/1;
 }
 
 .prevPlayer {
   grid-area: prevPlayer;
+  width: 240px;
+  // justify-content: end;
+}
+
+.nextPlayer {
+  grid-area: nextPlayer;
+  width: 240px;
+  // align-items: center;
 }
 
 .discard-area-div {
   grid-area: discard-area-div;
 }
 
-.nextPlayer {
-  grid-area: nextPlayer;
-}
-
 .currentPlayer {
   grid-area: currentPlayer;
+}
+
+.prev-player-rotate {
+  rotate: -90deg;
+}
+
+.next-player-rotate {
+  rotate: 90deg;
 }

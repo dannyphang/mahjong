@@ -8,5 +8,15 @@ import { RoomDto } from '../../../core/services/game.service';
 })
 export class DiscardAreaComponent {
   @Input() room: RoomDto;
+  discardMapBackground: string;
+  woodColor: string;
 
+  constructor() {
+
+  }
+
+  ngOnInit() {
+    this.discardMapBackground = 'url(../../../../assets/images/room/mahjongTable.jpg)';
+    this.woodColor = '#bc6a3c';
+  }
 }
