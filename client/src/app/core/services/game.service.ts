@@ -89,6 +89,13 @@ export class MahjongGroupDto {
 export class RoomMahjongGroupDto {
     discardTiles: MahjongDto[];
     remainingTiles: MahjongDto[];
+    setting: MahjongSettingDto;
+}
+
+export class MahjongSettingDto {
+    minPoints: number; // min points to win
+    score: number; // 1 points = ? score
+    initTotalScore: number; // each player initail total score
 }
 
 export class MahjongTileSetDto {

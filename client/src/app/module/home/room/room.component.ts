@@ -6,6 +6,8 @@ import { MessageService } from 'primeng/api';
 import { BaseCoreAbstract } from '../../../core/shared/base/base-core.abstract';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { TranslateService } from '@ngx-translate/core';
+import { CONTROL_TYPE, FormConfig } from '../../../core/services/components.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-room',
@@ -19,6 +21,13 @@ export class RoomComponent extends BaseCoreAbstract {
   player: PlayerDto;
   chowVisible: boolean;
   selectedChowList: MahjongDto[] = [];
+  roomSettingVisible: boolean = false;
+  settingFormConfig: FormConfig[] = [];
+  settingFormGroup: FormGroup = new FormGroup({
+    minPoints: new FormControl(5),
+    score: new FormControl(1),
+    initTotalScore: new FormControl(100),
+  })
 
   constructor(
     private socketIoService: SocketioService,
@@ -80,6 +89,9 @@ export class RoomComponent extends BaseCoreAbstract {
       case '7':
         this.actionMahjong('win', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
         break;
+      case 'S':
+        this.roomSettingVisible = true;
+        break;
     }
   }
 
@@ -96,6 +108,7 @@ export class RoomComponent extends BaseCoreAbstract {
     this.roomId = this.route.snapshot.paramMap.get('id') ?? 'undefined';
     this.player = this.socketIoService.currentPlayer;
     this.room = this.socketIoService.currentRoom;
+    this.initSettingForm();
 
     this.socketIoService.connect();
 
@@ -103,6 +116,45 @@ export class RoomComponent extends BaseCoreAbstract {
     this.recieveGameUpdate();
 
     this.socketIoService.playerJoinRoom(this.player, this.room);
+  }
+
+  initSettingForm() {
+    this.settingFormGroup.controls['minPoints'].setValue(this.room.mahjong.setting.minPoints);
+    this.settingFormGroup.controls['score'].setValue(this.room.mahjong.setting.score);
+    this.settingFormGroup.controls['initTotalScore'].setValue(this.room.mahjong.setting.initTotalScore);
+
+    this.settingFormConfig = [
+      {
+        label: 'INPUT.MIN_POINT',
+        type: CONTROL_TYPE.Textbox,
+        layoutDefine: {
+          row: 0,
+          column: 0,
+        },
+        fieldControl: this.settingFormGroup.controls['minPoints'],
+        mode: 'number'
+      },
+      {
+        label: 'INPUT.SCORE',
+        type: CONTROL_TYPE.Textbox,
+        layoutDefine: {
+          row: 1,
+          column: 0,
+        },
+        fieldControl: this.settingFormGroup.controls['score'],
+        mode: 'number'
+      },
+      {
+        label: 'INPUT.INIT_TOTAL_SCORE',
+        type: CONTROL_TYPE.Textbox,
+        layoutDefine: {
+          row: 2,
+          column: 0,
+        },
+        fieldControl: this.settingFormGroup.controls['initTotalScore'],
+        mode: 'number'
+      },
+    ];
   }
 
   recieveJoinedPlayers() {
@@ -132,6 +184,7 @@ export class RoomComponent extends BaseCoreAbstract {
     this.socketIoService.recieveRoomUpdate().subscribe((room) => {
       if (room.response.isSuccess) {
         this.room = room;
+        this.initSettingForm();
         this.socketIoService.currentPlayer = room.playerList.find(p => p.playerId === this.player.playerId)!;
         this.player = this.socketIoService.currentPlayer;
         this.popMessage(room.response.updateMessage, 'info');
@@ -294,5 +347,24 @@ export class RoomComponent extends BaseCoreAbstract {
 
   returnIsShowingCancelButton(player: PlayerDto): boolean {
     return (player.action.isChowable || player.action.isKongable || player.action.isPongable || player.action.isSelfKongable || player.action.isWinnable);
+  }
+
+  saveSetting() {
+    if (this.settingFormGroup.valid) {
+      let roomU = this.room;
+      roomU.mahjong.setting.minPoints = this.settingFormGroup.controls['minPoints'].value;
+      roomU.mahjong.setting.score = this.settingFormGroup.controls['score'].value;
+      roomU.mahjong.setting.initTotalScore = this.settingFormGroup.controls['initTotalScore'].value;
+
+      this.socketIoService.sendRoomUpdate(roomU);
+      this.roomSettingVisible = false
+    }
+  }
+
+  cancelSetting() {
+    this.settingFormGroup.controls['minPoints'].setValue(this.room.mahjong.setting.minPoints);
+    this.settingFormGroup.controls['score'].setValue(this.room.mahjong.setting.score);
+    this.settingFormGroup.controls['initTotalScore'].setValue(this.room.mahjong.setting.initTotalScore);
+    this.roomSettingVisible = false;
   }
 }
