@@ -1,4 +1,10 @@
-<div class="tw-w-full tw-grid player-mahjong-div">
+<div
+  class="tw-w-full tw-grid"
+  [ngClass]="{
+  'reverse-player-mahjong-div': playerPosition !== 'current', 
+  'player-mahjong-div': playerPosition === 'current', 
+}"
+>
   <!-- player info, action -->
   <div
     class="tw-grid tw-p-[var(--content-gap)] tw-gap-[var(--content-gap)] tw-items-center"
@@ -109,7 +115,7 @@
 
   <!-- flower set -->
   <div
-    class="tw-p-[var(--content-gap)] tw-flex flower-set-div"
+    class="tw-m-[10px] tw-p-[5px] tw-flex flower-set-div mahjong-set-div"
     [ngClass]="{
     'tw-justify-end': playerPosition === 'prev', 
   }"
@@ -119,14 +125,14 @@
         let mahjong of player.mahjong.flowerTiles.mahjongTile;
         let i = index
       "
-      class="tw-mx-[-4px]"
+      class=""
     >
       <app-mahjong [mahjong]="mahjong" [selectable]="false"></app-mahjong>
     </div>
   </div>
 
   <div
-    class="tw-px-[var(--content-gap)] tw-grid tw-gap-[15px] tw-w-full"
+    class="tw-mx-[10px] tw-p-[5px] tw-grid tw-gap-[15px]"
     [ngClass]="{
       'other-set-div': playerPosition !== 'prev', 
       'reverse-other-set-div': playerPosition === 'prev', 
@@ -134,7 +140,7 @@
   >
     <!-- hand set -->
     <div
-      class="tw-flex hand-set"
+      class="tw-flex hand-set mahjong-set-div"
       cdkDropList
       cdkDropListOrientation="horizontal"
       (cdkDropListDropped)="drop($event, player.mahjong.handTiles.mahjongTile)"
@@ -144,7 +150,7 @@
           let mahjong of player.mahjong.handTiles.mahjongTile;
           let i = index
         "
-        class="tw-mx-[-4px] tw-flex"
+        class="tw-flex"
       >
         <app-mahjong
           [mahjong]="mahjong"
@@ -158,20 +164,18 @@
           *ngIf="!currentPlayer"
           [isHide]="true"
           (click)="clickOtherPlayerTile()"
+          [selectable]="false"
         ></app-mahjong>
       </div>
     </div>
 
     <!-- public set -->
-    <div class="tw-flex tw-gap-[var(--content-gap)]">
+    <div class="tw-flex tw-gap-[var(--content-gap)] mahjong-set-div">
       <div
         *ngFor="let group of player.mahjong.publicTiles"
         class="tw-flex public-set"
       >
-        <div
-          *ngFor="let mahjong of group.mahjongTile; let i = index"
-          class="tw-mx-[-4px]"
-        >
+        <div *ngFor="let mahjong of group.mahjongTile; let i = index" class="">
           <app-mahjong [mahjong]="mahjong" [selectable]="false"></app-mahjong>
         </div>
       </div>

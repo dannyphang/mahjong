@@ -5,11 +5,11 @@
     "prevPlayer discard-area-div nextPlayer"
     "prevPlayer discard-area-div nextPlayer"
     "... currentPlayer ...";
-  grid-template-columns: 240px 1fr 240px;
-  grid-template-rows: 700px auto;
+  grid-template-columns: 240px fit-content(80%) 240px;
+  grid-template-rows: 800px auto;
   min-width: 60%;
-  max-width: 80%;
-  aspect-ratio: 1/1;
+  aspect-ratio: 1 / 1;
+  justify-content: center;
 }
 
 .prevPlayer {

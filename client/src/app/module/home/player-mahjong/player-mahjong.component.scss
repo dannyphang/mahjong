@@ -1,17 +1,21 @@
+.mahjong-set-div {
+  gap: 2px;
+}
+
 .player-mahjong-div {
   display: grid;
   grid-template-areas:
-    "playerInfo"
+    "flowerSet"
     "otherSet"
-    "flowerSet";
+    "playerInfo";
 }
 
 .reverse-player-mahjong-div {
   display: grid;
   grid-template-areas:
-    "flower-set-info"
-    "other-set-info"
-    "player-info";
+    "playerInfo"
+    "otherSet"
+    "flowerSet";
 }
 
 .player-info {
@@ -28,19 +32,27 @@
 
 .flower-set-div {
   grid-area: flowerSet;
-  height: 100px;
+  height: 75px;
+  background-color: var(--mahjong-secondary);
+  border-radius: 5px;
 }
 
 .other-set-div {
   grid-area: otherSet;
-  height: 70px;
+  height: 75px;
   grid-template-areas: "handSet publicSet";
+  justify-content: start;
+  background-color: #82490b;
+  border-radius: 5px;
 }
 
 .reverse-other-set-div {
   grid-area: otherSet;
-  height: 70px;
+  height: 75px;
   grid-template-areas: "publicSet handSet";
+  justify-content: end;
+  background-color: #82490b;
+  border-radius: 5px;
 }
 
 .player-label {
