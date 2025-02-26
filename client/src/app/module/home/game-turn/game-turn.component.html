@@ -1,0 +1,60 @@
+<div class="tw-w-full tw-grid tw-justify-center">
+  <!-- <img
+    [src]="
+      '../../../../assets/images/mahjong/' +
+      (room ? room.gameOrder : 1) +
+      '.png'
+    "
+  /> -->
+
+  <!-- if current player direction is east -->
+  <div
+    class="tw-border tw-border-solid tw-w-[150px] tw-h-[150px] tw-rounded-full"
+  >
+    <div class="tw-absolute">
+      <div
+        class="tw-absolute tw-top-[-20px] tw-grid tw-w-[150px] tw-h-[150px] tw-justify-center tw-items-start"
+      >
+        x{{ room.mahjong.remainingTiles.length }}
+      </div>
+    </div>
+    <div
+      class="tw-absolute tw-grid tw-w-[150px] tw-h-[150px] tw-justify-center tw-items-center"
+    >
+      <img
+        [src]="
+          '../../../../assets/images/mahjong/' +
+          (room ? room.gameOrder : 1) +
+          '.png'
+        "
+      />
+    </div>
+    <div class="tw-relative tw-grid tw-w-[150px] tw-h-[150px]">
+      <div class="tw-flex tw-justify-between tw-items-end">
+        <img
+          [src]="
+            '../../../../assets/images/mahjong/' +
+            returnPlayerDirectionLabel(2) +
+            '.png'
+          "
+        />
+        <img
+          [src]="
+            '../../../../assets/images/mahjong/' +
+            returnPlayerDirectionLabel(1) +
+            '.png'
+          "
+        />
+      </div>
+      <div class="tw-flex tw-justify-center tw-items-end">
+        <img
+          [src]="
+            '../../../../assets/images/mahjong/' +
+            returnPlayerDirectionLabel(0) +
+            '.png'
+          "
+        />
+      </div>
+    </div>
+  </div>
+</div>

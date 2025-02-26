@@ -1,0 +1,184 @@
+<div
+  class="tw-w-full tw-grid"
+  [ngClass]="{
+  'reverse-player-mahjong-div': playerPosition !== 'current', 
+  'player-mahjong-div': playerPosition === 'current', 
+}"
+>
+  <!-- player info, action -->
+  <div
+    class="tw-grid tw-p-[var(--content-gap)] tw-gap-[var(--content-gap)] tw-items-center"
+    [ngClass]="{
+      'player-info': playerPosition !== 'prev', 
+      'reverse-player-info': playerPosition === 'prev', 
+    }"
+  >
+    <app-chip
+      [label]="player.playerName"
+      [removable]="false"
+      class="player-label"
+    ></app-chip>
+
+    <img
+      class="direction-icon"
+      [src]="'../../../../assets/images/mahjong/' + player.direction + '.png'"
+    />
+
+    <app-base-label
+      [label]="'(' + player.mahjong.flowerTiles.point.toString() + ')'"
+      class="points"
+    ></app-base-label>
+
+    <!-- actions -->
+    <div class="tw-flex tw-gap-[15px] action-div" *ngIf="currentPlayer">
+      <!-- sort -->
+      <p-button
+        [label]="'ACTION.SORT' | translate"
+        (onClick)="sortMahjongList(player)"
+        [outlined]="true"
+      ></p-button>
+
+      <!-- draw -->
+      <p-button
+        [label]="'ACTION.DRAW' | translate"
+        (onClick)="drawMahjong(player)"
+        [outlined]="true"
+        *ngIf="currentPlayer"
+        [disabled]="checkIsTileFullNow(player)"
+      ></p-button>
+
+      <!-- discard -->
+      <p-button
+        [label]="'ACTION.DISCARD' | translate"
+        (onClick)="discardMahjong(player)"
+        [outlined]="true"
+        [disabled]="checkIsTileSelected(player) || !checkIsTileFullNow(player)"
+        *ngIf="currentPlayer"
+      ></p-button>
+
+      <!-- pong -->
+      <p-button
+        [label]="'ACTION.PONG' | translate"
+        (onClick)="actionMahjong('pong', player)"
+        [outlined]="true"
+        *ngIf="player.action.isPongable"
+      ></p-button>
+
+      <!-- kong -->
+      <p-button
+        [label]="'ACTION.KONG' | translate"
+        (onClick)="actionMahjong('kong', player)"
+        [outlined]="true"
+        *ngIf="player.action.isKongable"
+      ></p-button>
+
+      <!-- self kong -->
+      <p-button
+        [label]="'ACTION.SELF_KONG' | translate"
+        (onClick)="actionMahjong('self-kong', player)"
+        [outlined]="true"
+        [disabled]="checkIsTileSelected(player)"
+        *ngIf="player.action.isSelfKongable"
+      ></p-button>
+
+      <!-- chow -->
+      <p-button
+        [label]="'ACTION.CHOW' | translate"
+        (onClick)="actionMahjong('chow', player)"
+        [outlined]="true"
+        *ngIf="player.action.isChowable"
+      ></p-button>
+
+      <!-- cancel -->
+      <p-button
+        [label]="'BUTTON.CANCEL' | translate"
+        (onClick)="actionMahjong('cancel', player)"
+        [outlined]="true"
+        *ngIf="returnIsShowingCancelButton(player)"
+      ></p-button>
+
+      <!-- win -->
+      <p-button
+        [label]="'ACTION.WIN' | translate"
+        (onClick)="actionMahjong('win', player)"
+        [outlined]="true"
+      ></p-button>
+
+      <!-- check point -->
+      <p-button
+        [label]="'Check'"
+        (onClick)="checkPoint(player)"
+        [outlined]="true"
+      ></p-button>
+    </div>
+  </div>
+
+  <!-- flower set -->
+  <div
+    class="tw-m-[10px] tw-p-[5px] tw-flex flower-set-div mahjong-set-div"
+    [ngClass]="{
+    'tw-justify-end': playerPosition === 'prev', 
+  }"
+  >
+    <div
+      *ngFor="
+        let mahjong of player.mahjong.flowerTiles.mahjongTile;
+        let i = index
+      "
+      class=""
+    >
+      <app-mahjong [mahjong]="mahjong" [selectable]="false"></app-mahjong>
+    </div>
+  </div>
+
+  <div
+    class="tw-mx-[10px] tw-p-[5px] tw-grid tw-gap-[15px]"
+    [ngClass]="{
+      'other-set-div': playerPosition !== 'prev', 
+      'reverse-other-set-div': playerPosition === 'prev', 
+    }"
+  >
+    <!-- hand set -->
+    <div
+      class="tw-flex hand-set mahjong-set-div"
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="drop($event, player.mahjong.handTiles.mahjongTile)"
+    >
+      <div
+        *ngFor="
+          let mahjong of player.mahjong.handTiles.mahjongTile;
+          let i = index
+        "
+        class="tw-flex"
+      >
+        <app-mahjong
+          [mahjong]="mahjong"
+          cdkDrag
+          (click)="(mahjong.isSelected != mahjong.isSelected)"
+          *ngIf="currentPlayer"
+          (selectedTile)="selectedTileOutput($event, player)"
+        ></app-mahjong>
+
+        <app-mahjong
+          *ngIf="!currentPlayer"
+          [isHide]="true"
+          (click)="clickOtherPlayerTile()"
+          [selectable]="false"
+        ></app-mahjong>
+      </div>
+    </div>
+
+    <!-- public set -->
+    <div class="tw-flex tw-gap-[var(--content-gap)] mahjong-set-div">
+      <div
+        *ngFor="let group of player.mahjong.publicTiles"
+        class="tw-flex public-set"
+      >
+        <div *ngFor="let mahjong of group.mahjongTile; let i = index" class="">
+          <app-mahjong [mahjong]="mahjong" [selectable]="false"></app-mahjong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

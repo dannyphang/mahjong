@@ -1,0 +1,81 @@
+.mahjong-set-div {
+  gap: 2px;
+}
+
+.player-mahjong-div {
+  display: grid;
+  grid-template-areas:
+    "flowerSet"
+    "otherSet"
+    "playerInfo";
+}
+
+.reverse-player-mahjong-div {
+  display: grid;
+  grid-template-areas:
+    "playerInfo"
+    "otherSet"
+    "flowerSet";
+}
+
+.player-info {
+  grid-area: playerInfo;
+  grid-template-areas: "playerLabel directionIcon points actionDiv";
+  justify-content: start;
+}
+
+.reverse-player-info {
+  grid-area: playerInfo;
+  grid-template-areas: "points directionIcon playerLabel";
+  justify-content: end;
+}
+
+.flower-set-div {
+  grid-area: flowerSet;
+  height: 75px;
+  background-color: var(--mahjong-secondary);
+  border-radius: 5px;
+}
+
+.other-set-div {
+  grid-area: otherSet;
+  height: 75px;
+  grid-template-areas: "handSet publicSet";
+  justify-content: start;
+  background-color: #82490b;
+  border-radius: 5px;
+}
+
+.reverse-other-set-div {
+  grid-area: otherSet;
+  height: 75px;
+  grid-template-areas: "publicSet handSet";
+  justify-content: end;
+  background-color: #82490b;
+  border-radius: 5px;
+}
+
+.player-label {
+  grid-area: playerLabel;
+}
+
+.direction-icon {
+  grid-area: directionIcon;
+}
+
+.points {
+  grid-area: points;
+}
+
+.action-div {
+  grid-area: actionDiv;
+}
+
+.hand-set {
+  grid-area: handSet;
+  justify-content: end;
+}
+
+.public-set {
+  grid-area: publicSet;
+}

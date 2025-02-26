@@ -1,8 +1,17 @@
 .tile {
   width: var(--tile-width);
   height: calc(var(--tile-width) * var(--tile-ratio));
+  border: 1px solid #b8b0b0;
+  border-radius: 5px;
+  box-shadow: 0px 0px 4px 0px #b8b0b0 inset;
+  background-color: white;
+  padding: 5px;
 }
 
 .tile-div:hover {
   top: -10px;
+}
+
+.hide {
+  background-color: var(--mahjong-primary);
 }

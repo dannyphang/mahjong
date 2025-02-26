@@ -1,0 +1,19 @@
+<div
+  class="tw-border tw-border-solid tw-h-full tw-rounded-md"
+  [ngStyle]="{
+    backgroundImage: discardMapBackground,
+    borderColor: woodColor,
+    borderWidth: '10px'
+  }"
+>
+  <div
+    class="tw-flex tw-flex-wrap tw-gap-[var(--content-gap)] tw-p-[var(--content-gap)] tw-justify-center tw-h-full"
+  >
+    <div
+      *ngFor="let mahjong of room.mahjong.discardTiles; let i = index"
+      class="tw-mx-[-4px]"
+    >
+      <app-mahjong [mahjong]="mahjong" [selectable]="false"></app-mahjong>
+    </div>
+  </div>
+</div>
