@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { RoomDto } from '../../../core/services/game.service';
+import { PlayerDto, RoomDto } from '../../../core/services/game.service';
 
 @Component({
   selector: 'app-discard-area',

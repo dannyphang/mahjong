@@ -690,7 +690,12 @@ function playerJoinRoom(player, room) {
 function updateRoom(room) {
     return new Promise(async function (resolve, reject) {
         API.updateRoom(room).then((res) => {
-            resolve(room);
+            resolve({
+                ...room,
+                response: {
+                    isSuccess: true,
+                },
+            });
         });
     });
 }

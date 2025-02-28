@@ -23,6 +23,11 @@ router.post("/", async (req, res) => {
             mahjong: {
                 discardTiles: [],
                 remainingTiles: [],
+                setting: {
+                    minPoints: 5,
+                    score: 1,
+                    initTotalScore: 100,
+                },
             },
         };
 

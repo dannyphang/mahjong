@@ -3,7 +3,11 @@
 <div *ngIf="player">
   <div class="tw-p-[var(--content-gap)] tw-grid tw-gap-[var(--content-gap)]">
     <!-- player list in the room -->
-    <div class="tw-flex tw-gap-[var(--content-gap)]">
+    <div
+      class="tw-flex tw-gap-[var(--content-gap)] tw-flex-wrap tw-items-center"
+    >
+      <h2 class="tw-m-[var(--content-gap)]">Room: {{ room.roomCode }}</h2>
+
       <div *ngFor="let p of room.playerList">
         <p-button
           [label]="p.playerName"
@@ -27,6 +31,13 @@
         [outlined]="true"
         (onClick)="nextTurn()"
       ></p-button>
+
+      <p-button
+        [outlined]="true"
+        icon="pi pi-cog"
+        [pTooltip]="'ROOM.SETTING' | translate"
+        (onClick)="roomSettingVisible = true"
+      ></p-button>
     </div>
   </div>
 
@@ -34,6 +45,7 @@
   <section class="display-mahjong-div">
     <!-- testing area (remaining mahjong) -->
     <div
+      *ngIf="false"
       class="tw-flex tw-flex-wrap tw-gap-[var(--content-gap)] tw-p-[var(--content-gap)] tw-justify-center tw-items-center"
       cdkDropList
       cdkDropListOrientation="horizontal"
@@ -51,19 +63,20 @@
       </div>
     </div>
 
-    <!-- Player turn area -->
-    <div
-      class="tw-flex tw-gap-[var(--content-gap)] tw-p-[var(--content-gap)] tw-justify-center tw-items-center"
-    >
-      <app-game-turn [room]="room" [player]="player"></app-game-turn>
-    </div>
-
     <app-mahjong-table
       [room]="room"
       [player]="player"
       class="room-table-div"
     ></app-mahjong-table>
   </section>
+</div>
+
+<!-- Player turn area -->
+<div
+  class="tw-flex tw-gap-[var(--content-gap)] tw-p-[var(--content-gap)] tw-justify-center tw-items-center tw-fixed tw-bottom-4 tw-left-4 tw-rounded-full tw-bg-white"
+  *ngIf="true"
+>
+  <app-game-turn [room]="room" [player]="player"></app-game-turn>
 </div>
 
 <p-dialog
@@ -117,5 +130,23 @@
         (onClick)="sendChow()"
       ></p-button>
     </div>
+  </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="roomSettingVisible" [modal]="true" [closable]="false">
+  <ng-template pTemplate="content">
+    <app-base-form [formConfig]="settingFormConfig"></app-base-form>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      [outlined]="true"
+      [label]="'BUTTON.CANCEL' | translate"
+      (onClick)="cancelSetting()"
+    ></p-button>
+    <p-button
+      [label]="'BUTTON.SUBMIT' | translate"
+      (onClick)="saveSetting()"
+    ></p-button>
   </ng-template>
 </p-dialog>
