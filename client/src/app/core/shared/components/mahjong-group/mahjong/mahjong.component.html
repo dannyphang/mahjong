@@ -1,10 +1,10 @@
 <div class="tw-grid tw-justify-items-center">
   <div
-    class="tw-relative tw-flex"
+    class="tw-relative tw-flex tile-div"
     (click)="selectTile()"
     [ngClass]="{
       'tw-top-[-10px]': selectable && mahjong?.isSelected && !isHide,
-      'tile-div': selectable
+      'tile-div-hover': selectable
     }"
   >
     <img
@@ -14,6 +14,9 @@
       [ngClass]="{ 'tw-brightness-50': isTaken }"
       *ngIf="!isHide"
     />
+    <div *ngIf="!isHide" class="mahjong-tag">
+      {{ mahjong!.name[0].toUpperCase() }}
+    </div>
     <div class="tile hide" *ngIf="isHide"></div>
   </div>
   <!-- <i
