@@ -10,6 +10,7 @@
     "CHECK": "CHECK",
     "SORT": "Sort",
     "START_GAME": "Start Game",
+    "END_GAME": "End Game",
     "MESSAGE": {
       "SELECTE_TILE_DISCARD": "Please select a tile to discard.",
       "SELECTE_TILE_KONG": "Please select a tile to Kong.",

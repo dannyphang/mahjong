@@ -140,4 +140,8 @@ export class SocketioService {
     sendChow(room: RoomDto, player: PlayerDto, selectedMahjongChow: MahjongDto[], selectedMahjong: MahjongDto) {
         this.socket.emit('chow', { room: room, player: player, selectedMahjongChow: selectedMahjongChow, selectedMahjong: selectedMahjong });
     }
+
+    sendGameEnd(room: RoomDto) {
+        this.socket.emit('gameEnd', { room: room });
+    }
 }

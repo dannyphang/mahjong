@@ -317,4 +317,8 @@ export class RoomComponent extends BaseCoreAbstract {
     this.roomSettingVisible = false;
 
   }
+
+  endGame() {
+    this.socketIoService.sendGameEnd(this.room);
+  }
 }

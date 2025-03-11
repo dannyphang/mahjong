@@ -85,7 +85,6 @@ router.put("/", async (req, res) => {
         room.playerList = room.playerList.map((item) => item.playerId ?? item);
         room.mahjong.remainingTiles = room.mahjong.remainingTiles?.map((item) => item.uid ?? item) ?? [];
         room.mahjong.discardTiles = room.mahjong.discardTiles?.map((item) => item.uid ?? item) ?? [];
-        console.log(room.mahjong.takenTiles);
         room.mahjong.takenTiles = room.mahjong.takenTiles?.map((item) => item.uid ?? item) ?? [];
         room.waitingPlayer = room.waitingPlayer?.playerId ?? room.waitingPlayer ?? null;
 

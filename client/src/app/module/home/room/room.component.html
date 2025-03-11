@@ -30,6 +30,15 @@
         [label]="'Next player turn'"
         [outlined]="true"
         (onClick)="nextTurn()"
+        *ngIf="true"
+      ></p-button>
+
+      <!-- next player -->
+      <p-button
+        [label]="'ACTION.END_GAME' | translate"
+        [outlined]="true"
+        (onClick)="endGame()"
+        *ngIf="true"
       ></p-button>
 
       <p-button

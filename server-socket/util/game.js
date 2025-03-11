@@ -1683,4 +1683,24 @@ async function checkActionPriority(action, room, player, selectedMahjong) {
     return false;
 }
 
-export { createGame, playerJoinRoom, updateRoom, playerQuitRoom, discardMahjong, nextTurn, drawMahjong, updatePlayer, actions, chowAction, testGame, discardMahjongV1, actionV1 };
+function endGame(room) {
+    return new Promise((resolve, reject) => {
+        room.gameStarted = false;
+
+        updateRoom(room)
+            .then((roomU) => {
+                resolve({
+                    ...roomU,
+                    response: {
+                        isSuccess: true,
+                        updateMessage: "Game ended.",
+                    },
+                });
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+}
+
+export { createGame, playerJoinRoom, updateRoom, playerQuitRoom, discardMahjong, nextTurn, drawMahjong, updatePlayer, actions, chowAction, testGame, discardMahjongV1, actionV1, endGame };

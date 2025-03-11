@@ -10,6 +10,7 @@
     "SORT": "整理",
     "START_GAME": "开始游戏",
     "CHECK": "检查",
+    "END_GAME": "结束游戏",
     "MESSAGE": {
       "SELECTE_TILE_DISCARD": "请选择一张麻将丢弃.",
       "SELECTE_TILE_KONG": "请选择一张麻将杠.",
