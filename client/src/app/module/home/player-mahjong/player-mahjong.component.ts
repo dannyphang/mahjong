@@ -1,5 +1,5 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
@@ -19,6 +19,7 @@ export class PlayerMahjongComponent extends BaseCoreAbstract {
   @Input() playerPosition: 'prev' | 'next' | 'current' = 'current';
 
   chowVisible: boolean;
+  roomSettingVisible: boolean = false;
   selectedChowList: MahjongDto[] = [];
 
   constructor(
@@ -30,6 +31,39 @@ export class PlayerMahjongComponent extends BaseCoreAbstract {
     private translateService: TranslateService
   ) {
     super(messageService);
+  }
+
+  @HostListener("window:keydown", ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'ArrowRight':
+        this.nextTurn();
+        break;
+      case '1':
+        this.sortMahjongList(this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+        break;
+      case '2':
+        this.drawMahjong(this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+        break;
+      case '3':
+        this.discardMahjong(this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+        break;
+      case '4':
+        this.actionMahjong('pong', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+        break;
+      case '5':
+        this.actionMahjong('kong', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+        break;
+      case '6':
+        this.actionMahjong('chow', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+        break;
+      case '7':
+        this.actionMahjong('win', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+        break;
+      case 'S':
+        this.roomSettingVisible = true;
+        break;
+    }
   }
 
   updateRoom(room: RoomDto) {
@@ -181,4 +215,7 @@ export class PlayerMahjongComponent extends BaseCoreAbstract {
     return (player.action.isChowable || player.action.isKongable || player.action.isPongable || player.action.isSelfKongable || player.action.isWinnable);
   }
 
+  returnIsTaken(mahjong: MahjongDto): boolean {
+    return this.gameService.checkMahjongIsTaken(this.room, mahjong.uid);
+  }
 }

@@ -3,15 +3,15 @@
     class="tw-relative tw-flex"
     (click)="selectTile()"
     [ngClass]="{
-      'tw-top-[-10px]': selectable && mahjong.isSelected && !isHide,
+      'tw-top-[-10px]': selectable && mahjong?.isSelected && !isHide,
       'tile-div': selectable
     }"
   >
     <img
-      [src]="'../../../../assets/images/mahjong/' + mahjong.code + '.png'"
-      [alt]="mahjong.name"
+      [src]="'../../../../assets/images/mahjong/' + mahjong?.code + '.png'"
+      [alt]="mahjong?.name"
       class="tile"
-      [ngClass]="{ 'tw-brightness-50': mahjong.isTaken }"
+      [ngClass]="{ 'tw-brightness-50': isTaken }"
       *ngIf="!isHide"
     />
     <div class="tile hide" *ngIf="isHide"></div>

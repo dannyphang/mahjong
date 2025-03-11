@@ -7,6 +7,7 @@ import responseModel from "../shared/function.js";
 router.use(express.json());
 
 const roomCollectionName = "room";
+const playerCollectionName = "player";
 
 // create new room
 router.post("/", async (req, res) => {
@@ -28,6 +29,7 @@ router.post("/", async (req, res) => {
                     score: 1,
                     initTotalScore: 100,
                 },
+                takenTiles: [],
             },
         };
 
@@ -79,12 +81,33 @@ router.get("/:id", async (req, res) => {
 router.put("/", async (req, res) => {
     try {
         let room = req.body.room;
+
+        room.playerList = room.playerList.map((item) => item.playerId ?? item);
+        room.mahjong.remainingTiles = room.mahjong.remainingTiles?.map((item) => item.uid ?? item) ?? [];
+        room.mahjong.discardTiles = room.mahjong.discardTiles?.map((item) => item.uid ?? item) ?? [];
+        console.log(room.mahjong.takenTiles);
+        room.mahjong.takenTiles = room.mahjong.takenTiles?.map((item) => item.uid ?? item) ?? [];
+        room.waitingPlayer = room.waitingPlayer?.playerId ?? room.waitingPlayer ?? null;
+
         let newRef = db.default.db.collection(roomCollectionName).doc(room.roomId);
         await newRef.update(room);
 
-        res.status(200).json(responseModel({ data: room }));
+        await getAllPlayerList(room)
+            .then((newPlayerList) => {
+                room.playerList = newPlayerList;
+                room.waitingPlayer = newPlayerList.find((p) => p.playerId === room.waitingPlayer);
+                res.status(200).json(responseModel({ data: room }));
+            })
+            .catch((error) => {
+                res.status(400).json(
+                    responseModel({
+                        isSuccess: false,
+                        responseMessage: error,
+                    })
+                );
+            });
     } catch (error) {
-        console.log("error", error);
+        console.log(error);
         res.status(400).json(
             responseModel({
                 isSuccess: false,
@@ -93,5 +116,35 @@ router.put("/", async (req, res) => {
         );
     }
 });
+
+async function getAllPlayerList(room) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let plist = [];
+
+            // Use Promise.all to handle async operations in parallel
+            await Promise.all(
+                room.playerList.map(async (player) => {
+                    const snapshot = await db.default.db.collection(playerCollectionName).where("statusId", "==", 1).where("playerId", "==", player).get();
+
+                    const list = snapshot.docs.map((doc) => doc.data());
+
+                    if (list.length > 0) {
+                        plist.push(list[0]);
+                    }
+                })
+            );
+
+            // Resolve with the list of players
+            if (plist.length > 0) {
+                resolve(plist);
+            } else {
+                resolve("No players found.");
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
 
 export default router;

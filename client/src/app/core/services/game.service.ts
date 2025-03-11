@@ -9,10 +9,19 @@ import { NumberValueAccessor } from '@angular/forms';
     providedIn: 'root',
 })
 export class GameService {
+    mahjongFullList: MahjongDto[] = [];
 
     constructor(
         private http: HttpClient
     ) {
+    }
+
+    set setMahjongList(mahjongList: MahjongDto[]) {
+        this.mahjongFullList = mahjongList;
+    }
+
+    get getMahjongList(): MahjongDto[] {
+        return this.mahjongFullList;
     }
 
     getAllMahjong(): Observable<ResponseModel<MahjongDto[]>> {
@@ -23,8 +32,8 @@ export class GameService {
         return this.http.post<ResponseModel<RoomDto>>(apiConfig.baseUrl + '/room', null).pipe();
     }
 
-    getRoomById(roomId: string): Observable<ResponseModel<RoomDto>> {
-        return this.http.get<ResponseModel<RoomDto>>(apiConfig.baseUrl + '/room/' + roomId).pipe();
+    getRoomById(roomId: string): Observable<ResponseModel<any>> {
+        return this.http.get<ResponseModel<any>>(apiConfig.baseUrl + '/room/' + roomId).pipe();
     }
 
     createPlayer(player: PlayerDto): Observable<ResponseModel<PlayerDto>> {
@@ -46,6 +55,10 @@ export class GameService {
     getCalculatePoint(player: PlayerDto): Observable<ResponseModel<MahjongCombinationGroupDto>> {
         return this.http.post<ResponseModel<MahjongCombinationGroupDto>>(apiConfig.baseUrl + '/mahjong/calculate_points', { player }).pipe();
     }
+
+    checkMahjongIsTaken(room: RoomDto, uid: string): boolean {
+        return room.mahjong.takenTiles?.find(m => m.uid === uid) ? true : false;
+    }
 }
 
 export class RoomDto {
@@ -59,6 +72,7 @@ export class RoomDto {
     gameOrder: number;
     waitingPlayer: PlayerDto;
     waitingAction: string;
+    waitingTile: string;
     waiting: number; // 0 = no value, 1 = is waiting, 2 = cancelled
 }
 
@@ -80,6 +94,13 @@ export class RoomUpdateDto extends RoomDto {
     }
 }
 
+export class RoomErrorResponseDto {
+    response: {
+        isSuccess: boolean;
+        updateMessage: string;
+    }
+}
+
 export class MahjongGroupDto {
     handTiles: MahjongTileSetDto;
     publicTiles: [{ mahjongTile: MahjongDto[] }];
@@ -90,6 +111,7 @@ export class RoomMahjongGroupDto {
     discardTiles: MahjongDto[];
     remainingTiles: MahjongDto[];
     setting: MahjongSettingDto;
+    takenTiles: MahjongDto[];
 }
 
 export class MahjongSettingDto {
@@ -99,7 +121,7 @@ export class MahjongSettingDto {
 }
 
 export class MahjongTileSetDto {
-    point: number;
+    point?: number;
     mahjongTile: MahjongDto[];
 }
 

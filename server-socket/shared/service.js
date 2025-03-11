@@ -9,6 +9,14 @@ function getMahjong() {
     return http.get("mahjong");
 }
 
+function getMahjongByUid(uid) {
+    return http.get("mahjong/" + uid);
+}
+
+function getPlayerByUid(uid) {
+    return http.get(`player/${uid}`);
+}
+
 function updateRoom(room) {
     return http.put("room", { room: room });
 }
@@ -37,4 +45,4 @@ function isConsecutive(code1, code2, code3) {
     return http.post("mahjong/isConsecutive", { code1: code1, code2: code2, code3: code3 });
 }
 
-export { getMahjong, updateRoom, updatePlayer, isNextPlayer, checkChow, calculateFlowerTilePoints, isKongableFromHandSet, isConsecutive };
+export { getMahjong, getMahjongByUid, getPlayerByUid, updateRoom, updatePlayer, isNextPlayer, checkChow, calculateFlowerTilePoints, isKongableFromHandSet, isConsecutive };

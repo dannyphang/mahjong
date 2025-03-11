@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { PlayerDto, RoomDto } from '../../../core/services/game.service';
+import { GameService, MahjongDto, PlayerDto, RoomDto } from '../../../core/services/game.service';
 
 @Component({
   selector: 'app-discard-area',
@@ -11,12 +11,18 @@ export class DiscardAreaComponent {
   discardMapBackground: string;
   woodColor: string;
 
-  constructor() {
+  constructor(
+    private gameService: GameService
+  ) {
 
   }
 
   ngOnInit() {
     this.discardMapBackground = 'url(../../../../assets/images/room/mahjongTable.jpg)';
     this.woodColor = '#bc6a3c';
+  }
+
+  returnIsTaken(mahjong: MahjongDto): boolean {
+    return this.gameService.checkMahjongIsTaken(this.room, mahjong.uid);
   }
 }

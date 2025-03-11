@@ -195,7 +195,7 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
       this.gameService.getRoomById(this.roomIdFormControl.value).subscribe({
         next: res2 => {
           if (res2.isSuccess) {
-            if (res2.data.playerList.length < 3 || res2.data.playerList.find(p => p.playerId === this.socketIoService.player.playerId)) {
+            if (res2.data.playerList.length < 3 || res2.data.playerList.find((p: any) => p === this.socketIoService.player.playerId)) {
               this.socketIoService.room = res2.data;
               this.router.navigate(['/room', this.roomIdFormControl.value]);
             }

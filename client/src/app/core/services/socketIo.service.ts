@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
 import apiConfig from '../../../environments/apiConfig';
-import { MahjongDto, PlayerDto, RoomDto, RoomUpdateDto } from './game.service';
+import { GameService, MahjongDto, PlayerDto, RoomDto, RoomErrorResponseDto, RoomUpdateDto } from './game.service';
 
 @Injectable({
     providedIn: 'root',
@@ -13,7 +13,9 @@ export class SocketioService {
     currentPlayer: PlayerDto;
     currentRoom: RoomDto;
 
-    constructor() { }
+    constructor(
+        private gameService: GameService
+    ) { }
 
     set player(player: PlayerDto) {
         this.currentPlayer = player;
@@ -54,27 +56,61 @@ export class SocketioService {
     recieveJoinedPlayers() {
         return new Observable<RoomUpdateDto>((observer) => {
             this.socket.on('joinRoom', (room) => {
-                observer.next(room);
+                observer.next(this.assignMahjongToRoom(room));
             });
         });
     }
 
     recieveRoomUpdate() {
         return new Observable<RoomUpdateDto>((observer) => {
-            this.socket.on('roomUpdate', (room: RoomUpdateDto) => {
+            this.socket.on('roomUpdate', (room: any) => {
+                observer.next(this.assignMahjongToRoom(room));
+            });
+        });
+    }
+
+    recieveRoomError() {
+        return new Observable<RoomErrorResponseDto>((observer) => {
+            this.socket.on('roomError', (room: RoomErrorResponseDto) => {
                 observer.next(room);
             });
         });
     }
 
-    recievePlayerRoomUpdate() {
-        return new Observable<RoomUpdateDto>((observer) => {
-            this.socket.on('roomUpdate', (room: RoomUpdateDto) => {
-                this.currentPlayer = room.playerList.find(p => p.playerId === this.currentPlayer.playerId)!;
+    assignMahjongToRoom(room: any): RoomUpdateDto {
+        let playerList: PlayerDto[] = [];
+        room.playerList.forEach((player: any) => {
+            let updatedPlayer: PlayerDto = {
+                ...player,
+                mahjong: {
+                    flowerTiles: {
+                        mahjongTile: this.gameService.mahjongFullList.filter(m => player.mahjong.flowerTiles.mahjongTile.includes(m.uid)),
+                    },
+                    handTiles: {
+                        mahjongTile: this.gameService.mahjongFullList.filter(m => player.mahjong.handTiles.mahjongTile.includes(m.uid))
+                    },
+                    publicTiles: player.mahjong.publicTiles.map((tileGroup: any) => ({
+                        mahjongTile: this.gameService.mahjongFullList.filter(m =>
+                            tileGroup.mahjongTile.some((tile: any) => tile === m.uid)
+                        )
+                    }))
 
-                observer.next(room);
-            });
-        });
+                }
+            }
+            playerList.push(updatedPlayer)
+        })
+
+        let newUpdatedRoom: RoomUpdateDto = {
+            ...room,
+            mahjong: {
+                remainingTiles: this.gameService.mahjongFullList.filter(m => room.mahjong.remainingTiles.includes(m.uid)),
+                discardTiles: this.gameService.mahjongFullList.filter(m => room.mahjong.discardTiles.includes(m.uid)),
+                takenTiles: this.gameService.mahjongFullList.filter(m => room.mahjong.takenTiles.includes(m.uid)),
+            },
+            playerList: playerList
+        }
+        console.log(newUpdatedRoom)
+        return newUpdatedRoom;
     }
 
     sendPlayerQuitRoom(room: RoomDto, player: PlayerDto) {

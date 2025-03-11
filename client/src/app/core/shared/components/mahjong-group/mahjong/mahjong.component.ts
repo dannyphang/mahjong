@@ -7,13 +7,14 @@ import { MahjongDto } from '../../../../services/game.service';
   styleUrl: './mahjong.component.scss'
 })
 export class MahjongComponent {
-  @Input() mahjong: MahjongDto = new MahjongDto();
+  @Input() mahjong: MahjongDto | null = new MahjongDto() || null;
   @Input() selectable: boolean = true;
   @Input() isHide: boolean = false;
   @Output() selectedTile: EventEmitter<MahjongDto> = new EventEmitter();
+  @Input() isTaken: boolean = false;
 
   selectTile() {
-    if (this.selectable) {
+    if (this.selectable && this.mahjong) {
       this.mahjong.isSelected = !this.mahjong.isSelected;
       this.selectedTile.emit(this.mahjong);
     }
