@@ -13,7 +13,11 @@
       *ngFor="let mahjong of room.mahjong.discardTiles; let i = index"
       class="tw-mx-[-4px]"
     >
-      <app-mahjong [mahjong]="mahjong" [selectable]="false"></app-mahjong>
+      <app-mahjong
+        [mahjong]="mahjong"
+        [selectable]="false"
+        [isTaken]="returnIsTaken(mahjong)"
+      ></app-mahjong>
     </div>
   </div>
 </div>

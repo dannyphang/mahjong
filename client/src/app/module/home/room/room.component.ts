@@ -27,7 +27,8 @@ export class RoomComponent extends BaseCoreAbstract {
     minPoints: new FormControl(5),
     score: new FormControl(1),
     initTotalScore: new FormControl(100),
-  })
+  });
+  isDisplay: boolean = false;
 
   constructor(
     private socketIoService: SocketioService,
@@ -40,6 +41,11 @@ export class RoomComponent extends BaseCoreAbstract {
     super(messageService);
 
     if (this.socketIoService.currentPlayer) {
+      // get all mahjong
+      this.gameService.getAllMahjong().subscribe(res => {
+        this.gameService.setMahjongList = res.data;
+        this.isDisplay = true;
+      });
       this.initRoom();
     }
     else {
@@ -59,41 +65,41 @@ export class RoomComponent extends BaseCoreAbstract {
     }
   }
 
-  @HostListener("window:keydown", ['$event'])
-  onKeyDown(event: KeyboardEvent) {
-    switch (event.key) {
-      case 'Q':
-        this.startGame();
-        break;
-      case 'ArrowRight':
-        this.nextTurn();
-        break;
-      case '1':
-        this.sortMahjongList(this.room.playerList.find(p => p.playerId === this.player.playerId)!);
-        break;
-      case '2':
-        this.drawMahjong(this.room.playerList.find(p => p.playerId === this.player.playerId)!);
-        break;
-      case '3':
-        this.discardMahjong(this.room.playerList.find(p => p.playerId === this.player.playerId)!);
-        break;
-      case '4':
-        this.actionMahjong('pong', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
-        break;
-      case '5':
-        this.actionMahjong('kong', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
-        break;
-      case '6':
-        this.actionMahjong('chow', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
-        break;
-      case '7':
-        this.actionMahjong('win', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
-        break;
-      case 'S':
-        this.roomSettingVisible = true;
-        break;
-    }
-  }
+  // @HostListener("window:keydown", ['$event'])
+  // onKeyDown(event: KeyboardEvent) {
+  //   switch (event.key) {
+  //     case 'Q':
+  //       this.startGame();
+  //       break;
+  //     case 'ArrowRight':
+  //       this.nextTurn();
+  //       break;
+  //     case '1':
+  //       this.sortMahjongList(this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+  //       break;
+  //     case '2':
+  //       this.drawMahjong(this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+  //       break;
+  //     case '3':
+  //       this.discardMahjong(this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+  //       break;
+  //     case '4':
+  //       this.actionMahjong('pong', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+  //       break;
+  //     case '5':
+  //       this.actionMahjong('kong', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+  //       break;
+  //     case '6':
+  //       this.actionMahjong('chow', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+  //       break;
+  //     case '7':
+  //       this.actionMahjong('win', this.room.playerList.find(p => p.playerId === this.player.playerId)!);
+  //       break;
+  //     case 'S':
+  //       this.roomSettingVisible = true;
+  //       break;
+  //   }
+  // }
 
   playerQuited(player: PlayerDto) {
     this.room.playerList = this.room.playerList.filter(p => p.playerId !== player.playerId);
@@ -119,9 +125,10 @@ export class RoomComponent extends BaseCoreAbstract {
   }
 
   initSettingForm() {
-    this.settingFormGroup.controls['minPoints'].setValue(this.room.mahjong.setting.minPoints);
-    this.settingFormGroup.controls['score'].setValue(this.room.mahjong.setting.score);
-    this.settingFormGroup.controls['initTotalScore'].setValue(this.room.mahjong.setting.initTotalScore);
+    console.log(this.room)
+    this.settingFormGroup.controls['minPoints'].setValue(this.room.mahjong.setting?.minPoints ?? null);
+    this.settingFormGroup.controls['score'].setValue(this.room.mahjong.setting?.score ?? null);
+    this.settingFormGroup.controls['initTotalScore'].setValue(this.room.mahjong.setting?.initTotalScore ?? null);
 
     this.settingFormConfig = [
       {
@@ -173,6 +180,7 @@ export class RoomComponent extends BaseCoreAbstract {
         waiting: roomU.waiting,
         waitingPlayer: roomU.waitingPlayer,
         waitingAction: roomU.waitingAction,
+        waitingTile: roomU.waitingTile,
       }
 
       this.socketIoService.currentRoom = newRoom;
@@ -183,6 +191,7 @@ export class RoomComponent extends BaseCoreAbstract {
   recieveGameUpdate() {
     this.socketIoService.recieveRoomUpdate().subscribe((room) => {
       if (room.response.isSuccess) {
+        console.log(room)
         this.room = room;
         this.initSettingForm();
         this.socketIoService.currentPlayer = room.playerList.find(p => p.playerId === this.player.playerId)!;
@@ -193,6 +202,12 @@ export class RoomComponent extends BaseCoreAbstract {
         this.popMessage(room.response.updateMessage, 'error');
       }
     });
+  }
+
+  receiveRoomError() {
+    this.socketIoService.recieveRoomError().subscribe(message => {
+      this.popMessage(message.response.updateMessage, 'error');
+    })
   }
 
   startGame() {
@@ -279,72 +294,6 @@ export class RoomComponent extends BaseCoreAbstract {
     this.socketIoService.sendNextTurn(this.room);
   }
 
-  actionMahjong(action: string, player: PlayerDto) {
-    switch (action) {
-      case 'pong':
-        this.socketIoService.sendMahjongAction('pong', this.room, player, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
-        break;
-      case 'chow':
-        this.player.mahjong.handTiles.mahjongTile.forEach(m => {
-          m.isSelected = false;
-        });
-        this.selectedChowList = [];
-        this.chowVisible = true;
-        break;
-      case 'kong':
-        this.socketIoService.sendMahjongAction('kong', this.room, player, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
-        break;
-      case 'self-kong':
-        let selectedMahjong = this.room.playerList.find(p => p.playerId === this.player.playerId)?.mahjong.handTiles.mahjongTile.find(m => m.isSelected);
-
-        if (!selectedMahjong) {
-          this.popMessage(this.translateService.instant("ACTION.MESSAGE.SELECTE_TILE_KONG"), 'error');
-        }
-        else {
-          this.socketIoService.sendMahjongAction('self-kong', this.room, player, selectedMahjong);
-        }
-        break;
-      case 'win':
-        this.checkPoint(player)
-        break;
-      case 'cancel':
-        this.socketIoService.sendMahjongAction('cancel', this.room, player, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
-        break;
-
-    }
-  }
-
-  checkPoint(player: PlayerDto) {
-    this.gameService.getCalculatePoint(player).subscribe(res => {
-      if (res.isSuccess) {
-        console.log(res.data)
-      }
-      else {
-        console.log('not winning', res.data)
-      }
-    })
-  }
-
-  cancelChow() {
-    this.player.mahjong.handTiles.mahjongTile.forEach(m => {
-      m.isSelected = false;
-    });
-
-    this.room.playerList.find(p => p.playerId === this.player.playerId)!.mahjong = this.player.mahjong;
-    this.selectedChowList = [];
-    this.chowVisible = false;
-  }
-
-  sendChow() {
-    if (this.selectedChowList.length !== 2) {
-      this.popMessage(this.translateService.instant("ACTION.MESSAGE.SELECTE_TILE_CHOW"), 'error');
-    }
-    else {
-      this.socketIoService.sendChow(this.room, this.player, this.selectedChowList, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
-      this.cancelChow();
-    }
-  }
-
   returnIsShowingCancelButton(player: PlayerDto): boolean {
     return (player.action.isChowable || player.action.isKongable || player.action.isPongable || player.action.isSelfKongable || player.action.isWinnable);
   }
@@ -366,5 +315,6 @@ export class RoomComponent extends BaseCoreAbstract {
     this.settingFormGroup.controls['score'].setValue(this.room.mahjong.setting.score);
     this.settingFormGroup.controls['initTotalScore'].setValue(this.room.mahjong.setting.initTotalScore);
     this.roomSettingVisible = false;
+
   }
 }

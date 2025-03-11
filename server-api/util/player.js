@@ -34,6 +34,15 @@ router.put("/", async (req, res) => {
     try {
         let player = req.body.player;
         let newRef = db.default.db.collection(playerCollectionName).doc(player.playerId);
+
+        player.mahjong.flowerTiles.mahjongTile = player.mahjong.flowerTiles.mahjongTile.map((item) => item.uid ?? item);
+        player.mahjong.publicTiles =
+            player.mahjong.publicTiles?.map((tileGroup) => ({
+                mahjongTile: tileGroup.mahjongTile?.map((tile) => tile.uid) || [],
+            })) ?? [];
+
+        player.mahjong.handTiles.mahjongTile = player.mahjong.handTiles.mahjongTile.map((item) => item.uid ?? item);
+
         await newRef.update(player);
 
         res.status(200).json(responseModel({ data: player }));
@@ -67,6 +76,37 @@ router.get("/", async (req, res) => {
                 responseModel({
                     isSuccess: false,
                     responseMessage: "Player is not found.",
+                })
+            );
+        }
+    } catch (error) {
+        console.log("error", error);
+        res.status(400).json(
+            responseModel({
+                isSuccess: false,
+                responseMessage: error,
+            })
+        );
+    }
+});
+
+// get player by uid
+router.get("/:id", async (req, res) => {
+    const id = req.params.id;
+    try {
+        const snapshot = await db.default.db.collection(playerCollectionName).where("statusId", "==", 1).where("playerId", "==", id).get();
+
+        const list = snapshot.docs.map((doc) => {
+            return doc.data();
+        });
+
+        if (list.length > 0) {
+            res.status(200).json(responseModel({ data: list[0] }));
+        } else {
+            res.status(400).json(
+                responseModel({
+                    isSuccess: false,
+                    responseMessage: id + "Player is not found.",
                 })
             );
         }

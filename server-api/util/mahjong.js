@@ -60,6 +60,26 @@ router.get("/", async (req, res) => {
     }
 });
 
+// get mahjong by uid
+router.get("/:id", async (req, res) => {
+    const id = req.params.id;
+    try {
+        const snapshot = await db.default.db.collection(mahjongCollectionName).where("statusId", "==", 1).where("uid", "==", id).get();
+
+        const list = snapshot.docs.map((doc) => doc.data());
+
+        res.status(200).json(responseModel({ data: list[0] }));
+    } catch (error) {
+        console.error("Error fetching Mahjong data:", error);
+        res.status(400).json(
+            responseModel({
+                isSuccess: false,
+                responseMessage: error.message,
+            })
+        );
+    }
+});
+
 // get room by id
 router.get("/:id", async (req, res) => {
     const id = req.params.id;

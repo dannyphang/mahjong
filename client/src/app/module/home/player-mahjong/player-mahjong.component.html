@@ -25,7 +25,7 @@
     />
 
     <app-base-label
-      [label]="'(' + player.mahjong.flowerTiles.point.toString() + ')'"
+      [label]="'(' + (player.mahjong.flowerTiles.point ?? 0) + ')'"
       class="points"
     ></app-base-label>
 
@@ -61,7 +61,6 @@
         [label]="'ACTION.PONG' | translate"
         (onClick)="actionMahjong('pong', player)"
         [outlined]="true"
-        *ngIf="player.action.isPongable"
       ></p-button>
 
       <!-- kong -->
@@ -69,7 +68,6 @@
         [label]="'ACTION.KONG' | translate"
         (onClick)="actionMahjong('kong', player)"
         [outlined]="true"
-        *ngIf="player.action.isKongable"
       ></p-button>
 
       <!-- self kong -->
@@ -78,7 +76,6 @@
         (onClick)="actionMahjong('self-kong', player)"
         [outlined]="true"
         [disabled]="checkIsTileSelected(player)"
-        *ngIf="player.action.isSelfKongable"
       ></p-button>
 
       <!-- chow -->
@@ -86,7 +83,6 @@
         [label]="'ACTION.CHOW' | translate"
         (onClick)="actionMahjong('chow', player)"
         [outlined]="true"
-        *ngIf="player.action.isChowable"
       ></p-button>
 
       <!-- cancel -->
@@ -94,7 +90,6 @@
         [label]="'BUTTON.CANCEL' | translate"
         (onClick)="actionMahjong('cancel', player)"
         [outlined]="true"
-        *ngIf="returnIsShowingCancelButton(player)"
       ></p-button>
 
       <!-- win -->
@@ -106,7 +101,7 @@
 
       <!-- check point -->
       <p-button
-        [label]="'Check'"
+        [label]="'ACTION.CHECK' | translate"
         (onClick)="checkPoint(player)"
         [outlined]="true"
       ></p-button>
@@ -176,9 +171,67 @@
         class="tw-flex public-set"
       >
         <div *ngFor="let mahjong of group.mahjongTile; let i = index" class="">
-          <app-mahjong [mahjong]="mahjong" [selectable]="false"></app-mahjong>
+          <app-mahjong
+            [mahjong]="mahjong"
+            [selectable]="false"
+            [isTaken]="returnIsTaken(mahjong)"
+          ></app-mahjong>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<p-dialog
+  [(visible)]="chowVisible"
+  [modal]="true"
+  [closable]="false"
+  (onHide)="cancelChow()"
+>
+  <ng-template pTemplate="content">
+    <div>
+      <app-mahjong
+        [mahjong]="
+          room.mahjong.discardTiles[room.mahjong.discardTiles.length - 1]
+        "
+      ></app-mahjong>
+    </div>
+
+    <!-- hand set -->
+    <div
+      class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap"
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="drop($event, player.mahjong.handTiles.mahjongTile)"
+    >
+      <div
+        *ngFor="
+          let mahjong of player.mahjong.handTiles.mahjongTile;
+          let i = index
+        "
+        class="tw-mx-[-4px] tw-flex"
+      >
+        <app-mahjong
+          [mahjong]="mahjong"
+          cdkDrag
+          (click)="(mahjong.isSelected != mahjong.isSelected)"
+          (selectedTile)="selectedTileOutput2($event, player)"
+        ></app-mahjong>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <div class="tw-flex tw-justify-between">
+      <p-button
+        [label]="'BUTTON.CANCEL' | translate"
+        (onClick)="cancelChow()"
+        [outlined]="true"
+      ></p-button>
+      <p-button
+        [label]="'BUTTON.OK' | translate"
+        (onClick)="sendChow()"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
