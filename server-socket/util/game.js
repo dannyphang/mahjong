@@ -1090,6 +1090,7 @@ function actionV1(action, room, player, selectedMahjong, selectedMahjongChow = [
                     ...roomU,
                     response: {
                         isSuccess: true,
+                        updateMessage: `${player.playerName} done action.`,
                     },
                 });
             });
@@ -1153,6 +1154,11 @@ function performAction(action, room, player, selectedMahjong, selectedMahjongCho
                     }
                     player.mahjong.publicTiles.push({ mahjongTile: mahjongPongList });
 
+                    if (!room.mahjong.takenTiles) {
+                        room.mahjong.takenTiles = [];
+                    }
+                    room.mahjong.takenTiles.push(selectedMahjong.uid);
+
                     player.drawAction = {
                         isDrawFlower: false,
                         isDrawKong: false,
@@ -1181,9 +1187,18 @@ function performAction(action, room, player, selectedMahjong, selectedMahjongCho
                     }
 
                     mahjongKongList.push(selectedMahjong);
+
+                    if (!player.mahjong.publicTiles) {
+                        player.mahjong.publicTiles = [];
+                    }
                     player.mahjong.publicTiles.push({ mahjongTile: mahjongKongList });
 
-                    drawMahjong(room, player).then((draw) => {});
+                    if (!room.mahjong.takenTiles) {
+                        room.mahjong.takenTiles = [];
+                    }
+                    room.mahjong.takenTiles.push(selectedMahjong.uid);
+
+                    await drawMahjong(room, player).then((draw) => {});
 
                     player.drawAction = {
                         isDrawFlower: false,
@@ -1214,7 +1229,16 @@ function performAction(action, room, player, selectedMahjong, selectedMahjongCho
                     player.mahjong.handTiles.mahjongTile = player.mahjong.handTiles.mahjongTile.filter((m) => m.id !== kongTileInHand.id);
 
                     mahjongSelfKongList.push(selectedMahjong);
+
+                    if (!player.mahjong.publicTiles) {
+                        player.mahjong.publicTiles = [];
+                    }
                     player.mahjong.publicTiles.push({ mahjongTile: mahjongSelfKongList });
+
+                    if (!room.mahjong.takenTiles) {
+                        room.mahjong.takenTiles = [];
+                    }
+                    room.mahjong.takenTiles.push(selectedMahjong.uid);
 
                     let isSecondKong = false;
                     if (player.drawAction.isDrawKong || player.drawAction.isGetKong) {
@@ -1234,7 +1258,7 @@ function performAction(action, room, player, selectedMahjong, selectedMahjongCho
                         isSoloDraw: false,
                     };
 
-                    drawMahjong(room, player).then((drawRoomU) => {
+                    await drawMahjong(room, player).then((drawRoomU) => {
                         room = {
                             ...drawRoomU,
                         };
@@ -1288,8 +1312,6 @@ function performAction(action, room, player, selectedMahjong, selectedMahjongCho
                 }
                 break;
         }
-
-        // if the waiting player is cancelled, then continue to this player
 
         // reset
         room.waitingPlayer = null;

@@ -135,8 +135,8 @@ export class MahjongDto {
     direction: number;
     statusId: number;
     id: number;
-    isSelected?: boolean;
-    isTaken?: boolean;
+    isSelected: boolean;
+    isTaken: boolean;
 }
 
 export class MahjongActionDto {

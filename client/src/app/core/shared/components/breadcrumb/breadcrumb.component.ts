@@ -12,7 +12,7 @@ import { filter } from 'rxjs';
 export class BreadcrumbComponent {
   items: MenuItem[] = [];
   home: MenuItem = {
-    routerLink: 'home',
+    routerLink: '/',
   };
   constructor(
     private router: Router,
