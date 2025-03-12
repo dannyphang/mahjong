@@ -1,10 +1,15 @@
 import env from "./environment.json" with { type: "json" };
 import envProd from "./environment.prod.json" with { type: "json" };
+import dotenv from "dotenv";
 
-let isDev = true;
+dotenv.config();
 
-const port = isDev ? env.port : envProd.port;
+let isProd = process.env.NODE_ENV === "production";
 
-const apiBaseUrl = isDev ? env.api : envProd.api;
+let isServerConnect = false;
+
+const port = isProd || isServerConnect ? envProd.port : env.port;
+
+const apiBaseUrl = isProd || isServerConnect ? envProd.api : env.api;
 
 export { apiBaseUrl, port };
