@@ -125,7 +125,6 @@ export class RoomComponent extends BaseCoreAbstract {
   }
 
   initSettingForm() {
-    console.log(this.room)
     this.settingFormGroup.controls['minPoints'].setValue(this.room.mahjong.setting?.minPoints ?? null);
     this.settingFormGroup.controls['score'].setValue(this.room.mahjong.setting?.score ?? null);
     this.settingFormGroup.controls['initTotalScore'].setValue(this.room.mahjong.setting?.initTotalScore ?? null);
@@ -191,7 +190,6 @@ export class RoomComponent extends BaseCoreAbstract {
   recieveGameUpdate() {
     this.socketIoService.recieveRoomUpdate().subscribe((room) => {
       if (room.response.isSuccess) {
-        console.log(room)
         this.room = room;
         this.initSettingForm();
         this.socketIoService.currentPlayer = room.playerList.find(p => p.playerId === this.player.playerId)!;
@@ -311,9 +309,9 @@ export class RoomComponent extends BaseCoreAbstract {
   }
 
   cancelSetting() {
-    this.settingFormGroup.controls['minPoints'].setValue(this.room.mahjong.setting.minPoints);
-    this.settingFormGroup.controls['score'].setValue(this.room.mahjong.setting.score);
-    this.settingFormGroup.controls['initTotalScore'].setValue(this.room.mahjong.setting.initTotalScore);
+    this.settingFormGroup.controls['minPoints'].setValue(this.room.mahjong.setting?.minPoints);
+    this.settingFormGroup.controls['score'].setValue(this.room.mahjong.setting?.score);
+    this.settingFormGroup.controls['initTotalScore'].setValue(this.room.mahjong.setting?.initTotalScore);
     this.roomSettingVisible = false;
 
   }

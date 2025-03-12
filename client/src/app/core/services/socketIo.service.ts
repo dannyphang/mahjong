@@ -106,10 +106,10 @@ export class SocketioService {
                 remainingTiles: this.gameService.mahjongFullList.filter(m => room.mahjong.remainingTiles.includes(m.uid)),
                 discardTiles: this.gameService.mahjongFullList.filter(m => room.mahjong.discardTiles.includes(m.uid)),
                 takenTiles: this.gameService.mahjongFullList.filter(m => room.mahjong.takenTiles.includes(m.uid)),
+                ...room.mahjong
             },
             playerList: playerList
         }
-        console.log(newUpdatedRoom)
         return newUpdatedRoom;
     }
 

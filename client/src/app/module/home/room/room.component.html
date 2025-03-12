@@ -87,3 +87,21 @@
 >
   <app-game-turn [room]="room" [player]="player"></app-game-turn>
 </div>
+
+<p-dialog [(visible)]="roomSettingVisible" [modal]="true" [closable]="false">
+  <ng-template pTemplate="content">
+    <app-base-form [formConfig]="settingFormConfig"></app-base-form>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      [outlined]="true"
+      [label]="'BUTTON.CANCEL' | translate"
+      (onClick)="cancelSetting()"
+    ></p-button>
+    <p-button
+      [label]="'BUTTON.SUBMIT' | translate"
+      (onClick)="saveSetting()"
+    ></p-button>
+  </ng-template>
+</p-dialog>
