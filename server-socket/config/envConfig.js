@@ -6,7 +6,7 @@ dotenv.config();
 
 let isProd = process.env.NODE_ENV === "production";
 
-let isServerConnect = false;
+let isServerConnect = true;
 
 console.log(isProd)
 
