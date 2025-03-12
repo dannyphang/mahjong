@@ -761,9 +761,9 @@ function updatePlayer(player) {
 
 function playerQuitRoom(room, player) {
   return new Promise(async function (resolve, reject) {
-    room.playerList = room.playerList.filter((p) => p.playerId !== player.playerId);
+    let newRoom = await API.quitRoom(room, player);
 
-    updateRoom(room).then((roomU) => {
+    updateRoom(newRoom).then((roomU) => {
       resolve({
         ...roomU,
         response: {

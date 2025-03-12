@@ -3,6 +3,7 @@ import express from "express";
 const router = Router();
 import * as db from "../firebase/firebase-admin.js";
 import responseModel from "../shared/function.js";
+import { FieldValue } from "firebase-admin/firestore";
 
 router.use(express.json());
 
@@ -113,6 +114,30 @@ router.put("/", async (req, res) => {
       });
   } catch (error) {
     console.log(error);
+    res.status(400).json(
+      responseModel({
+        isSuccess: false,
+        responseMessage: error,
+      })
+    );
+  }
+});
+
+// player quit room
+router.post("/quit_room", async (req, res) => {
+  try {
+    let player = req.body.player;
+    let room = req.body.room;
+
+    let newRef = db.default.db.collection(roomCollectionName).doc(room.roomId);
+
+    await newRef.update({
+      playerList: FieldValue.arrayRemove(player.playerId),
+    });
+
+    res.status(200).json(responseModel({ data: player }));
+  } catch (error) {
+    console.log("error", error);
     res.status(400).json(
       responseModel({
         isSuccess: false,
