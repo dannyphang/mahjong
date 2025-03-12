@@ -45,4 +45,8 @@ function isConsecutive(code1, code2, code3) {
     return http.post("mahjong/isConsecutive", { code1: code1, code2: code2, code3: code3 });
 }
 
-export { getMahjong, getMahjongByUid, getPlayerByUid, updateRoom, updatePlayer, isNextPlayer, checkChow, calculateFlowerTilePoints, isKongableFromHandSet, isConsecutive };
+function checkWin(player) {
+    return http.post("mahjong/calculate_points", { player: player });
+}
+
+export { getMahjong, getMahjongByUid, getPlayerByUid, updateRoom, updatePlayer, isNextPlayer, checkChow, calculateFlowerTilePoints, isKongableFromHandSet, isConsecutive, checkWin };

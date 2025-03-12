@@ -1,6 +1,6 @@
-<div class="tw-grid tw-justify-items-center">
+<div class="tw-grid tw-justify-items-center" *ngIf="mahjong">
   <div
-    class="tw-relative tw-flex tile-div"
+    class="tw-relative tw-flex tile-div grabbable"
     (click)="selectTile()"
     [ngClass]="{
       'tw-top-[-10px]': selectable && mahjong.isSelected && !isHide,

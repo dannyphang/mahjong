@@ -123,19 +123,30 @@ router.post("/calculate_points", async (req, res) => {
         let player = req.body.player;
         let mahjong = player.mahjong;
 
-        games.calculateMahjongSetPoints(mahjong, player).then((r) => {
-            if (r.points >= 0) {
-                res.status(200).json(responseModel({ data: r }));
-            } else {
-                res.status(200).json(
+        games
+            .calculateMahjongSetPoints(mahjong, player)
+            .then((r) => {
+                if (r.points >= 0) {
+                    res.status(200).json(responseModel({ data: r }));
+                } else {
+                    res.status(200).json(
+                        responseModel({
+                            data: r,
+                            isSuccess: false,
+                            responseMessage: "This set is not winning.",
+                        })
+                    );
+                }
+            })
+            .catch((error) => {
+                console.log("error", error);
+                res.status(400).json(
                     responseModel({
-                        data: r,
                         isSuccess: false,
-                        responseMessage: "This set is not winning.",
+                        responseMessage: error,
                     })
                 );
-            }
-        });
+            });
     } catch (error) {
         console.log("error", error);
         res.status(400).json(
