@@ -68,6 +68,10 @@ export class PlayerMahjongComponent extends BaseCoreAbstract {
     }
   }
 
+  ngOnInit() {
+
+  }
+
   updateRoom(room: RoomDto) {
     room.playerList.forEach(p => {
       this.gameService.updatePlayer(p).subscribe(res => {
@@ -173,10 +177,15 @@ export class PlayerMahjongComponent extends BaseCoreAbstract {
         }
         break;
       case 'win':
-        this.checkPoint(player);
-        Object.assign(this.selectedWinSet, this.player.mahjong.handTiles.mahjongTile);
-        this.selectedWinSet.push(this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
-        this.winVisible = true;
+        if (this.player.mahjong.handTiles.mahjongTile.length % 3 !== 2) {
+          Object.assign(this.selectedWinSet, this.player.mahjong.handTiles.mahjongTile);
+          this.selectedWinSet.push(this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
+          this.winVisible = true;
+        }
+        else {
+          console.log("here")
+          this.socketIoService.sendWin(this.room, this.player, this.player.mahjong.handTiles.mahjongTile);
+        }
         break;
       case 'cancel':
         this.socketIoService.sendMahjongAction('cancel', this.room, player, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
@@ -231,6 +240,6 @@ export class PlayerMahjongComponent extends BaseCoreAbstract {
 
   sendWin() {
     this.socketIoService.sendWin(this.room, this.player, this.selectedWinSet);
-    this.cancelWin();
+    // this.cancelWin();
   }
 }
