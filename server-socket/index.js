@@ -79,6 +79,12 @@ io.on("connection", (socket) => {
         });
     });
 
+    socket.on("gameEnd", ({ room }) => {
+        games.endGame(room).then((roomU) => {
+            io.in(roomU.roomId).emit("roomUpdate", roomU);
+        });
+    });
+
     socket.on("joinRoom", ({ room, player }) => {
         socket.join(room.roomId);
         if (player) {

@@ -30,6 +30,7 @@ function createGame(room) {
                 remainingTiles: [],
                 discardTiles: [],
                 takenTiles: [],
+                ...room.mahjong,
             };
             room.waiting = 0;
             room.waitingPlayer = null;
@@ -631,12 +632,14 @@ function testGame(room) {
                     remainingTiles: remainingTiles,
                     discardTiles: [],
                     takenTiles: [],
+                    ...room.mahjong,
                 };
                 room.waitingPlayer = null;
                 room.waitingAction = null;
                 room.waitingTile = null;
                 room.waitingChowTiles = [];
                 room.gameOrder = 1;
+                room.gameStarted = true;
 
                 updateRoom(room).then((roomU) => {
                     resolve({
@@ -844,7 +847,6 @@ function discardMahjong(room, player, discardedMahjongTile) {
                 await Promise.all(
                     room.playerList.map(async (p) => {
                         if (p.playerId !== player.playerId) {
-                            console.log(player);
                             // reset player action & drawAction
                             player.action = {};
                             player.drawAction = {};
@@ -913,7 +915,6 @@ function discardMahjong(room, player, discardedMahjongTile) {
                         });
                     } else {
                         nextTurn(roomU).then((roomNU) => {
-                            console.log("trigger here");
                             resolve({
                                 ...roomNU,
                                 response: {
@@ -1532,7 +1533,6 @@ function actions(action, room, player, selectedMahjong, selectedMahjongChow = []
                     if (room.waiting === 2) {
                         selectedMahjongChow = room.waitingChowTiles;
                     }
-                    console.log(selectedMahjongChow);
                     let list = selectedMahjongChow.concat(selectedMahjong);
                     list = list.sort((a, b) => a.code - b.code);
                     if ((await API.isConsecutive(list[0].code, list[1].code, list[2].code)).data.data) {
@@ -1688,4 +1688,46 @@ async function checkActionPriority(action, room, player, selectedMahjong) {
     return false;
 }
 
-export { createGame, playerJoinRoom, updateRoom, playerQuitRoom, discardMahjong, nextTurn, drawMahjong, updatePlayer, actions, chowAction, testGame, discardMahjongV1, actionV1 };
+function endGame(room) {
+    return new Promise(async (resolve, reject) => {
+        room.gameStarted = false;
+
+        room.mahjong = {
+            discardTiles: [],
+            remainingTiles: [],
+            takenTiles: [],
+            ...room.mahjong,
+        };
+
+        // reset player hand tiles
+        // await Promise.all(
+        //     room.playerList.map(async (p) => {
+        //         p.mahjong = {
+        //             flowerTiles: { mahjongTile: [] },
+        //             handTiles: { mahjongTile: [] },
+        //             publicTiles: [],
+        //         };
+
+        //         return updatePlayer(p); // Returns the promise for `Promise.all()`
+        //     })
+        // );
+
+        room.waitingPlayer = null;
+        room.waitingAction = null;
+        room.waitingTile = null;
+        room.waitingChowTiles = [];
+
+        updateRoom(room)
+            .then((roomU) => {
+                resolve({
+                    ...roomU,
+                    updateMessage: "Game ended.",
+                });
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+}
+
+export { createGame, playerJoinRoom, updateRoom, playerQuitRoom, discardMahjong, nextTurn, drawMahjong, updatePlayer, actions, chowAction, testGame, discardMahjongV1, actionV1, endGame };
