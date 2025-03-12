@@ -730,7 +730,12 @@ function updateRoom(room) {
             })
             .catch((error) => {
                 console.log(error);
-                reject(error);
+                resolve({
+                    response: {
+                        isSuccess: false,
+                        updateMessage: error,
+                    },
+                });
             });
     });
 }
