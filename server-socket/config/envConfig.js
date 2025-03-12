@@ -8,6 +8,8 @@ let isProd = process.env.NODE_ENV === "production";
 
 let isServerConnect = false;
 
+console.log(isProd)
+
 const port = isProd || isServerConnect ? envProd.port : env.port;
 
 const apiBaseUrl = isProd || isServerConnect ? envProd.api : env.api;
