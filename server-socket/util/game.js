@@ -27,10 +27,10 @@ function createGame(room) {
             room.gameStarted = true;
             room.gameOrder = 1;
             room.mahjong = {
+                ...room.mahjong,
                 remainingTiles: [],
                 discardTiles: [],
                 takenTiles: [],
-                ...room.mahjong,
             };
             room.waiting = 0;
             room.waitingPlayer = null;
@@ -629,10 +629,10 @@ function testGame(room) {
                 // });
 
                 room.mahjong = {
+                    ...room.mahjong,
                     remainingTiles: remainingTiles,
                     discardTiles: [],
                     takenTiles: [],
-                    ...room.mahjong,
                 };
                 room.waitingPlayer = null;
                 room.waitingAction = null;
@@ -1064,23 +1064,29 @@ function nextTurn(room) {
 function actionV1(action, room, player, selectedMahjong, selectedMahjongChow = []) {
     return new Promise(async function (resolve, reject) {
         if (room.waitingPlayer) {
-            // if current action is chow, but the pong is in waitingAction, then set current action to pong and set the current player to the waiting player
-            if (room.waitingAction !== "chow" && room.waitingAction !== "cancel") {
-                player = room.playerList.find((p) => p.playerId === room.waitingPlayer);
-                action = room.waitingAction;
+            if (room.waitingAction === "cancel" && action === "cancel") {
+                nextTurn(room).then(async (roomNU) => {
+                    resolve(roomNU);
+                });
+            } else {
+                // if current action is chow, but the pong is in waitingAction, then set current action to pong and set the current player to the waiting player
+                if (room.waitingAction !== "chow" && room.waitingAction !== "cancel") {
+                    player = room.playerList.find((p) => p.playerId === room.waitingPlayer);
+                    action = room.waitingAction;
 
-                selectedMahjong = await getMahjongByUid(room.waitingTile);
-            } else if (room.waitingAction === "chow") {
-                player = room.playerList.find((p) => p.playerId === room.waitingPlayer);
-                action = room.waitingAction;
+                    selectedMahjong = await getMahjongByUid(room.waitingTile);
+                } else if (room.waitingAction === "chow") {
+                    player = room.playerList.find((p) => p.playerId === room.waitingPlayer);
+                    action = room.waitingAction;
 
-                room.waitingChowTiles.forEach(async (wct) => {
-                    selectedMahjongChow.push(await getMahjongByUid(wct));
+                    room.waitingChowTiles.forEach(async (wct) => {
+                        selectedMahjongChow.push(await getMahjongByUid(wct));
+                    });
+                }
+                performAction(action, room, player, selectedMahjong, selectedMahjongChow).then((actionRoom) => {
+                    resolve(actionRoom);
                 });
             }
-            performAction(action, room, player, selectedMahjong, selectedMahjongChow).then((actionRoom) => {
-                resolve(actionRoom);
-            });
         } else {
             room.waitingPlayer = player?.playerId;
             room.waitingAction = action;
@@ -1693,10 +1699,10 @@ function endGame(room) {
         room.gameStarted = false;
 
         room.mahjong = {
+            ...room.mahjong,
             discardTiles: [],
             remainingTiles: [],
             takenTiles: [],
-            ...room.mahjong,
         };
 
         // reset player hand tiles
@@ -1730,4 +1736,73 @@ function endGame(room) {
     });
 }
 
-export { createGame, playerJoinRoom, updateRoom, playerQuitRoom, discardMahjong, nextTurn, drawMahjong, updatePlayer, actions, chowAction, testGame, discardMahjongV1, actionV1, endGame };
+function winAction(room, player, selectedMahjongSet) {
+    return new Promise(async function (resolve, reject) {
+        // check if both player done action
+        if (room.waitingAction === "cancel" || room.waitingAction === "win") {
+            if (room.waitingAction !== "cancel") {
+                // check if which player is the next player and win 1st
+                // if its not, then set the waiting player into current player
+                if (
+                    !(await API.isNextPlayer(
+                        room,
+                        room.playerList.find((p) => p.direction === room.gameOrder),
+                        player
+                    ))
+                ) {
+                    player = await API.getPlayerByUid(room.waitingPlayer);
+                    selectedMahjongSet = room.waitingWinTiles;
+                }
+            }
+            // make sure the hand tile is fulfilled the win set number before sending to API
+            player.mahjong.handTiles.mahjongTile = selectedMahjongSet;
+
+            API.checkWin(player)
+                .then((win) => {
+                    if (win.points >= room.mahjong.setting.minPoints) {
+                        endGame(room)
+                            .then((endGameUpdate) => {
+                                resolve({
+                                    ...endGameUpdate,
+                                    response: {
+                                        isSuccess: true,
+                                        updateMessage: `Player ${player.playerName} won the game!}`,
+                                    },
+                                });
+                            })
+                            .catch((error) => {
+                                console.log("End game (enuf point) error: ", error);
+                                reject(error);
+                            });
+                    } else {
+                        endGame(room)
+                            .then((endGameUpdate) => {
+                                resolve({
+                                    ...endGameUpdate,
+                                    response: {
+                                        isSuccess: false,
+                                        updateMessage: `Player ${player.playerName} lost the game!}`,
+                                    },
+                                });
+                            })
+                            .catch((error) => {
+                                console.log("End game (not enuf point) error: ", error);
+                                reject(error);
+                            });
+                    }
+                })
+                .catch((error) => {
+                    console.log("Check win error: ", error);
+                    reject(error);
+                });
+        } else {
+            room.waitingAction = "win";
+            room.waitingPlayer = player.playerId;
+            room.waitingWinTiles = selectedMahjongSet;
+
+            resolve(room);
+        }
+    });
+}
+
+export { createGame, playerJoinRoom, updateRoom, playerQuitRoom, discardMahjong, nextTurn, drawMahjong, updatePlayer, actions, chowAction, testGame, discardMahjongV1, actionV1, endGame, winAction };

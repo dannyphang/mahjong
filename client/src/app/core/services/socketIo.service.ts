@@ -103,13 +103,14 @@ export class SocketioService {
         let newUpdatedRoom: RoomUpdateDto = {
             ...room,
             mahjong: {
+                ...room.mahjong,
                 remainingTiles: this.gameService.mahjongFullList.filter(m => room.mahjong.remainingTiles.includes(m.uid)),
                 discardTiles: this.gameService.mahjongFullList.filter(m => room.mahjong.discardTiles.includes(m.uid)),
                 takenTiles: this.gameService.mahjongFullList.filter(m => room.mahjong.takenTiles.includes(m.uid)),
-                ...room.mahjong
             },
             playerList: playerList
         }
+
         return newUpdatedRoom;
     }
 
@@ -143,5 +144,9 @@ export class SocketioService {
 
     sendGameEnd(room: RoomDto) {
         this.socket.emit('gameEnd', { room: room });
+    }
+
+    sendWin(room: RoomDto, player: PlayerDto, selectedMahjongSet: MahjongDto[]) {
+        this.socket.emit('win', { room: room, player: player, selectedMahjongSet: selectedMahjongSet });
     }
 }

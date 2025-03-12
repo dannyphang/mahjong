@@ -18,9 +18,11 @@ export class PlayerMahjongComponent extends BaseCoreAbstract {
   @Input() currentPlayer: boolean = false;
   @Input() playerPosition: 'prev' | 'next' | 'current' = 'current';
 
-  chowVisible: boolean;
+  chowVisible: boolean = false;
+  winVisible: boolean = false;
   roomSettingVisible: boolean = false;
   selectedChowList: MahjongDto[] = [];
+  selectedWinSet: MahjongDto[] = [];
 
   constructor(
     private socketIoService: SocketioService,
@@ -171,7 +173,10 @@ export class PlayerMahjongComponent extends BaseCoreAbstract {
         }
         break;
       case 'win':
-        this.checkPoint(player)
+        this.checkPoint(player);
+        Object.assign(this.selectedWinSet, this.player.mahjong.handTiles.mahjongTile);
+        this.selectedWinSet.push(this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
+        this.winVisible = true;
         break;
       case 'cancel':
         this.socketIoService.sendMahjongAction('cancel', this.room, player, this.room.mahjong.discardTiles[this.room.mahjong.discardTiles.length - 1]);
@@ -217,5 +222,15 @@ export class PlayerMahjongComponent extends BaseCoreAbstract {
 
   returnIsTaken(mahjong: MahjongDto): boolean {
     return this.gameService.checkMahjongIsTaken(this.room, mahjong.uid);
+  }
+
+  cancelWin() {
+    this.selectedWinSet = [];
+    this.winVisible = false;
+  }
+
+  sendWin() {
+    this.socketIoService.sendWin(this.room, this.player, this.selectedWinSet);
+    this.cancelWin();
   }
 }

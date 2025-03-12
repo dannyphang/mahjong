@@ -138,6 +138,7 @@
       class="tw-flex hand-set mahjong-set-div"
       cdkDropList
       cdkDropListOrientation="horizontal"
+      [cdkDropListData]="player.mahjong.handTiles.mahjongTile"
       (cdkDropListDropped)="drop($event, player.mahjong.handTiles.mahjongTile)"
     >
       <div
@@ -151,15 +152,21 @@
           [mahjong]="mahjong"
           cdkDrag
           (click)="(mahjong.isSelected != mahjong.isSelected)"
-          *ngIf="currentPlayer"
+          *ngIf="currentPlayer && room.gameStarted"
           (selectedTile)="selectedTileOutput($event, player)"
         ></app-mahjong>
 
         <app-mahjong
-          *ngIf="!currentPlayer"
+          *ngIf="!currentPlayer && room.gameStarted"
           [isHide]="true"
           (click)="clickOtherPlayerTile()"
           [selectable]="false"
+        ></app-mahjong>
+
+        <app-mahjong
+          [mahjong]="mahjong"
+          cdkDrag
+          *ngIf="!room.gameStarted"
         ></app-mahjong>
       </div>
     </div>
@@ -182,6 +189,7 @@
   </div>
 </div>
 
+<!-- chow dialog -->
 <p-dialog
   [(visible)]="chowVisible"
   [modal]="true"
@@ -209,7 +217,7 @@
           let mahjong of player.mahjong.handTiles.mahjongTile;
           let i = index
         "
-        class="tw-mx-[-4px] tw-flex"
+        class="tw-flex"
       >
         <app-mahjong
           [mahjong]="mahjong"
@@ -231,6 +239,47 @@
       <p-button
         [label]="'BUTTON.OK' | translate"
         (onClick)="sendChow()"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- win dialog -->
+<p-dialog
+  [(visible)]="winVisible"
+  [modal]="true"
+  [closable]="false"
+  (onHide)="cancelWin()"
+>
+  <ng-template pTemplate="content">
+    <div
+      class="tw-p-[var(--content-gap)] tw-flex tw-flex-wrap"
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="drop($event, selectedWinSet)"
+    >
+      <div
+        *ngFor="let mahjong of selectedWinSet; let i = index"
+        class="tw-flex"
+        [ngClass]="{
+          'tw-mr-[var(--content-gap)]': (i + 1) % 3 === 0
+        }"
+      >
+        <app-mahjong [mahjong]="mahjong" cdkDrag></app-mahjong>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <div class="tw-flex tw-justify-between">
+      <p-button
+        [label]="'BUTTON.CANCEL' | translate"
+        (onClick)="cancelWin()"
+        [outlined]="true"
+      ></p-button>
+      <p-button
+        [label]="'BUTTON.OK' | translate"
+        (onClick)="sendWin()"
       ></p-button>
     </div>
   </ng-template>

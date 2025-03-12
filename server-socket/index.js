@@ -161,6 +161,17 @@ io.on("connection", (socket) => {
                 socket.emit("roomError", error);
             });
     });
+
+    socket.on("win", ({ room, player, selectedMahjongSet }) => {
+        games
+            .winAction(room, player, selectedMahjongSet)
+            .then((roomU) => {
+                io.in(roomU.roomId).emit("roomUpdate", roomU);
+            })
+            .catch((error) => {
+                socket.emit("roomError", error);
+            });
+    });
 });
 
 server.listen(PORT, () => console.log(consoleStr("FgCyan"), "Server is running on port " + PORT));
