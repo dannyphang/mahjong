@@ -12,4 +12,6 @@ const port = isProd || isServerConnect ? envProd.port : env.port;
 
 const apiBaseUrl = isProd || isServerConnect ? envProd.api : env.api;
 
-export { apiBaseUrl, port };
+const logBaseUrl = isProd || isServerConnect ? envProd.log : env.log;
+
+export { apiBaseUrl, port, logBaseUrl };
