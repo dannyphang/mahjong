@@ -733,6 +733,18 @@ function updateRoom(room) {
             })
             .catch((error) => {
                 console.log(error);
+                // API.createLog(error)
+                //     .then((res) => {
+                //         console.log(res);
+                //     })
+                //     .catch((error) => {
+                //         res.status(400).json(
+                //             responseModel({
+                //                 isSuccess: false,
+                //                 responseMessage: error,
+                //             })
+                //         );
+                //     });
                 resolve({
                     response: {
                         isSuccess: false,

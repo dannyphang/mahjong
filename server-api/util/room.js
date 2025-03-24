@@ -3,6 +3,7 @@ import express from "express";
 const router = Router();
 import * as db from "../firebase/firebase-admin.js";
 import responseModel from "../shared/function.js";
+import * as API from "./log.js";
 
 router.use(express.json());
 
@@ -38,7 +39,7 @@ router.post("/", async (req, res) => {
         res.status(200).json(responseModel({ data: room }));
     } catch (error) {
         console.log("error", error);
-        res.status(400).json(
+        res.status(500).json(
             responseModel({
                 isSuccess: false,
                 responseMessage: error,
@@ -60,7 +61,7 @@ router.get("/:id", async (req, res) => {
         if (list.length > 0) {
             res.status(200).json(responseModel({ data: list[0] }));
         } else {
-            res.status(400).json(
+            res.status(500).json(
                 responseModel({
                     isSuccess: false,
                     responseMessage: "Room is not found.",
@@ -68,7 +69,7 @@ router.get("/:id", async (req, res) => {
             );
         }
     } catch (error) {
-        res.status(400).json(
+        res.status(500).json(
             responseModel({
                 isSuccess: false,
                 responseMessage: error,
@@ -85,7 +86,7 @@ router.put("/", async (req, res) => {
         room.playerList = room.playerList.map((item) => item.playerId ?? item);
         room.mahjong.remainingTiles = room.mahjong.remainingTiles?.map((item) => item.uid ?? item) ?? [];
         room.mahjong.discardTiles = room.mahjong.discardTiles?.map((item) => item.uid ?? item) ?? [];
-        room.mahjong.takenTiles = room.mahjong.takenTiles?.map((item) => item.uid ?? item) ?? [];
+        room.mahjong.takenTiles = room.mahjong.takenTiles.map((item) => item.uid ?? item);
         room.waitingPlayer = room.waitingPlayer?.playerId ?? room.waitingPlayer ?? null;
 
         let newRef = db.default.db.collection(roomCollectionName).doc(room.roomId);
@@ -98,7 +99,7 @@ router.put("/", async (req, res) => {
                 res.status(200).json(responseModel({ data: room }));
             })
             .catch((error) => {
-                res.status(400).json(
+                res.status(500).json(
                     responseModel({
                         isSuccess: false,
                         responseMessage: error,
@@ -106,8 +107,9 @@ router.put("/", async (req, res) => {
                 );
             });
     } catch (error) {
-        console.log(error);
-        res.status(400).json(
+        console.log("error: ", error);
+        API.createLog(error, req, res, 500);
+        res.status(500).json(
             responseModel({
                 isSuccess: false,
                 responseMessage: error,

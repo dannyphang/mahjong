@@ -5,6 +5,10 @@ const http = axios.create({
     baseURL: config.apiBaseUrl,
 });
 
+const httpLog = axios.create({
+    baseURL: config.logBaseUrl,
+});
+
 function getMahjong() {
     return http.get("mahjong");
 }
@@ -49,4 +53,8 @@ function checkWin(player) {
     return http.post("mahjong/calculate_points", { player: player });
 }
 
-export { getMahjong, getMahjongByUid, getPlayerByUid, updateRoom, updatePlayer, isNextPlayer, checkChow, calculateFlowerTilePoints, isKongableFromHandSet, isConsecutive, checkWin };
+function createLog(error) {
+    return httpLog.post("console/", { log: error });
+}
+
+export { getMahjong, getMahjongByUid, getPlayerByUid, updateRoom, updatePlayer, isNextPlayer, checkChow, calculateFlowerTilePoints, isKongableFromHandSet, isConsecutive, checkWin, createLog };
