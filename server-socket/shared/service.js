@@ -70,4 +70,18 @@ function createLog(error) {
     return httpLog.post("console/", { log: error });
 }
 
-export { getMahjong, getMahjongByUid, getPlayerByUid, updateRoom, updatePlayer, isNextPlayer, checkChow, calculateFlowerTilePoints, isKongableFromHandSet, isConsecutive, checkWin, createLog };
+export {
+    getMahjong,
+    getMahjongByUid,
+    getPlayerByUid,
+    updateRoom,
+    updatePlayer,
+    isNextPlayer,
+    checkChow,
+    calculateFlowerTilePoints,
+    isKongableFromHandSet,
+    isConsecutive,
+    checkWin,
+    quitRoom,
+    createLog,
+};
