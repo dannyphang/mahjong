@@ -109,6 +109,7 @@ router.put("/", async (req, res) => {
             });
     } catch (error) {
         console.log(error);
+        API.createLog(error, req, res, 500);
         res.status(400).json(
             responseModel({
                 isSuccess: false,
