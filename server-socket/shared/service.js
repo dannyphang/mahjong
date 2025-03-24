@@ -86,19 +86,6 @@ function createLog(error, statusCode, module, socket) {
     return httpLog.post("console/", { errorDetails });
 }
 
-function createLogAPI(error, statusCode, module) {
-    const errorDetails = {
-        project: "Mahjong",
-        module: module,
-        server: "Server Socket",
-        serverType: "SOCKET",
-        message: error?.message || null,
-        stack: error?.stack || null,
-        statusCode: statusCode,
-    };
-    return httpLog.post("console/", { errorDetails });
-}
-
 export {
     getMahjong,
     getMahjongByUid,
@@ -113,5 +100,4 @@ export {
     checkWin,
     quitRoom,
     createLog,
-    createLogAPI,
 };
