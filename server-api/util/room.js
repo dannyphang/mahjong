@@ -10,6 +10,7 @@ router.use(express.json());
 
 const roomCollectionName = "room";
 const playerCollectionName = "player";
+const logModule = "Room";
 
 // create new room
 router.post("/", async (req, res) => {
@@ -40,6 +41,7 @@ router.post("/", async (req, res) => {
         res.status(200).json(responseModel({ data: room }));
     } catch (error) {
         console.log("error", error);
+        API.createLog(error, 500, logModule);
         res.status(500).json(
             responseModel({
                 isSuccess: false,
@@ -62,6 +64,7 @@ router.get("/:id", async (req, res) => {
         if (list.length > 0) {
             res.status(200).json(responseModel({ data: list[0] }));
         } else {
+            API.createLog(error, req, res, 400, logModule);
             res.status(400).json(
                 responseModel({
                     isSuccess: false,
@@ -70,6 +73,7 @@ router.get("/:id", async (req, res) => {
             );
         }
     } catch (error) {
+        API.createLog(error, 500, logModule);
         res.status(500).json(
             responseModel({
                 isSuccess: false,
@@ -87,7 +91,7 @@ router.put("/", async (req, res) => {
         room.playerList = room.playerList.map((item) => item.playerId ?? item);
         room.mahjong.remainingTiles = room.mahjong.remainingTiles?.map((item) => item.uid ?? item) ?? [];
         room.mahjong.discardTiles = room.mahjong.discardTiles?.map((item) => item.uid ?? item) ?? [];
-        room.mahjong.takenTiles = room.mahjong.takenTiles.map((item) => item.uid ?? item);
+        room.mahjong.takenTiles = room.mahjong.takenTiles?.map((item) => item.uid ?? item) ?? [];
         room.waitingPlayer = room.waitingPlayer?.playerId ?? room.waitingPlayer ?? null;
 
         let newRef = db.default.db.collection(roomCollectionName).doc(room.roomId);
@@ -100,6 +104,7 @@ router.put("/", async (req, res) => {
                 res.status(200).json(responseModel({ data: room }));
             })
             .catch((error) => {
+                API.createLog(error, req, res, 400, logModule);
                 res.status(400).json(
                     responseModel({
                         isSuccess: false,
@@ -109,7 +114,7 @@ router.put("/", async (req, res) => {
             });
     } catch (error) {
         console.log(error);
-        API.createLog(error, req, res, 500);
+        API.createLog(error, 500, logModule);
         res.status(400).json(
             responseModel({
                 isSuccess: false,
@@ -134,30 +139,7 @@ router.post("/quit_room", async (req, res) => {
         res.status(200).json(responseModel({ data: player }));
     } catch (error) {
         console.log("error", error);
-        res.status(500).json(
-            responseModel({
-                isSuccess: false,
-                responseMessage: error,
-            })
-        );
-    }
-});
-
-// player quit room
-router.post("/quit_room", async (req, res) => {
-    try {
-        let player = req.body.player;
-        let room = req.body.room;
-
-        let newRef = db.default.db.collection(roomCollectionName).doc(room.roomId);
-
-        await newRef.update({
-            playerList: FieldValue.arrayRemove(player.playerId),
-        });
-
-        res.status(200).json(responseModel({ data: player }));
-    } catch (error) {
-        console.log("error", error);
+        API.createLog(error, 500, logModule);
         res.status(500).json(
             responseModel({
                 isSuccess: false,

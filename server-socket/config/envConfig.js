@@ -7,11 +7,12 @@ dotenv.config();
 let isProd = process.env.NODE_ENV === "production";
 
 let isServerConnect = false;
+let isLogServerConnect = false;
 
 const port = isProd || isServerConnect ? envProd.port : env.port;
 
 const apiBaseUrl = isProd || isServerConnect ? envProd.api : env.api;
 
-const logBaseUrl = isProd || isServerConnect ? envProd.log : env.log;
+const logBaseUrl = isProd || isLogServerConnect ? envProd.log : env.log;
 
 export { apiBaseUrl, port, logBaseUrl };
