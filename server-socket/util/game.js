@@ -37,6 +37,7 @@ function createGame(room) {
             room.waitingAction = null;
             room.waitingTile = null;
             room.waitingChowTiles = [];
+            room.waitingWinTiles = [];
 
             // shuffle mahjong list
             // the new mahjong list will be mahjong uid list only
@@ -638,6 +639,7 @@ function testGame(room) {
                 room.waitingAction = null;
                 room.waitingTile = null;
                 room.waitingChowTiles = [];
+                room.waitingWinTiles = [];
                 room.gameOrder = 1;
                 room.gameStarted = true;
 
@@ -733,18 +735,6 @@ function updateRoom(room) {
             })
             .catch((error) => {
                 console.log(error);
-                // API.createLog(error)
-                //     .then((res) => {
-                //         console.log(res);
-                //     })
-                //     .catch((error) => {
-                //         res.status(400).json(
-                //             responseModel({
-                //                 isSuccess: false,
-                //                 responseMessage: error,
-                //             })
-                //         );
-                //     });
                 resolve({
                     response: {
                         isSuccess: false,
@@ -769,9 +759,9 @@ function updatePlayer(player) {
 
 function playerQuitRoom(room, player) {
     return new Promise(async function (resolve, reject) {
-        room.playerList = room.playerList.filter((p) => p.playerId !== player.playerId);
+        let newRoom = await API.quitRoom(room, player);
 
-        updateRoom(room).then((roomU) => {
+        updateRoom(newRoom).then((roomU) => {
             resolve({
                 ...roomU,
                 response: {
@@ -1751,34 +1741,32 @@ function endGame(room) {
 function winAction(room, player, selectedMahjongSet) {
     return new Promise(async function (resolve, reject) {
         // check if both player done action
-        if (room.waitingAction === "cancel" || room.waitingAction === "win") {
+        if (room.waitingAction === "cancel" || room.waitingAction === "win" || room.gameOrder === player.direction) {
             if (room.waitingAction !== "cancel") {
                 // check if which player is the next player and win 1st
                 // if its not, then set the waiting player into current player
-                if (
-                    !(await API.isNextPlayer(
-                        room,
-                        room.playerList.find((p) => p.direction === room.gameOrder),
-                        player
-                    ))
-                ) {
+                let isNextPlayer = await API.isNextPlayer(
+                    room,
+                    room.playerList.find((p) => p.direction === room.gameOrder),
+                    player
+                );
+                if (!isNextPlayer) {
                     player = await API.getPlayerByUid(room.waitingPlayer);
                     selectedMahjongSet = room.waitingWinTiles;
                 }
             }
             // make sure the hand tile is fulfilled the win set number before sending to API
             player.mahjong.handTiles.mahjongTile = selectedMahjongSet;
-
             API.checkWin(player)
                 .then((win) => {
-                    if (win.points >= room.mahjong.setting.minPoints) {
+                    if (win.data.data.points >= room.mahjong.setting.minPoints) {
                         endGame(room)
                             .then((endGameUpdate) => {
                                 resolve({
                                     ...endGameUpdate,
                                     response: {
                                         isSuccess: true,
-                                        updateMessage: `Player ${player.playerName} won the game!}`,
+                                        updateMessage: `Player ${player.playerName} won the game!`,
                                     },
                                 });
                             })
@@ -1793,7 +1781,7 @@ function winAction(room, player, selectedMahjongSet) {
                                     ...endGameUpdate,
                                     response: {
                                         isSuccess: false,
-                                        updateMessage: `Player ${player.playerName} lost the game!}`,
+                                        updateMessage: `Player ${player.playerName} lost the game!`,
                                     },
                                 });
                             })

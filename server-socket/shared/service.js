@@ -30,11 +30,18 @@ function updatePlayer(player) {
 }
 
 function isNextPlayer(room, currentPlayer, targetPlayer) {
-    return http.post("mahjong/isNextPlayer", { room: room, currentPlayer: currentPlayer, targetPlayer: targetPlayer });
+    return http.post("mahjong/isNextPlayer", {
+        room: room,
+        currentPlayer: currentPlayer,
+        targetPlayer: targetPlayer,
+    });
 }
 
 function checkChow(mahjongTile, discardedMahjongTile) {
-    return http.post("mahjong/checkChow", { mahjongTile: mahjongTile, discardedMahjongTile: discardedMahjongTile });
+    return http.post("mahjong/checkChow", {
+        mahjongTile: mahjongTile,
+        discardedMahjongTile: discardedMahjongTile,
+    });
 }
 
 function calculateFlowerTilePoints(newMahjong, player) {
@@ -42,7 +49,10 @@ function calculateFlowerTilePoints(newMahjong, player) {
 }
 
 function isKongableFromHandSet(newMahjong, mahjongList) {
-    return http.post("mahjong/isKongableFromHandSet", { newMahjong: newMahjong, mahjongList: mahjongList });
+    return http.post("mahjong/isKongableFromHandSet", {
+        newMahjong: newMahjong,
+        mahjongList: mahjongList,
+    });
 }
 
 function isConsecutive(code1, code2, code3) {
@@ -53,6 +63,11 @@ function checkWin(player) {
     return http.post("mahjong/calculate_points", { player: player });
 }
 
+function quitRoom(room, player) {
+    return http.post("room/quit_room", { room: room, player: player });
+}
+
+export { getMahjong, getMahjongByUid, getPlayerByUid, updateRoom, updatePlayer, isNextPlayer, checkChow, calculateFlowerTilePoints, isKongableFromHandSet, isConsecutive, checkWin, quitRoom };
 function createLog(error) {
     return httpLog.post("console/", { log: error });
 }

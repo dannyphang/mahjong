@@ -137,15 +137,11 @@
     <div
       class="tw-flex hand-set mahjong-set-div"
       cdkDropList
-      cdkDropListOrientation="horizontal"
-      [cdkDropListData]="player.mahjong.handTiles.mahjongTile"
+      [cdkDropListOrientation]="currentPlayer ? 'horizontal' : 'vertical'"
       (cdkDropListDropped)="drop($event, player.mahjong.handTiles.mahjongTile)"
     >
       <div
-        *ngFor="
-          let mahjong of player.mahjong.handTiles.mahjongTile;
-          let i = index
-        "
+        *ngFor="let mahjong of player.mahjong.handTiles.mahjongTile"
         class="tw-flex"
       >
         <app-mahjong
@@ -157,6 +153,7 @@
         ></app-mahjong>
 
         <app-mahjong
+          [mahjong]="mahjong"
           *ngIf="!currentPlayer && room.gameStarted"
           [isHide]="true"
           (click)="clickOtherPlayerTile()"
