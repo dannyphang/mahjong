@@ -2,17 +2,25 @@ import * as API from "../shared/service.js";
 
 function getAllMahjong() {
     return new Promise(async function (resolve, reject) {
-        API.getMahjong().then((res) => {
-            resolve(res.data.data);
-        });
+        API.getMahjong()
+            .then((res) => {
+                resolve(res.data.data);
+            })
+            .catch((error) => {
+                reject(error);
+            });
     });
 }
 
 function getMahjongByUid(uid) {
     return new Promise(async function (resolve, reject) {
-        API.getMahjongByUid(uid).then((res) => {
-            resolve(res.data.data);
-        });
+        API.getMahjongByUid(uid)
+            .then((res) => {
+                resolve(res.data.data);
+            })
+            .catch((error) => {
+                reject(error);
+            });
     });
 }
 
@@ -741,6 +749,7 @@ function updateRoom(room) {
                         updateMessage: error,
                     },
                 });
+                reject(error);
             });
     });
 }
@@ -752,7 +761,7 @@ function updatePlayer(player) {
                 resolve(player);
             })
             .catch((error) => {
-                resolve(error);
+                reject(error);
             });
     });
 }

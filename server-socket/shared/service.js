@@ -66,8 +66,24 @@ function checkWin(player) {
 function quitRoom(room, player) {
     return http.post("room/quit_room", { room: room, player: player });
 }
-function createLog(error) {
-    return httpLog.post("console/", { log: error });
+
+function createLog(error, statusCode, module, socket) {
+    const errorDetails = {
+        project: "Mahjong",
+        module: module,
+        server: "Server Socket",
+        serverType: "SOCKET",
+        message: error?.message || null,
+        stack: error?.stack || null,
+        statusCode: statusCode,
+        socket: {
+            clientIp: socket?.handshake?.address || "Unknown IP",
+            baseUrl: socket?.handshake?.headers?.host || "Unknown origin",
+            path: socket?.handshake?.url || "Unknown path",
+            clientId: socket?.id || "No client ID",
+        },
+    };
+    return httpLog.post("console/", { errorDetails });
 }
 
 export {

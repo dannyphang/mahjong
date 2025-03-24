@@ -5,8 +5,12 @@ const httpLog = axios.create({
     baseURL: config.logBaseUrl,
 });
 
-function createLog(error, req, res, statusCode) {
+function createLog(error, req, res, statusCode, module) {
     const errorDetails = {
+        project: "Mahjong",
+        module: module,
+        server: "Server API",
+        serverType: "API",
         message: error.message,
         stack: error.stack,
         statusCode: statusCode || res.statusCode,
@@ -14,8 +18,6 @@ function createLog(error, req, res, statusCode) {
             url: req.originalUrl,
             method: req.method,
             path: req.path,
-            headers: req.headers,
-            body: req.body,
         },
     };
     return httpLog.post("console", { errorDetails });
