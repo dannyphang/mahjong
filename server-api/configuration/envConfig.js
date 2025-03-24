@@ -1,7 +1,8 @@
 import env from "./environment.json" with { type: "json" };
+import envProd from "./environment.prod.json" with { type: "json" };
 
-let isServerConnect = false;
+let isServerConnect = true;
 
-const logBaseUrl = env.log;
+const logBaseUrl = isServerConnect ? envProd.log : env.log;
 
 export { logBaseUrl };
