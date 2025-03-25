@@ -6,6 +6,7 @@ import { GameService, MahjongActionDto, MahjongGroupDto, PlayerDto } from '../..
 import { BaseCoreAbstract } from '../../core/shared/base/base-core.abstract';
 import { MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
+import { EventService } from '../../core/services/event.service';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +22,8 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
     private socketIoService: SocketioService,
     private gameService: GameService,
     protected override messageService: MessageService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private eventService: EventService
   ) {
     super(messageService);
   }
@@ -38,6 +40,9 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
           next: res => {
             if (res.isSuccess) {
               this.socketIoService.currentPlayer = res.data[0];
+
+              this.eventService.createEventLog("room", "Player created room", `${res.data[0].playerName} created a room`);
+              this.eventService.createEventLog("room", "Player join room", `${res.data[0].playerName} joined the room`);
 
               this.navigateToRoom(true);
             }
@@ -81,6 +86,9 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                 if (res3.isSuccess) {
                   this.socketIoService.player = res3.data;
 
+                  this.eventService.createEventLog("player", "New player", `New player created, ${res.data[0].playerName}`);
+                  this.eventService.createEventLog("room", "Player join room", `${res.data[0].playerName} joined the room`);
+
                   this.navigateToRoom(true);
                 }
               });
@@ -108,7 +116,7 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
           next: res => {
             if (res.isSuccess) {
               this.socketIoService.player = res.data[0];
-
+              this.eventService.createEventLog("room", "Player join room", `${res.data[0].playerName} joined the room`);
               this.navigateToRoom();
             }
             else {
@@ -164,7 +172,6 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
       else {
         this.popMessage(this.translateService.instant('ACTION.MESSAGE.MUST_ENTER_PIN'), "info");
       }
-
     }
     else {
       this.popMessage(this.translateService.instant('ACTION.MESSAGE.USERNAME_CANNOT_EMPTY'), "error")

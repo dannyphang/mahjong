@@ -8,6 +8,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { TranslateService } from '@ngx-translate/core';
 import { CONTROL_TYPE, FormConfig } from '../../../core/services/components.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { EventService } from '../../../core/services/event.service';
 
 @Component({
   selector: 'app-room',
@@ -36,7 +37,8 @@ export class RoomComponent extends BaseCoreAbstract {
     private router: Router,
     private gameService: GameService,
     protected override messageService: MessageService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private eventService: EventService
   ) {
     super(messageService);
 
@@ -103,6 +105,7 @@ export class RoomComponent extends BaseCoreAbstract {
 
   playerQuited(player: PlayerDto) {
     this.room.playerList = this.room.playerList.filter(p => p.playerId !== player.playerId);
+    this.eventService.createEventLog("room", "Player quit room", `${this.player.playerName} quited the room`);
     this.socketIoService.sendPlayerQuitRoom(this.room, player);
   }
 
