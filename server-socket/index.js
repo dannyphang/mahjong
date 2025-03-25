@@ -89,7 +89,6 @@ io.on("connection", (socket) => {
             games
                 .playerJoinRoom(player, room)
                 .then((roomU) => {
-                    API.createLog(null, 500, logModule, socket);
                     io.in(roomU.roomId).emit("joinRoom", roomU);
                 })
                 .catch((error) => {

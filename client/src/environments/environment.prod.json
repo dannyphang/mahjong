@@ -1,4 +1,5 @@
 {
   "baseUrl": "https://mahjong-v2-me1t.vercel.app",
-  "socketEndpoint": "https://mahjong-v2.onrender.com"
+  "socketEndpoint": "https://mahjong-v2.onrender.com",
+  "event": "https://log-five-theta.vercel.app"
 }

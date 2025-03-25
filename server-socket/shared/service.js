@@ -83,7 +83,7 @@ function createLog(error, statusCode, module, socket) {
             clientId: socket?.id || "No client ID",
         },
     };
-    return httpLog.post("console/", { errorDetails });
+    return httpLog.post("exception", { errorDetails });
 }
 
 export {

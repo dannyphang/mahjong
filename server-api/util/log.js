@@ -20,7 +20,7 @@ function createLog(error, req, res, statusCode, module) {
             path: req.path,
         },
     };
-    return httpLog.post("console", { errorDetails });
+    return httpLog.post("exception", { errorDetails });
 }
 
 export { createLog };
