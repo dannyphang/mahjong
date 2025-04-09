@@ -18,6 +18,7 @@ function createLog(error, req, res, statusCode, module) {
             url: req.originalUrl,
             method: req.method,
             path: req.path,
+            host: req.headers.host,
         },
     };
     return httpLog.post("exception", { errorDetails });
