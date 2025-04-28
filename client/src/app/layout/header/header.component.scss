@@ -11,7 +11,7 @@
 }
 
 :host ::ng-deep {
-  .user-menu-container .p-menu {
-    width: 350px;
+  .user-menu-container .p-tieredmenu-overlay {
+    width: max-content;
   }
 }

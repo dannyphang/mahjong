@@ -3,7 +3,7 @@ import express from "express";
 const router = Router();
 import * as db from "../firebase/firebase-admin.js";
 import * as API from "./log.js";
-import responseModel from "../shared/function.js";
+import * as func from "../shared/function.js";
 
 router.use(express.json());
 
@@ -19,12 +19,12 @@ router.post("/", async (req, res) => {
 
         await newRef.set(player);
 
-        res.status(200).json(responseModel({ data: player }));
+        res.status(200).json(func.responseModel({ data: player }));
     } catch (error) {
         console.log("error", error);
         API.createLog(error, req, res, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error,
             })
@@ -48,12 +48,12 @@ router.put("/", async (req, res) => {
 
         await newRef.update(player);
 
-        res.status(200).json(responseModel({ data: player }));
+        res.status(200).json(func.responseModel({ data: player }));
     } catch (error) {
         console.log("error", error);
         API.createLog(error, req, res, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error,
             })
@@ -71,14 +71,14 @@ router.get("/", async (req, res) => {
 
         if (list.length > 0) {
             if (req.headers.pin === list[0].pin) {
-                res.status(200).json(responseModel({ data: list }));
+                res.status(200).json(func.responseModel({ data: list }));
             } else {
                 API.createLog(error, req, res, 400, logModule);
-                res.status(400).json(responseModel({ isSuccess: false, responseMessage: "Incorrect Pin." }));
+                res.status(400).json(func.responseModel({ isSuccess: false, responseMessage: "Incorrect Pin." }));
             }
         } else {
             res.status(200).json(
-                responseModel({
+                func.responseModel({
                     isSuccess: false,
                     responseMessage: "Player is not found.",
                 })
@@ -88,7 +88,7 @@ router.get("/", async (req, res) => {
         console.log("error", error);
         API.createLog(error, req, res, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error,
             })
@@ -107,11 +107,11 @@ router.get("/:id", async (req, res) => {
         });
 
         if (list.length > 0) {
-            res.status(200).json(responseModel({ data: list[0] }));
+            res.status(200).json(func.responseModel({ data: list[0] }));
         } else {
             API.createLog(error, req, res, 400, logModule);
             res.status(400).json(
-                responseModel({
+                func.responseModel({
                     isSuccess: false,
                     responseMessage: id + "Player is not found.",
                 })
@@ -121,7 +121,7 @@ router.get("/:id", async (req, res) => {
         console.log("error", error);
         API.createLog(error, req, res, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error,
             })

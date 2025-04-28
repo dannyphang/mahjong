@@ -32,7 +32,9 @@
     "OK": "OK",
     "SUBMIT": "Submit",
     "ENTER_ROOM": "Enter Room",
-    "CREATE_ROOM": "Create Room"
+    "CREATE_ROOM": "Create Room",
+    "LOGIN": "Login",
+    "LOGOUT": "Logout"
   },
   "MAHJONG": "Mahjong",
   "INPUT": {
@@ -41,6 +43,7 @@
     "ROOM_ID": "Room ID",
     "MIN_POINT": "Minimum points",
     "SCORE": "Score",
-    "INIT_TOTAL_SCORE": "Initial total score"
+    "INIT_TOTAL_SCORE": "Initial total score",
+    "SEARCH": "Search"
   }
 }

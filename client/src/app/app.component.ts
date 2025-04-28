@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { inject } from '@vercel/analytics';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,8 @@ export class AppComponent {
   title = 'angular-setup-base';
 
   constructor(
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private authService: AuthService
   ) {
     inject();
     this.translateService.use('zh');
@@ -26,5 +28,11 @@ export class AppComponent {
     else {
       // light mode
     }
+  }
+
+  ngOnInit() {
+    this.authService.getCurrentAuthUser().then(user => {
+      console.log(user);
+    })
   }
 }

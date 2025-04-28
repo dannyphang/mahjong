@@ -71,7 +71,7 @@ export class MahjongDisplayComponent extends BaseCoreAbstract {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
-      let tempArr = [];
+      let tempArr: any[] = [];
       for (let i = 0; i < length - 1; i++) {
         tempArr.push(array[i])
       }

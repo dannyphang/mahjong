@@ -1,5 +1,6 @@
 {
     "api": "http://localhost:3000",
     "log": "http://localhost:1114",
-    "apiPort": 3000
+    "apiPort": 3000,
+    "auth": "http://localhost:1110"
 }

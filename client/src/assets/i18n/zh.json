@@ -29,7 +29,9 @@
     "CANCEL": "取消",
     "OK": "确定",
     "ENTER_ROOM": "进入房间",
-    "CREATE_ROOM": "开新房间"
+    "CREATE_ROOM": "开新房间",
+    "LOGIN": "登录",
+    "LOGOUT": "登出"
   },
   "MAHJONG": "麻将",
   "INPUT": {

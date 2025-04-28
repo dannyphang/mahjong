@@ -20,10 +20,14 @@ const routes: Routes = [
       // },
     ]
   },
-  // {
-  //   path: 'signup',
-  //   loadChildren: () => import('./module/login/login.module').then(m => m.LoginModule),
-  // },
+  {
+    path: 'login',
+    loadChildren: () => import('./module/login/login.module').then(m => m.LoginModule),
+  },
+  {
+    path: 'callback',
+    loadChildren: () => import('./module/callback/callback.module').then(m => m.CallbackModule),
+  },
   {
     path: 'pagenotfound',
     component: Error404Component

@@ -2,7 +2,7 @@ import { Router } from "express";
 import express from "express";
 const router = Router();
 import * as db from "../firebase/firebase-admin.js";
-import responseModel from "../shared/function.js";
+import * as func from "../shared/function.js";
 import * as games from "../util/game.js";
 import * as API from "./log.js";
 
@@ -26,17 +26,17 @@ router.post("/", async (req, res) => {
                 await newRef.set(m);
 
                 if (index === list.length - 1) {
-                    res.status(200).json(responseModel({ responseMessage: "Created " + list.length + " record(s)." }));
+                    res.status(200).json(func.responseModel({ responseMessage: "Created " + list.length + " record(s)." }));
                 }
             });
         } else {
-            res.status(200).json(responseModel({ data: list }));
+            res.status(200).json(func.responseModel({ data: list }));
         }
     } catch (error) {
         console.log("error", error);
         API.createLog(error, req, res, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error,
             })
@@ -51,12 +51,12 @@ router.get("/", async (req, res) => {
 
         const list = snapshot.docs.map((doc) => doc.data());
 
-        res.status(200).json(responseModel({ data: list }));
+        res.status(200).json(func.responseModel({ data: list }));
     } catch (error) {
         console.error("Error fetching Mahjong data:", error);
         API.createLog(error, req, res, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error.message,
             })
@@ -72,12 +72,12 @@ router.get("/:id", async (req, res) => {
 
         const list = snapshot.docs.map((doc) => doc.data());
 
-        res.status(200).json(responseModel({ data: list[0] }));
+        res.status(200).json(func.responseModel({ data: list[0] }));
     } catch (error) {
         console.error("Error fetching Mahjong data:", error);
         API.createLog(error, req, res, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error.message,
             })
@@ -93,12 +93,12 @@ router.get("/:id", async (req, res) => {
 
         const room = snapshot.data().statusId == 1 ? snapshot.data() : {};
 
-        res.status(200).json(responseModel({ data: room }));
+        res.status(200).json(func.responseModel({ data: room }));
     } catch (error) {
         console.log("error", error);
         API.createLog(error, req, res, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error,
             })
@@ -118,7 +118,7 @@ router.get("/:id", async (req, res) => {
 //           await newRef.set(m);
 
 //           if (index === list.length - 1) {
-//               res.status(200).json(responseModel({ responseMessage: "Created " + list.length + " record(s)." }));
+//               res.status(200).json(func.responseModel({ responseMessage: "Created " + list.length + " record(s)." }));
 //           }
 //       });
 //     } catch (error) {}
@@ -133,10 +133,10 @@ router.post("/calculate_points", async (req, res) => {
             .calculateMahjongSetPoints(mahjong, player)
             .then((r) => {
                 if (r.points >= 0) {
-                    res.status(200).json(responseModel({ data: r }));
+                    res.status(200).json(func.responseModel({ data: r }));
                 } else {
                     res.status(200).json(
-                        responseModel({
+                        func.responseModel({
                             data: r,
                             isSuccess: false,
                             responseMessage: "This set is not winning.",
@@ -148,7 +148,7 @@ router.post("/calculate_points", async (req, res) => {
                 console.log("error", error);
                 API.createLog(error, req, res, 400, logModule);
                 res.status(400).json(
-                    responseModel({
+                    func.responseModel({
                         isSuccess: false,
                         responseMessage: error,
                     })
@@ -158,7 +158,7 @@ router.post("/calculate_points", async (req, res) => {
         console.log("error", error);
         API.createLog(error, req, res, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error,
             })
@@ -169,12 +169,12 @@ router.post("/calculate_points", async (req, res) => {
 // get FlowerTilePoints
 router.post("/calculateFlowerTilePoints", async (req, res) => {
     try {
-        res.status(200).json(responseModel({ data: games.calculateFlowerTilePoints(req.body.mahjong, req.body.player) }));
+        res.status(200).json(func.responseModel({ data: games.calculateFlowerTilePoints(req.body.mahjong, req.body.player) }));
     } catch (error) {
         console.error("Error:", error);
         API.createLog(error, req, res, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error.message,
             })
@@ -186,7 +186,7 @@ router.post("/calculateFlowerTilePoints", async (req, res) => {
 router.post("/isKongableFromHandSet", async (req, res) => {
     try {
         res.status(200).json(
-            responseModel({
+            func.responseModel({
                 data: games.isKongableFromHandSet(req.body.newMahjong, req.body.mahjongList),
             })
         );
@@ -194,7 +194,7 @@ router.post("/isKongableFromHandSet", async (req, res) => {
         console.error("Error:", error);
         API.createLog(error, req, res, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error.message,
             })
@@ -206,7 +206,7 @@ router.post("/isKongableFromHandSet", async (req, res) => {
 router.post("/checkChow", async (req, res) => {
     try {
         res.status(200).json(
-            responseModel({
+            func.responseModel({
                 data: games.checkChow(req.body.mahjongTile, req.body.discardedMahjongTile),
             })
         );
@@ -214,7 +214,7 @@ router.post("/checkChow", async (req, res) => {
         console.error("Error:", error);
         API.createLog(error, req, res, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error.message,
             })
@@ -226,7 +226,7 @@ router.post("/checkChow", async (req, res) => {
 router.post("/isNextPlayer", async (req, res) => {
     try {
         res.status(200).json(
-            responseModel({
+            func.responseModel({
                 data: games.isNextPlayer(req.body.room, req.body.currentPlayer, req.body.targetPlayer),
             })
         );
@@ -234,7 +234,7 @@ router.post("/isNextPlayer", async (req, res) => {
         console.error("Error:", error);
         API.createLog(error, req, res, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error.message,
             })
@@ -245,12 +245,12 @@ router.post("/isNextPlayer", async (req, res) => {
 // get isConsecutive
 router.post("/isConsecutive", async (req, res) => {
     try {
-        res.status(200).json(responseModel({ data: games.isConsecutive(req.body.code1, req.body.code2, req.body.code3) }));
+        res.status(200).json(func.responseModel({ data: games.isConsecutive(req.body.code1, req.body.code2, req.body.code3) }));
     } catch (error) {
         console.error("Error:", error);
         API.createLog(error, req, res, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error.message,
             })

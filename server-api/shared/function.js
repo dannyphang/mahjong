@@ -1,9 +1,20 @@
 function responseModel({ data = null, isSuccess = true, responseMessage = null }) {
-  return {
-    data: data,
-    isSuccess: isSuccess,
-    responseMessage: responseMessage,
-  };
+    return {
+        data: data,
+        isSuccess: isSuccess,
+        responseMessage: responseMessage,
+    };
 }
 
-export default responseModel;
+function body(data) {
+    return {
+        data: data.body,
+        tenantId: data.headers?.tenantid ?? "",
+        userId: data.headers?.userid ?? "",
+        headers: data.headers,
+    };
+}
+
+const PROJECT = "Mahjong";
+
+export { responseModel, PROJECT, body };
