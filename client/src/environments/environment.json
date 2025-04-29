@@ -1,5 +1,8 @@
 {
+  "clientUrl": "http://localhost:4200",
   "baseUrl": "http://localhost:3000",
   "socketEndpoint": "http://localhost:3001",
-  "event": "http://localhost:1114"
+  "event": "http://localhost:1114",
+  "auth": "http://localhost:1110",
+  "authClient": "http://localhost:1118"
 }

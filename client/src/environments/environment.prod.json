@@ -1,5 +1,8 @@
 {
+  "clientUrl": "https://mahjong-fun.vercel.app/",
   "baseUrl": "https://mahjong-v2-me1t.vercel.app",
   "socketEndpoint": "https://mahjong-v2.onrender.com",
-  "event": "https://log-five-theta.vercel.app"
+  "event": "https://log-five-theta.vercel.app",
+  "auth": "https://jwt-authentication-fawn.vercel.app",
+  "authClient": "https://jwt-authentication-hnoh.vercel.app"
 }

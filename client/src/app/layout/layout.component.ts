@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthService, UserDto } from '../core/services/auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -9,11 +10,19 @@ import { TranslateService } from '@ngx-translate/core';
 export class LayoutComponent {
   helpDialogVisible: boolean = false;
   translateVisible: boolean = true;
+  user: UserDto;
 
   constructor(
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private authService: AuthService
   ) {
 
+  }
+
+  ngOnInit() {
+    this.authService.getCurrentAuthUser().then(user => {
+      this.user = user;
+    })
   }
 
   @HostListener("window:keydown", ['$event'])

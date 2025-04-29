@@ -8,6 +8,7 @@ const server = http.createServer(app);
 import mahjongRouter from "./util/mahjong.js";
 import roomRouter from "./util/room.js";
 import playerRouter from "./util/player.js";
+import authRouter from "./util/controller/auth.controller.js";
 
 const PORT = process.env.PORT || 3000;
 
@@ -25,6 +26,7 @@ app.use(cors());
 app.use("/mahjong", mahjongRouter);
 app.use("/room", roomRouter);
 app.use("/player", playerRouter);
+app.use("/auth", authRouter);
 
 const consoleColor = {
     Reset: "\x1b[0m",
