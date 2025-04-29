@@ -59,6 +59,7 @@ export class HeaderComponent {
         email: this.authService.userC.email,
         lastActiveDateTime: new Date(),
         uid: this.authService.userC.uid,
+        username: this.authService.userC.username,
         setting: {
           ...this.authService.userC.setting,
           darkMode: isDark
@@ -85,7 +86,7 @@ export class HeaderComponent {
       },
       {
         label: this.translateService.instant('BUTTON.LOGOUT'),
-        icon: 'pi pi-user-plus',
+        icon: 'pi pi-sign-out',
         command: () => {
           this.authService.signOutUserAuth().subscribe(res => {
             // this.eventService.createEventLog("auth", "Log out", `${this.authService.userC.displayName} logged out.`);
@@ -124,7 +125,7 @@ export class HeaderComponent {
       },
       {
         label: this.translateService.instant('BUTTON.SIGNUP'),
-        icon: "pi pi-sign-up",
+        icon: "pi pi-user-plus",
         command: () => {
           this.redirectToSignUp();
         },
@@ -134,6 +135,6 @@ export class HeaderComponent {
   }
 
   profileClick() {
-
+    this.router.navigate(['/profile']);
   }
 }

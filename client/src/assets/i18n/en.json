@@ -25,12 +25,14 @@
   "ROOM": {
     "GAME_TURN": "Game Turn: ",
     "NOT_FOUND": "Room not found",
-    "SETTING": "Room setting"
+    "SETTING": "Room setting",
+    "PROFILE": "Profile"
   },
   "BUTTON": {
     "CANCEL": "Cancel",
     "OK": "OK",
     "SUBMIT": "Submit",
+    "SAVE": "Save",
     "ENTER_ROOM": "Enter Room",
     "CREATE_ROOM": "Create Room",
     "LOGIN": "Login",
@@ -45,6 +47,10 @@
     "MIN_POINT": "Minimum points",
     "SCORE": "Score",
     "INIT_TOTAL_SCORE": "Initial total score",
-    "SEARCH": "Search"
+    "SEARCH": "Search",
+    "EMAIL": "Email",
+    "PASSWORD": "Password",
+    "CONFIRM_PASSWORD": "Confirm Password",
+    "DISPLAY_NAME": "Display Name"
   }
 }

@@ -82,7 +82,7 @@ export class AuthService {
             this.http.get<any>(`${this.AUTH_URL}/auth/user`, { withCredentials: true }).subscribe({
                 next: res => {
                     let authUid = res.data.uid;
-                    console.log("authUid", authUid);
+
                     this.getUserByAuthUid(authUid).subscribe({
                         next: res2 => {
                             this.userC = res2.data;
@@ -93,6 +93,7 @@ export class AuthService {
                                 let newUser: UserDto = {
                                     authUid: authUid,
                                     email: res.data.email,
+                                    username: res.data.username,
                                     displayName: res.data.displayName,
                                     profilePhotoUrl: res.data.profileImage,
                                     setting: {},
@@ -144,6 +145,7 @@ export class UserDto extends BasedDto {
     phoneNumber?: string;
     profilePhotoUrl?: string;
     email: string;
+    username?: string;
     setting: SettingDto;
     lastActiveDateTime: Date;
 }

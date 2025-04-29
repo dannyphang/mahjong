@@ -23,11 +23,16 @@
     }
   },
   "ROOM": {
-    "GAME_TURN": "玩家回合: "
+    "GAME_TURN": "玩家回合: ",
+    "NOT_FOUND": "房间不存在",
+    "SETTING": "房间设置",
+    "PROFILE": "个人资料"
   },
   "BUTTON": {
     "CANCEL": "取消",
     "OK": "确定",
+    "SUBMIT": "提交",
+    "SAVE": "保存",
     "ENTER_ROOM": "进入房间",
     "CREATE_ROOM": "开新房间",
     "LOGIN": "登录",
@@ -38,6 +43,14 @@
   "INPUT": {
     "USERNAME": "玩家名字",
     "PIN": "密码",
-    "ROOM_ID": "房间号"
+    "ROOM_ID": "房间号",
+    "MIN_POINT": "最小分数",
+    "SCORE": "分数",
+    "INIT_TOTAL_SCORE": "初始总分",
+    "SEARCH": "搜索",
+    "EMAIL": "邮箱",
+    "PASSWORD": "密码",
+    "CONFIRM_PASSWORD": "确认密码",
+    "DISPLAY_NAME": "显示名称"
   }
 }

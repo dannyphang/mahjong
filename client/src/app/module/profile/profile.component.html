@@ -1,0 +1,17 @@
+<div>
+  <div class="tw-px-[var(--content-gap)]">
+    {{ "ROOM.PROFILE" | translate }}
+  </div>
+
+  <div>
+    <app-base-form [formConfig]="profileFormConfig"></app-base-form>
+  </div>
+
+  <div class="tw-px-[var(--content-gap)]">
+    <app-base-button
+      [label]="'BUTTON.SAVE' | translate"
+      (onClick)="profileSave()"
+      class="tw-w-min tw-grid"
+    ></app-base-button>
+  </div>
+</div>
