@@ -68,7 +68,7 @@
       </div>
     </ng-container>
     <ng-template #notProfileLabel>
-      <div class="user-menu-div">
+      <div class="user-menu-div tw-cursor-pointer" (click)="profileClick()">
         <p-avatar
           [image]="avatarImage ? avatarImage : DEFAULT_PROFILE_PIC_URL"
           class="user-menu-avatar"

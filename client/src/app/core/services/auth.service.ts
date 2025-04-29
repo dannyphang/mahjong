@@ -10,11 +10,52 @@ export class AuthService {
     JWT_BASE_URL = apiConfig.authClient;
     private AUTH_URL = apiConfig.authUrl;
     userC: UserDto;
+    private paramData: ParamsDto = {
+        token: undefined,
+        project: undefined,
+        redirect_uri: undefined,
+        platform: [],
+        signup: true,
+        forgotPassword: true,
+        rememberMe: true,
+        email: undefined,
+        displayName: undefined,
+        username: undefined,
+        profileImage: undefined,
+        authUid: undefined,
+    };
 
     constructor(
         private http: HttpClient,
         private toastService: ToastService
     ) { }
+
+    set params(params: ParamsDto) {
+        this.paramData = params;
+    }
+
+    get params() {
+        return this.paramData;
+    }
+
+    returnParamDataUrl(): string {
+        const params: Record<string, string | undefined | null> = {
+            redirect_uri: this.paramData.redirect_uri ?? "http://localhost:4200/callback",
+            project: this.paramData.project ?? "jwt",
+            token: this.paramData.token,
+            email: this.paramData.email,
+            displayName: this.paramData.displayName,
+            username: this.paramData.username,
+            profileImage: this.paramData.profileImage,
+        };
+
+        const query = Object.entries(params)
+            .filter(([_, value]) => value !== undefined && value !== null)
+            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value!)}`)
+            .join("&");
+
+        return query ? `?${query}` : "";
+    }
 
     callJWT() {
         let redirectUri = apiConfig.clientUrl + "/callback";
@@ -22,7 +63,7 @@ export class AuthService {
     }
 
     signOutUserAuth() {
-        return this.http.post<ResponseModel<UserDto>>(this.JWT_BASE_URL + "/auth/logout", {}).pipe();
+        return this.http.post<ResponseModel<UserDto>>(this.AUTH_URL + "/auth/logout", {}, { withCredentials: true }).pipe();
     }
 
     getUserByAuthUid(uid: string): Observable<ResponseModel<UserDto>> {
@@ -30,7 +71,10 @@ export class AuthService {
     }
 
     createMahjongUser(user: UserDto): Observable<ResponseModel<UserDto>> {
-        return this.http.post<ResponseModel<UserDto>>(apiConfig.baseUrl + '/auth/createUser', { user: user }).pipe();
+        return this.http.post<ResponseModel<UserDto>>(
+            apiConfig.baseUrl + '/auth/createUser',
+            { user: user }
+        ).pipe();
     }
 
     getCurrentAuthUser(): Promise<UserDto> {
@@ -38,6 +82,7 @@ export class AuthService {
             this.http.get<any>(`${this.AUTH_URL}/auth/user`, { withCredentials: true }).subscribe({
                 next: res => {
                     let authUid = res.data.uid;
+                    console.log("authUid", authUid);
                     this.getUserByAuthUid(authUid).subscribe({
                         next: res2 => {
                             this.userC = res2.data;
@@ -48,6 +93,8 @@ export class AuthService {
                                 let newUser: UserDto = {
                                     authUid: authUid,
                                     email: res.data.email,
+                                    displayName: res.data.displayName,
+                                    profilePhotoUrl: res.data.profileImage,
                                     setting: {},
                                     lastActiveDateTime: new Date(),
                                 }
@@ -67,6 +114,18 @@ export class AuthService {
                 }
             })
         })
+    }
+
+    setCurrentAuthUser(token: string): Observable<ResponseModel<any>> {
+        return this.http.post<ResponseModel<any>>(
+            this.AUTH_URL + "/auth/loginWithToken",
+            { token: token },
+            { withCredentials: true }
+        ).pipe();
+    }
+
+    getJWTUserByAuthUid(uid: string): Observable<ResponseModel<UserDto>> {
+        return this.http.get<ResponseModel<UserDto>>(this.AUTH_URL + '/auth/user/' + uid).pipe();
     }
 
     updateUserFirestore(user: UserDto[]): Observable<ResponseModel<any>> {
@@ -91,4 +150,20 @@ export class UserDto extends BasedDto {
 
 export class SettingDto {
     darkMode?: boolean;
+}
+
+export class ParamsDto {
+    redirect_uri?: string;
+    project?: string;
+    token?: string;
+    platform: string[];
+    signup?: boolean;
+    forgotPassword?: boolean;
+    rememberMe?: boolean;
+    email?: string;
+    displayName?: string;
+    username?: string;
+    profileImage?: string;
+    authUid?: string;
+    // [key: string]: any;
 }

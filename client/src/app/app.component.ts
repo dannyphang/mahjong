@@ -31,8 +31,6 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    this.authService.getCurrentAuthUser().then(user => {
-      console.log(user);
-    })
+
   }
 }

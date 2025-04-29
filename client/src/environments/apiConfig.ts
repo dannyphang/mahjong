@@ -4,8 +4,8 @@ import { isDevMode } from '@angular/core';
 
 const isProd = !isDevMode();
 const isServerConnect = false;
-const isAuthServerConnect = true;
-const isAuthClientConnect = true;
+const isAuthServerConnect = false;
+const isAuthClientConnect = false;
 
 const apiConfig = {
     clientUrl: isProd || isServerConnect ? envProd.clientUrl : envLocal.clientUrl,

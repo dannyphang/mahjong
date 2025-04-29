@@ -34,7 +34,8 @@
     "ENTER_ROOM": "Enter Room",
     "CREATE_ROOM": "Create Room",
     "LOGIN": "Login",
-    "LOGOUT": "Logout"
+    "LOGOUT": "Logout",
+    "SIGNUP": "Sign Up"
   },
   "MAHJONG": "Mahjong",
   "INPUT": {

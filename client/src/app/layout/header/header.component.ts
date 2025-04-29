@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { CommonService } from '../../core/services/common.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { EventService } from '../../core/services/event.service';
+import apiConfig from '../../../environments/apiConfig';
 
 @Component({
   selector: 'app-header',
@@ -84,10 +85,10 @@ export class HeaderComponent {
       },
       {
         label: this.translateService.instant('BUTTON.LOGOUT'),
-        icon: 'pi pi-sign-out',
+        icon: 'pi pi-user-plus',
         command: () => {
           this.authService.signOutUserAuth().subscribe(res => {
-            this.eventService.createEventLog("auth", "Log out", `${this.authService.userC.displayName} logged out.`);
+            // this.eventService.createEventLog("auth", "Log out", `${this.authService.userC.displayName} logged out.`);
             window.location.reload();
           });
         },
@@ -100,12 +101,16 @@ export class HeaderComponent {
           this.redirectToSignIn();
         },
         visible: this.currentUser ? false : true
-      }
+      },
     ];
   }
 
   redirectToSignIn() {
     this.router.navigate(["/login"]);
+  }
+
+  redirectToSignUp() {
+    window.location.href = apiConfig.authClient + "/signup?redirect_uri=" + apiConfig.clientUrl + "/callback&project=Mahjong";
   }
 
   ngOnInit() {
@@ -116,7 +121,19 @@ export class HeaderComponent {
         command: () => {
           this.redirectToSignIn();
         }
-      }
+      },
+      {
+        label: this.translateService.instant('BUTTON.SIGNUP'),
+        icon: "pi pi-sign-up",
+        command: () => {
+          this.redirectToSignUp();
+        },
+        visible: this.currentUser ? false : true
+      },
     ];
+  }
+
+  profileClick() {
+
   }
 }
