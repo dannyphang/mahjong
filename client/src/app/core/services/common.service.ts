@@ -6,10 +6,19 @@ import { HttpClient } from '@angular/common/http';
     providedIn: 'root',
 })
 export class CommonService {
+    language: string = 'en';
 
     constructor(
         private http: HttpClient
     ) {
+    }
+
+    setLanguage(lang: string) {
+        this.language = lang;
+    }
+
+    getLanguage(): string {
+        return this.language;
     }
 
     // getAllActivities(): Observable<ResponseModel<ActivityDto[]>> {

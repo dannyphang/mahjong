@@ -2,7 +2,7 @@ import { Router } from "express";
 import express from "express";
 const router = Router();
 import * as db from "../firebase/firebase-admin.js";
-import responseModel from "../shared/function.js";
+import * as func from "../shared/function.js";
 import { FieldValue } from "firebase-admin/firestore";
 import * as API from "./log.js";
 
@@ -38,12 +38,12 @@ router.post("/", async (req, res) => {
 
         await newRef.set(room);
 
-        res.status(200).json(responseModel({ data: room }));
+        res.status(200).json(func.responseModel({ data: room }));
     } catch (error) {
         console.log("error", error);
         API.createLog(error, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error,
             })
@@ -62,11 +62,11 @@ router.get("/:id", async (req, res) => {
         });
 
         if (list.length > 0) {
-            res.status(200).json(responseModel({ data: list[0] }));
+            res.status(200).json(func.responseModel({ data: list[0] }));
         } else {
             API.createLog(error, req, res, 400, logModule);
             res.status(400).json(
-                responseModel({
+                func.responseModel({
                     isSuccess: false,
                     responseMessage: "Room is not found.",
                 })
@@ -75,7 +75,7 @@ router.get("/:id", async (req, res) => {
     } catch (error) {
         API.createLog(error, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error,
             })
@@ -101,12 +101,12 @@ router.put("/", async (req, res) => {
             .then((newPlayerList) => {
                 room.playerList = newPlayerList;
                 room.waitingPlayer = newPlayerList.find((p) => p.playerId === room.waitingPlayer);
-                res.status(200).json(responseModel({ data: room }));
+                res.status(200).json(func.responseModel({ data: room }));
             })
             .catch((error) => {
                 API.createLog(error, req, res, 400, logModule);
                 res.status(400).json(
-                    responseModel({
+                    func.responseModel({
                         isSuccess: false,
                         responseMessage: error,
                     })
@@ -116,7 +116,7 @@ router.put("/", async (req, res) => {
         console.log(error);
         API.createLog(error, 500, logModule);
         res.status(400).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error,
             })
@@ -136,12 +136,12 @@ router.post("/quit_room", async (req, res) => {
             playerList: FieldValue.arrayRemove(player.playerId),
         });
 
-        res.status(200).json(responseModel({ data: player }));
+        res.status(200).json(func.responseModel({ data: player }));
     } catch (error) {
         console.log("error", error);
         API.createLog(error, 500, logModule);
         res.status(500).json(
-            responseModel({
+            func.responseModel({
                 isSuccess: false,
                 responseMessage: error,
             })

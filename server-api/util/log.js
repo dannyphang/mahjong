@@ -11,13 +11,14 @@ function createLog(error, req, res, statusCode, module) {
         module: module,
         server: "Server API",
         serverType: "API",
-        message: error.message,
-        stack: error.stack,
+        message: error.message ?? error,
+        stack: error.stack ?? error,
         statusCode: statusCode || res.statusCode,
         request: {
             url: req.originalUrl,
             method: req.method,
             path: req.path,
+            host: req.headers.host,
         },
     };
     return httpLog.post("exception", { errorDetails });

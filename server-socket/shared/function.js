@@ -1,4 +1,4 @@
-function responseModel({ data = null, isSuccess = true, responseMessage = null }) {
+function func.responseModel({ data = null, isSuccess = true, responseMessage = null }) {
   return {
     data: data,
     isSuccess: isSuccess,

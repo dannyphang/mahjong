@@ -1,5 +1,6 @@
 {
     "api": "https://mahjong-v2-me1t.vercel.app",
     "log": "https://log-five-theta.vercel.app",
-    "apiPort": "3000"
+    "apiPort": "3000",
+    "auth": "https://jwt-authentication-fawn.vercel.app/"
 }

@@ -1,0 +1,88 @@
+<div class="header-div flex justify-between">
+  <div class="tw-w-full">
+    <p-menubar [model]="menuItem" class="tw-w-full">
+      <ng-template pTemplate="menuItem" let-item let-root="root">
+        <a
+          pRipple
+          class="flex align-items-center p-menuitem-link"
+          [pTooltip]="item.tooltip | translate"
+        >
+          <span [class]="item.icon"></span>
+          <span class="">{{ item.label }}</span>
+          <span
+            *ngIf="item.shortcut"
+            class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1"
+            >{{ item.shortcut }}</span
+          >
+          <i
+            *ngIf="item.items"
+            [ngClass]="[
+              'pi',
+              root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto'
+            ]"
+          ></i>
+        </a>
+      </ng-template>
+      <ng-template pTemplate="end">
+        <div class="tw-flex">
+          <!-- <app-base-button
+            [iconName]="isDarkMode ? 'pi pi-moon' : 'pi pi-sun'"
+            [outlined]="true"
+            class="tw-ml-[var(--content-gap)]"
+            (onClick)="updateThemeMode(!isDarkMode, false)"
+          ></app-base-button> -->
+
+          <div class="user-div tw-ml-[var(--content-gap-s)]">
+            <div class="avatar-div" (click)="userMenu.toggle($event)">
+              <p-avatar
+                [image]="avatarImage ? avatarImage : DEFAULT_PROFILE_PIC_URL"
+                styleClass="tw-w-[40px] tw-h-[40px]"
+                shape="circle"
+                data-blobity-magnetic="true"
+              />
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-menubar>
+  </div>
+</div>
+
+<p-tieredMenu
+  #userMenu
+  [model]="userMenuItem"
+  [popup]="true"
+  class="user-menu-container"
+>
+  <ng-template pTemplate="item" let-item let-hasSubmenu="hasSubmenu">
+    <ng-container *ngIf="item.label !== ''; else notProfileLabel">
+      <div>
+        <a pRipple class="flex align-items-center p-menuitem-link">
+          <span [class]="item.icon"></span>
+          <span class="ml-2">{{ item.label }}</span>
+          <i
+            *ngIf="hasSubmenu"
+            class="pi pi-angle-right ml-auto text-primary"
+          ></i>
+        </a>
+      </div>
+    </ng-container>
+    <ng-template #notProfileLabel>
+      <div class="user-menu-div tw-cursor-pointer" (click)="profileClick()">
+        <p-avatar
+          [image]="avatarImage ? avatarImage : DEFAULT_PROFILE_PIC_URL"
+          class="user-menu-avatar"
+          shape="circle"
+        />
+        <div class="user-menu-info-div">
+          <div class="user-menu-name">
+            {{ user ? user.displayName : "--" }}
+          </div>
+          <div class="user-menu-email">
+            {{ user ? user.email : "--" }}
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ng-template>
+</p-tieredMenu>
