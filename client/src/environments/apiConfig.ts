@@ -3,7 +3,7 @@ import envProd from './environment.prod.json';
 import { isDevMode } from '@angular/core';
 
 const isProd = !isDevMode();
-const isServerConnect = false;
+const isServerConnect = true;
 
 const apiConfig = {
     baseUrl: isProd || isServerConnect ? envProd.baseUrl : envLocal.baseUrl,
