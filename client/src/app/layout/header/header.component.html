@@ -1,6 +1,16 @@
 <div class="header-div flex justify-between">
   <div class="tw-w-full">
     <p-menubar [model]="menuItem" class="tw-w-full">
+      <ng-template pTemplate="start">
+        <div class="">
+          <img
+            src="assets/images/logo.png"
+            alt="Logo"
+            class="logo-image tw-h-[40px] tw-cursor-pointer"
+            (click)="logoClick()"
+          />
+        </div>
+      </ng-template>
       <ng-template pTemplate="menuItem" let-item let-root="root">
         <a
           pRipple

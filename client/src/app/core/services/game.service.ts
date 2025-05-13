@@ -77,6 +77,7 @@ export class RoomDto {
 }
 
 export class PlayerDto {
+    userUid: string;
     playerId?: string;
     playerName: string;
     statusId: number;

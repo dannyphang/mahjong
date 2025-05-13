@@ -13,11 +13,11 @@ const routes: Routes = [
         loadChildren: () => import('./module/home/home.module').then(m => m.HomeModule),
         data: { breadcrumb: '', title: 'Lobby' }
       },
-      // {
-      //   path: 'contact',
-      //   loadChildren: () => import('./module/contact/contact.module').then(m => m.ContactModule),
-      //   data: { breadcrumb: 'Contact', title: 'Contact' },
-      // },
+      {
+        path: 'profile',
+        loadChildren: () => import('./module/profile/profile.module').then(m => m.ProfileModule),
+        data: { breadcrumb: 'Profile', title: 'Profile' },
+      },
     ]
   },
   {

@@ -70,7 +70,7 @@ router.post("/signin", async (req, res) => {
 });
 
 // update user
-router.put("/", async (req, res) => {
+router.put("/user", async (req, res) => {
     try {
         authImpl
             .updateUser({ user: func.body(req).data.user })

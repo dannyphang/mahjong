@@ -58,4 +58,26 @@ function getUserByUid({ uid }) {
     });
 }
 
-export { createUser, getUserByAuthUid, getUserByUid };
+function updateUser({ user }) {
+    return new Promise((resolve, reject) => {
+        try {
+            if (!user) {
+                reject("User is required");
+            }
+            user.modifiedDate = new Date(new Date().toUTCString());
+
+            authRepo
+                .updateUser({ user: user })
+                .then((updatedUser) => {
+                    resolve(updatedUser);
+                })
+                .catch((error) => {
+                    reject(error);
+                });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+export { createUser, getUserByAuthUid, getUserByUid, updateUser };
