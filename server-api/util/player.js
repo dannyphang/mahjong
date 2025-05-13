@@ -52,7 +52,7 @@ router.put("/", async (req, res) => {
     } catch (error) {
         console.log("error", error);
         API.createLog(error, req, res, 500, logModule);
-        res.status(500).json(
+        res.status(200).json(
             func.responseModel({
                 isSuccess: false,
                 responseMessage: error,

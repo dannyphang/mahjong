@@ -830,8 +830,8 @@ function discardMahjong(room, player, discardedMahjongTile) {
     return new Promise(async function (resolve, reject) {
         // reset waiting object
         room.waiting = 0;
-        room.waitingPlayer = {};
-        room.waitingAction = "";
+        room.waitingPlayer = null;
+        room.waitingAction = null;
 
         // check player handtile number
         if ((player.mahjong.handTiles.mahjongTile.length - 2) % 3 === 0) {
@@ -1087,49 +1087,60 @@ function nextTurn(room) {
 
 function actionV1(action, room, player, selectedMahjong, selectedMahjongChow = []) {
     return new Promise(async function (resolve, reject) {
-        if (room.waitingPlayer) {
-            if (room.waitingAction === "cancel" && action === "cancel") {
-                nextTurn(room).then(async (roomNU) => {
-                    resolve(roomNU);
-                });
-            } else {
-                // if current action is chow, but the pong is in waitingAction, then set current action to pong and set the current player to the waiting player
-                if (room.waitingAction !== "chow" && room.waitingAction !== "cancel") {
-                    player = room.playerList.find((p) => p.playerId === room.waitingPlayer.playerId ?? room.waitingPlayer);
-                    action = room.waitingAction;
+        try {
+            if (room.waitingPlayer) {
+                if (room.waitingAction === "cancel" && action === "cancel") {
+                    nextTurn(room).then(async (roomNU) => {
+                        resolve(roomNU);
+                    });
+                } else {
+                    // if current action is chow, but the pong is in waitingAction, then set current action to pong and set the current player to the waiting player
+                    if (room.waitingAction !== "chow" && room.waitingAction !== "cancel") {
+                        if (!(await checkActionPriority(action, room, player, selectedMahjong))) {
+                            player = room.playerList.find((p) => p.playerId === room.waitingPlayer);
+                            action = room.waitingAction;
+                            selectedMahjong = await getMahjongByUid(room.waitingTile);
+                        }
+                    } else if (room.waitingAction === "chow") {
+                        // if current action is not chow, but the chow is in waitingAction, then check if the current action priority is higher than the waiting action
+                        // if so, then set the action to current action and set the plaer to the current player
+                        // else set the action to chow and set the player to the waiting player
+                        if (!(await checkActionPriority(action, room, player, selectedMahjong))) {
+                            player = room.playerList.find((p) => p.playerId === room.waitingPlayer);
+                            action = room.waitingAction;
 
-                    selectedMahjong = await getMahjongByUid(room.waitingTile);
-                } else if (room.waitingAction === "chow") {
-                    player = room.playerList.find((p) => p.playerId === room.waitingPlayer);
-                    action = room.waitingAction;
-
-                    room.waitingChowTiles.forEach(async (wct) => {
-                        selectedMahjongChow.push(await getMahjongByUid(wct));
+                            room.waitingChowTiles.forEach(async (wct) => {
+                                selectedMahjongChow.push(await getMahjongByUid(wct));
+                            });
+                        }
+                    }
+                    performAction(action, room, player, selectedMahjong, selectedMahjongChow).then((actionRoom) => {
+                        resolve(actionRoom);
                     });
                 }
-                performAction(action, room, player, selectedMahjong, selectedMahjongChow).then((actionRoom) => {
-                    resolve(actionRoom);
+            } else {
+                room.waitingPlayer = player?.playerId;
+                room.waitingAction = action;
+                room.waitingTile = selectedMahjong?.uid;
+                room.waitingChowTiles = selectedMahjongChow?.map((item) => item.uid);
+
+                room.mahjong.remainingTiles = room.mahjong.remainingTiles.map((item) => item.uid ?? item);
+                room.mahjong.discardTiles = room.mahjong.discardTiles.map((item) => item.uid ?? item);
+
+                room.playerList = room.playerList.map((item) => item.playerId ?? item);
+
+                updateRoom(room).then((roomU) => {
+                    resolve({
+                        ...roomU,
+                        response: {
+                            isSuccess: true,
+                            updateMessage: `${player.playerName} done action.`,
+                        },
+                    });
                 });
             }
-        } else {
-            room.waitingPlayer = player?.playerId;
-            room.waitingAction = action;
-            room.waitingTile = selectedMahjong?.uid;
-            room.waitingChowTiles = selectedMahjongChow?.map((item) => item.uid);
-
-            room.mahjong.remainingTiles = room.mahjong.remainingTiles.map((item) => item.uid ?? item);
-            room.mahjong.discardTiles = room.mahjong.discardTiles.map((item) => item.uid ?? item);
-
-            room.playerList = room.playerList.map((item) => item.playerId ?? item);
-            updateRoom(room).then((roomU) => {
-                resolve({
-                    ...roomU,
-                    response: {
-                        isSuccess: true,
-                        updateMessage: `${player.playerName} done action.`,
-                    },
-                });
-            });
+        } catch (error) {
+            reject(error);
         }
     });
 }
@@ -1142,7 +1153,7 @@ function performAction(action, room, player, selectedMahjong, selectedMahjongCho
                 player = room.playerList.find((p) => p.playerId === room.waitingPlayer);
                 action = room.waitingAction;
                 selectedMahjong = await getMahjongByUid(room.waitingTile);
-                console.log("selectedMahjong", selectedMahjong);
+
                 if (room.waitingAction === "chow") {
                     selectedMahjongChow = room.waitingChowTiles;
                 } else {
@@ -1361,6 +1372,7 @@ function performAction(action, room, player, selectedMahjong, selectedMahjongCho
             room.mahjong.discardTiles = room.mahjong.discardTiles.map((item) => item.uid ?? item);
 
             room.playerList = room.playerList.map((item) => item.playerId ?? item);
+
             updatePlayer(player).then((_) => {
                 updateRoom(room).then((roomU) => {
                     resolve({
@@ -1389,7 +1401,7 @@ function actions(action, room, player, selectedMahjong, selectedMahjongChow = []
         //  - if yes, then wait for the player do the action
         //  - else next turn
         if (action === "cancel") {
-            let otherPlayer = room.waitingPlayer ?? room.playerList.find((op) => op.direction !== room.gameOrder && op.playerId !== player.playerId);
+            let otherPlayer = room.playerList.find((op) => op.direction !== room.gameOrder && op.playerId !== player.playerId);
 
             // reset player action after cancelled
             player.action = {};
@@ -1625,13 +1637,13 @@ function actions(action, room, player, selectedMahjong, selectedMahjongChow = []
                 });
             }
 
-            room.waitingPlayer = {};
+            room.waitingPlayer = null;
             room.gameOrder = action === "cancel" ? room.gameOrder : player.direction;
             updatePlayer(room.playerList.find((p) => p.playerId === player.playerId)).then((up) => {});
         } else {
             // reach here means other player also got fake or real set
             // but the current player trigger here 1st and also not next player
-            room.waitingPlayer = player;
+            room.waitingPlayer = player.playerId;
             room.waitingAction = action;
             room.waiting = 1;
             room.waitingChowTiles = selectedMahjongChow;
@@ -1682,6 +1694,10 @@ async function checkActionPriority(action, room, player, selectedMahjong) {
         return true;
     }
 
+    if ((action === "pong" && room, waitingAction === "chow")) {
+        return true;
+    }
+
     if (action === "chow" && room.waitingAction === "pong") {
         return false;
     }
@@ -1691,7 +1707,7 @@ async function checkActionPriority(action, room, player, selectedMahjong) {
     // if no (means other player no fake and real set), then return true
     // if yes (means both player also fake set), then if this current player is next player then return true
     // else return false
-    let otherPlayer = room.playerList.find((op) => op.direction !== room.gameOrder && op.playerId !== player.playerId);
+    let otherPlayer = room.playerList.find((op) => op.playerId === room.waitingPlayer);
     otherPlayer.mahjong.handTiles.mahjongTile.forEach((m) => {
         if (m.code === selectedMahjong.code) {
             otherPlayerSameTileCount++;
