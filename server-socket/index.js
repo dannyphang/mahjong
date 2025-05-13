@@ -178,6 +178,18 @@ io.on("connection", (socket) => {
                 socket.emit("roomError", error);
             });
     });
+
+    socket.on("removePlayer", ({ room, player }) => {
+        games
+            .removePlayer(room, player)
+            .then((roomU) => {
+                io.in(roomU.roomId).emit("playerRemove", roomU);
+            })
+            .catch((error) => {
+                API.createLog(error, 500, logModule, socket);
+                socket.emit("roomError", error);
+            });
+    });
 });
 
 app.get("/ping", (req, res) => {

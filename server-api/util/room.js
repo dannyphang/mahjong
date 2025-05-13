@@ -132,11 +132,16 @@ router.post("/quit_room", async (req, res) => {
 
         let newRef = db.default.db.collection(roomCollectionName).doc(room.roomId);
 
-        await newRef.update({
-            playerList: FieldValue.arrayRemove(player.playerId),
-        });
-
-        res.status(200).json(func.responseModel({ data: player }));
+        newRef
+            .update({
+                playerList: FieldValue.arrayRemove(player.playerId),
+            })
+            .then((r) => {
+                room.playerList = room.playerList.filter((item) => item.playerId !== player.playerId);
+                console.log("playerid", player.playerId);
+                console.log("room", room.playerList);
+                res.status(200).json(func.responseModel({ data: room }));
+            });
     } catch (error) {
         console.log("error", error);
         API.createLog(error, 500, logModule);

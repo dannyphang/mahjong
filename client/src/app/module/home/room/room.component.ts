@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { CONTROL_TYPE, FormConfig } from '../../../core/services/components.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { EventService } from '../../../core/services/event.service';
+import { DEFAULT_PROFILE_PIC_URL } from '../../../core/shared/constants/common.constants';
 
 @Component({
   selector: 'app-room',
@@ -16,6 +17,7 @@ import { EventService } from '../../../core/services/event.service';
   styleUrl: './room.component.scss'
 })
 export class RoomComponent extends BaseCoreAbstract {
+  DEFAULT_PROFILE_IMAGE = DEFAULT_PROFILE_PIC_URL;
   roomId: string;
   role = 'operative';
   room: RoomDto;
@@ -123,6 +125,7 @@ export class RoomComponent extends BaseCoreAbstract {
 
     this.recieveJoinedPlayers();
     this.recieveGameUpdate();
+    this.recievePlayerRemove();
 
     this.socketIoService.playerJoinRoom(this.player, this.room);
   }
@@ -201,6 +204,35 @@ export class RoomComponent extends BaseCoreAbstract {
       }
       else {
         this.popMessage(room.response.updateMessage, 'error');
+      }
+    });
+  }
+
+  recievePlayerRemove() {
+    this.socketIoService.recievePlayerRemove().subscribe(roomU => {
+      this.popMessage(roomU.response.updateMessage, 'info');
+
+      let newRoom: RoomDto = {
+        roomId: roomU.roomId,
+        roomCode: roomU.roomCode,
+        statusId: 1,
+        playerList: roomU.playerList,
+        gameStarted: roomU.gameStarted,
+        roomOwnerId: roomU.roomOwnerId,
+        gameOrder: roomU.gameOrder,
+        mahjong: roomU.mahjong,
+        waiting: roomU.waiting,
+        waitingPlayer: roomU.waitingPlayer,
+        waitingAction: roomU.waitingAction,
+        waitingTile: roomU.waitingTile,
+      }
+
+      this.socketIoService.currentRoom = newRoom;
+      this.room = newRoom;
+
+      if (!newRoom.playerList.find(p => p.playerId === this.player.playerId)) {
+        console.log("Player is removed from this room");
+        this.router.navigate(['/']);
       }
     });
   }
@@ -321,5 +353,9 @@ export class RoomComponent extends BaseCoreAbstract {
 
   endGame() {
     this.socketIoService.sendGameEnd(this.room);
+  }
+
+  removePlayer(player: PlayerDto) {
+    this.socketIoService.sendRemovePlayer(this.room, player);
   }
 }

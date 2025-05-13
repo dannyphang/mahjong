@@ -69,6 +69,14 @@ export class SocketioService {
         });
     }
 
+    recievePlayerRemove() {
+        return new Observable<RoomUpdateDto>((observer) => {
+            this.socket.on('playerRemove', (room: any) => {
+                observer.next(this.assignMahjongToRoom(room));
+            });
+        });
+    }
+
     recieveRoomError() {
         return new Observable<RoomErrorResponseDto>((observer) => {
             this.socket.on('roomError', (room: RoomErrorResponseDto) => {
@@ -148,5 +156,9 @@ export class SocketioService {
 
     sendWin(room: RoomDto, player: PlayerDto, selectedMahjongSet: MahjongDto[]) {
         this.socket.emit('win', { room: room, player: player, selectedMahjongSet: selectedMahjongSet });
+    }
+
+    sendRemovePlayer(room: RoomDto, player: PlayerDto) {
+        this.socket.emit('removePlayer', { room: room, player: player });
     }
 }

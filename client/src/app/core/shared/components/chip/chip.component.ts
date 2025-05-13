@@ -10,6 +10,8 @@ export class ChipComponent {
   @Input() removable: boolean = true;
   @Input() file: File;
   @Input() isFile: boolean = false;
+  @Input() color: string = 'primary';
+  @Input() image: string | undefined = undefined;
   @Output() remove = new EventEmitter();
 
   constructor() {

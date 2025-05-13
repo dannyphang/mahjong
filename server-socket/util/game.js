@@ -773,17 +773,41 @@ function updatePlayer(player) {
 
 function playerQuitRoom(room, player) {
     return new Promise(async function (resolve, reject) {
-        let newRoom = await API.quitRoom(room, player);
+        try {
+            let newRoom = await API.quitRoom(room, player);
 
-        updateRoom(newRoom).then((roomU) => {
-            resolve({
-                ...roomU,
-                response: {
-                    isSuccess: true,
-                    updateMessage: `${player.playerName} quited the room.`,
-                },
+            updateRoom(newRoom).then((roomU) => {
+                resolve({
+                    ...roomU,
+                    response: {
+                        isSuccess: true,
+                        updateMessage: `${player.playerName} quited the room.`,
+                    },
+                });
             });
-        });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+function removePlayer(room, player) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let newRoom = await API.quitRoom(room, player);
+            updateRoom(newRoom.data.data).then((roomU) => {
+                console.log("roomU", roomU);
+                resolve({
+                    ...roomU,
+                    response: {
+                        isSuccess: true,
+                        updateMessage: `${player.playerName} is removed from the room.`,
+                    },
+                });
+            });
+        } catch (error) {
+            reject(error);
+        }
     });
 }
 
@@ -1847,4 +1871,21 @@ function winAction(room, player, selectedMahjongSet) {
     });
 }
 
-export { createGame, playerJoinRoom, updateRoom, playerQuitRoom, discardMahjong, nextTurn, drawMahjong, updatePlayer, actions, chowAction, testGame, discardMahjongV1, actionV1, endGame, winAction };
+export {
+    createGame,
+    playerJoinRoom,
+    updateRoom,
+    playerQuitRoom,
+    removePlayer,
+    discardMahjong,
+    nextTurn,
+    drawMahjong,
+    updatePlayer,
+    actions,
+    chowAction,
+    testGame,
+    discardMahjongV1,
+    actionV1,
+    endGame,
+    winAction,
+};

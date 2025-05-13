@@ -73,7 +73,7 @@ router.get("/", async (req, res) => {
             if (req.headers.pin === list[0].pin) {
                 res.status(200).json(func.responseModel({ data: list }));
             } else {
-                API.createLog(error, req, res, 400, logModule);
+                // API.createLog("list is empty", req, res, 400, logModule);
                 res.status(400).json(func.responseModel({ isSuccess: false, responseMessage: "Incorrect Pin." }));
             }
         } else {
@@ -86,7 +86,7 @@ router.get("/", async (req, res) => {
         }
     } catch (error) {
         console.log("error", error);
-        API.createLog(error, req, res, 500, logModule);
+        // API.createLog(error, req, res, 500, logModule);
         res.status(500).json(
             func.responseModel({
                 isSuccess: false,
