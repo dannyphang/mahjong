@@ -86,6 +86,7 @@ export class PlayerDto {
     action: MahjongActionDto;
     drawAction: MahjongDrawActionDto;
     pin: number;
+    profileImage?: string;
 }
 
 export class RoomUpdateDto extends RoomDto {

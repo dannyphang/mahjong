@@ -6,6 +6,7 @@ import { MessageService } from 'primeng/api';
 import { MahjongDto, GameService, RoomDto, PlayerDto } from '../../../core/services/game.service';
 import { SocketioService } from '../../../core/services/socketIo.service';
 import { BaseCoreAbstract } from '../../../core/shared/base/base-core.abstract';
+import { DEFAULT_PROFILE_PIC_URL } from '../../../core/shared/constants/common.constants';
 
 @Component({
   selector: 'app-player-mahjong',
@@ -13,6 +14,8 @@ import { BaseCoreAbstract } from '../../../core/shared/base/base-core.abstract';
   styleUrl: './player-mahjong.component.scss'
 })
 export class PlayerMahjongComponent extends BaseCoreAbstract {
+  DEFAULT_PROFILE_IMAGE = DEFAULT_PROFILE_PIC_URL;
+
   @Input() room: RoomDto;
   @Input() player: PlayerDto;
   @Input() currentPlayer: boolean = false;

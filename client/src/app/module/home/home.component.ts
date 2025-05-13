@@ -89,7 +89,8 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                   isSoloPong: false,
                   isStealKong: false,
                   isSoloDraw: false,
-                }
+                },
+                profileImage: this.authService.userC?.profilePhotoUrl ?? "",
               } as PlayerDto).subscribe(res3 => {
                 if (res3.isSuccess) {
                   this.socketIoService.player = res3.data;
@@ -163,7 +164,8 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
                   isSoloPong: false,
                   isStealKong: false,
                   isSoloDraw: false,
-                }
+                },
+                profileImage: this.authService.userC?.profilePhotoUrl ?? "",
               } as PlayerDto).subscribe(res => {
                 if (res.isSuccess) {
                   this.socketIoService.player = res.data;

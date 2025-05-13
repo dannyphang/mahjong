@@ -9,11 +9,16 @@
       <h2 class="tw-m-[var(--content-gap)]">Room: {{ room.roomCode }}</h2>
 
       <div *ngFor="let p of room.playerList">
-        <p-button
+        <app-chip
           [label]="p.playerName"
-          [outlined]="true"
-          [severity]="p.playerId === player.playerId ? 'primary' : 'secondary'"
-        ></p-button>
+          [color]="p.playerId === player.playerId ? 'primary' : 'secondary'"
+          [removable]="
+            room.roomOwnerId === player.playerId &&
+            p.playerId !== player.playerId
+          "
+          (remove)="removePlayer(p)"
+          [image]="p.profileImage ?? DEFAULT_PROFILE_IMAGE"
+        ></app-chip>
       </div>
     </div>
 
@@ -30,10 +35,10 @@
         [label]="'Next player turn'"
         [outlined]="true"
         (onClick)="nextTurn()"
-        *ngIf="true"
+        *ngIf="false"
       ></p-button>
 
-      <!-- next player -->
+      <!-- end game -->
       <p-button
         [label]="'ACTION.END_GAME' | translate"
         [outlined]="true"
@@ -41,6 +46,7 @@
         *ngIf="true"
       ></p-button>
 
+      <!-- setting -->
       <p-button
         [outlined]="true"
         icon="pi pi-cog"
