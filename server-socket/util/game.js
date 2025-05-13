@@ -796,7 +796,6 @@ function removePlayer(room, player) {
         try {
             let newRoom = await API.quitRoom(room, player);
             updateRoom(newRoom.data.data).then((roomU) => {
-                console.log("roomU", roomU);
                 resolve({
                     ...roomU,
                     response: {

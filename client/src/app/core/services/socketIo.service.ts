@@ -34,8 +34,42 @@ export class SocketioService {
     }
 
     connect() {
-        this.socket = io(apiConfig.socketUrl);
+        this.socket = io(apiConfig.socketUrl, {
+            reconnectionAttempts: 5, // try 5 times then give up
+            reconnectionDelay: 1000, // wait 1s before retrying
+        });
+
+        this.socket.on('connect_error', (err) => {
+            console.error('Socket connect error:', err.message);
+            // Show user-friendly message (can use a service or component toast)
+            alert('Connection error. Please try again later.');
+        });
+
+        this.socket.on('disconnect', (reason) => {
+            console.warn('Socket disconnected:', reason);
+            if (reason === 'io server disconnect') {
+                // server manually disconnected the client, try reconnecting manually
+                this.socket.connect();
+            } else {
+                alert('Disconnected from server. Trying to reconnect...');
+            }
+        });
+
+        this.socket.on('reconnect_attempt', () => {
+            console.log('Attempting to reconnect...');
+        });
+
+        this.socket.on('reconnect_failed', () => {
+            console.error('Reconnection failed.');
+            alert('Could not reconnect to server. Please refresh the page.');
+        });
+
+        this.socket.on('server_error', (msg) => {
+            console.error('Server error received:', msg);
+            alert('Server error: ' + msg);
+        });
     }
+
 
     playerJoinRoom(player: PlayerDto, room: RoomDto) {
         this.socket.emit('joinRoom', { room: room, player: player });
@@ -128,6 +162,16 @@ export class SocketioService {
 
     disconnectSocket() {
         this.socket.disconnect();
+    }
+
+    receiveConnection() {
+        return new Observable<RoomUpdateDto>((observer) => {
+            this.socket.on('connect_error', (err) => {
+                console.error("Connection Error:", err.message);
+                alert("Failed to connect to server. Please try again later.");
+                observer.next(this.assignMahjongToRoom(this.currentRoom));
+            });
+        });
     }
 
     sendDiscardMahjongTile(room: RoomDto, player: PlayerDto, discardedMahjongTile: MahjongDto) {

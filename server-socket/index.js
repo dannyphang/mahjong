@@ -192,6 +192,21 @@ io.on("connection", (socket) => {
     });
 });
 
+// Graceful crash handling
+process.on("uncaughtException", (err) => {
+    console.error("Uncaught Exception:", err);
+    // Optional: Notify all clients
+    io.emit("server_error", "Server crashed due to an uncaught exception.");
+    // Delay exit to allow message to send
+    setTimeout(() => process.exit(1), 1000);
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+    console.error("Unhandled Rejection:", reason);
+    io.emit("server_error", "Server encountered an unexpected error.");
+    setTimeout(() => process.exit(1), 1000);
+});
+
 app.get("/ping", (req, res) => {
     console.log(CONST.consoleStr("FgCyan"), "ping");
     res.send("pong");
