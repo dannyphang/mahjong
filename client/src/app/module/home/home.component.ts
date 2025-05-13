@@ -7,6 +7,7 @@ import { BaseCoreAbstract } from '../../core/shared/base/base-core.abstract';
 import { MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { EventService } from '../../core/services/event.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -17,19 +18,25 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
   roomIdFormControl: FormControl = new FormControl('123456');
   usernameFormControl: FormControl = new FormControl('');
   pinFormControl: FormControl<number> = new FormControl();
+
   constructor(
     private router: Router,
     private socketIoService: SocketioService,
     private gameService: GameService,
     protected override messageService: MessageService,
     private translateService: TranslateService,
-    private eventService: EventService
+    private eventService: EventService,
+    private authService: AuthService
   ) {
     super(messageService);
   }
 
   ngOnInit() {
-
+    this.authService.user$.subscribe(user => {
+      if (user) {
+        this.usernameFormControl.setValue(user.displayName);
+      }
+    });
   }
 
   createGame() {
@@ -48,6 +55,7 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
             }
             else {
               this.gameService.createPlayer({
+                userUid: this.authService.userC.uid,
                 playerName: this.usernameFormControl.value,
                 pin: this.pinFormControl.value,
                 statusId: 1,
@@ -121,6 +129,7 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
             }
             else {
               this.gameService.createPlayer({
+                userUid: this.authService.userC.uid,
                 playerName: this.usernameFormControl.value,
                 pin: this.pinFormControl.value,
                 statusId: 1,

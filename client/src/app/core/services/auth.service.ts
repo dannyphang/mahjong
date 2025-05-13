@@ -3,13 +3,23 @@ import apiConfig from "../../../environments/apiConfig";
 import { HttpClient } from "@angular/common/http";
 import { ToastService } from "./toast.service";
 import { BasedDto, ResponseModel } from "./common.service";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     JWT_BASE_URL = apiConfig.authClient;
     private AUTH_URL = apiConfig.authUrl;
-    userC: UserDto;
+    private userSubject = new BehaviorSubject<UserDto>({} as UserDto);
+    public user$ = this.userSubject.asObservable();
+
+    setUser(user: UserDto) {
+        this.userSubject.next(user);
+    }
+
+    get userC(): UserDto {
+        return this.userSubject.value;
+    }
+
     private paramData: ParamsDto = {
         token: undefined,
         project: undefined,
@@ -85,7 +95,7 @@ export class AuthService {
 
                     this.getUserByAuthUid(authUid).subscribe({
                         next: res2 => {
-                            this.userC = res2.data;
+                            this.setUser(res2.data);
                             resolve(res2.data);
                         },
                         error: err => {
@@ -100,7 +110,7 @@ export class AuthService {
                                     lastActiveDateTime: new Date(),
                                 }
                                 this.createMahjongUser(newUser).subscribe(nUser => {
-                                    this.userC = nUser.data;
+                                    this.setUser(nUser.data);
                                     resolve(nUser.data);
                                 })
                             }
@@ -129,9 +139,9 @@ export class AuthService {
         return this.http.get<ResponseModel<UserDto>>(this.AUTH_URL + '/auth/user/' + uid).pipe();
     }
 
-    updateUserFirestore(user: UserDto[]): Observable<ResponseModel<any>> {
-        // TODO
-        return this.http.put<any>(apiConfig.baseUrl + '/auth/user/update', { user }).pipe();
+    updateUserFirestore(user: UserDto): Observable<ResponseModel<any>> {
+        user.uid = this.userC.uid;
+        return this.http.put<any>(apiConfig.baseUrl + '/auth/user', { user }).pipe();
     }
 }
 

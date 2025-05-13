@@ -1,17 +1,32 @@
 <div>
-  <div class="tw-px-[var(--content-gap)]">
+  <div class="tw-px-[var(--content-gap)] tw-text-[40px]">
     {{ "ROOM.PROFILE" | translate }}
+  </div>
+
+  <!-- img -->
+  <div class="tw-px-[var(--content-gap)]">
+    <img
+      [src]="profileFormGroup.value.photoUrl"
+      class="tw-rounded-full tw-w-[100px] tw-aspect-square"
+      alt="Profile Image"
+    />
   </div>
 
   <div>
     <app-base-form [formConfig]="profileFormConfig"></app-base-form>
   </div>
 
-  <div class="tw-px-[var(--content-gap)]">
+  <div class="tw-px-[var(--content-gap)] tw-gap-[var(--content-gap)] tw-flex">
     <app-base-button
       [label]="'BUTTON.SAVE' | translate"
       (onClick)="profileSave()"
       class="tw-w-min tw-grid"
+    ></app-base-button>
+    <app-base-button
+      [label]="'BUTTON.CANCEL' | translate"
+      (onClick)="profileCancel()"
+      class="tw-w-min tw-grid"
+      [outlined]="true"
     ></app-base-button>
   </div>
 </div>

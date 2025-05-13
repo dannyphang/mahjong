@@ -55,7 +55,7 @@ export class HeaderComponent {
     this.isDarkMode = isDark;
     this.themeService.switchTheme(isDark ? this.darkThemeFile : this.lightThemeFile);
     if (!isInit) {
-      this.authService.updateUserFirestore([{
+      this.authService.updateUserFirestore({
         email: this.authService.userC.email,
         lastActiveDateTime: new Date(),
         uid: this.authService.userC.uid,
@@ -64,7 +64,7 @@ export class HeaderComponent {
           ...this.authService.userC.setting,
           darkMode: isDark
         }
-      }]).subscribe(res => {
+      }).subscribe(res => {
         if (res.isSuccess) {
 
         }
@@ -136,5 +136,9 @@ export class HeaderComponent {
 
   profileClick() {
     this.router.navigate(['/profile']);
+  }
+
+  logoClick() {
+    this.router.navigate(['/']);
   }
 }

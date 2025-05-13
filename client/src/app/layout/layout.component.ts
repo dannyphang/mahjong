@@ -21,7 +21,7 @@ export class LayoutComponent {
 
   ngOnInit() {
     this.authService.getCurrentAuthUser().then(user => {
-      this.authService.userC = user;
+      this.authService.setUser(user);
       this.user = user;
     })
   }

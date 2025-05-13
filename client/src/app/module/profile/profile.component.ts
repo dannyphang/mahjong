@@ -23,25 +23,16 @@ export class ProfileComponent {
 
   ngOnInit(): void {
     this.initForm();
-    if (this.authService.userC) {
-      this.profileFormGroup.patchValue({
-        photoUrl: this.authService.userC.profilePhotoUrl,
-        username: this.authService.userC.username,
-        email: this.authService.userC.email,
-        displayName: this.authService.userC.displayName,
-      });
-    }
-    else {
-      this.authService.getCurrentAuthUser().then(user => {
-        this.authService.userC = user;
+    this.authService.user$.subscribe(user => {
+      if (user) {
         this.profileFormGroup.patchValue({
           photoUrl: user.profilePhotoUrl,
           username: user.username,
           email: user.email,
           displayName: user.displayName,
         });
-      });
-    }
+      }
+    });
   }
 
   initForm() {
@@ -79,11 +70,21 @@ export class ProfileComponent {
 
   profileSave() {
     if (this.profileFormGroup.valid) {
-      const formValue = this.profileFormGroup.value;
-      console.log(formValue)
-      // this.authService.updateProfile(formValue).then(() => {
-      //   this.authService.userC = { ...this.authService.userC, ...formValue };
-      // });
+      this.authService.updateUserFirestore(this.profileFormGroup.value).subscribe({
+        next: res => {
+          this.authService.setUser({
+            ...this.authService.userC,
+            displayName: this.profileFormGroup.value.displayName,
+            email: this.profileFormGroup.value.email,
+            profilePhotoUrl: this.profileFormGroup.value.photoUrl,
+            username: this.profileFormGroup.value.username,
+          });
+        }
+      });
     }
+  }
+
+  profileCancel() {
+    this.profileFormGroup.reset(this.authService.userC);
   }
 }
