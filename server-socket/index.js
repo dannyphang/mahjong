@@ -146,6 +146,7 @@ io.on("connection", (socket) => {
         games
             .actionV1(action, room, player, selectedMahjong)
             .then((roomU) => {
+                roomU.waitingPlayer = roomU.waitingPlayer?.playerId ?? roomU.waitingPlayer ?? null;
                 io.in(roomU.roomId).emit("roomUpdate", roomU);
             })
             .catch((error) => {

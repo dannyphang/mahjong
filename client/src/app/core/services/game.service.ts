@@ -70,7 +70,7 @@ export class RoomDto {
     roomOwnerId?: string;
     mahjong: RoomMahjongGroupDto;
     gameOrder: number;
-    waitingPlayer: PlayerDto;
+    waitingPlayer: string;
     waitingAction: string;
     waitingTile: string;
     waiting: number; // 0 = no value, 1 = is waiting, 2 = cancelled
