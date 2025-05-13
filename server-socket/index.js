@@ -180,6 +180,7 @@ io.on("connection", (socket) => {
 });
 
 app.get("/ping", (req, res) => {
+    console.log(CONST.consoleStr("FgCyan"), "ping");
     res.send("pong");
 });
 
