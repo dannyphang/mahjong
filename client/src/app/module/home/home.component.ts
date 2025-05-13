@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, isDevMode, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SocketioService } from '../../core/services/socketIo.service';
@@ -15,7 +15,7 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent extends BaseCoreAbstract implements OnInit {
-  roomIdFormControl: FormControl = new FormControl('123456');
+  roomIdFormControl: FormControl = new FormControl(isDevMode() ? '123456' : "");
   usernameFormControl: FormControl = new FormControl('');
   pinFormControl: FormControl<number> = new FormControl();
 
