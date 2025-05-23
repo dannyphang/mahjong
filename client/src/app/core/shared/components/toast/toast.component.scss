@@ -1,56 +1,14 @@
-// @import "../../../../../assets/styles/variables";
-
-// :host ::ng-deep {
-//   .toast-container {
-//     .p-toast {
-//       opacity: 1;
-//       .p-toast-message {
-//         border: none;
-//         box-shadow: none;
-
-//         .p-toast-message-content {
-//           padding: 0;
-//           display: flex;
-//           align-items: center;
-//           height: 100%;
-
-//           img {
-//             margin-right: 12px;
-//             margin-left: 20px;
-//           }
-
-//           .summary {
-//             font-weight: 700;
-//           }
-//         }
-//         &.p-toast-message {
-//           height: 100px;
-//           overflow-y: hidden;
-//           box-sizing: border-box;
-//           &-success {
-//             background-color: $success_toast_background;
-//             color: $success_toast_text;
-//           }
-//           &-info {
-//             background-color: $info_toast_background;
-//             color: $info_toast_text;
-//           }
-//           &-warn {
-//             background-color: $warning_toast_background;
-//             color: $warning_toast_text;
-//           }
-//           &-error {
-//             background-color: $error_toast_background;
-//             color: $error_toast_text;
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
-
 :host ::ng-deep {
   .p-toast {
     width: 250px;
+
+    .p-toast-message-content {
+      align-items: center;
+      justify-content: space-between;
+    }
   }
+}
+
+.toast-div {
+  gap: var(--content-gap);
 }

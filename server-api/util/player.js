@@ -61,21 +61,16 @@ router.put("/", async (req, res) => {
     }
 });
 
-// get player by name
+// get player by userId
 router.get("/", async (req, res) => {
     try {
-        const snapshot = await db.default.db.collection(playerCollectionName).where("statusId", "==", 1).where("playerName", "==", req.headers.name).get();
+        const snapshot = await db.default.db.collection(playerCollectionName).where("statusId", "==", 1).where("userUid", "==", req.headers.useruid).get();
         const list = snapshot.docs.map((doc) => {
             return doc.data();
         });
 
         if (list.length > 0) {
-            if (req.headers.pin === list[0].pin) {
-                res.status(200).json(func.responseModel({ data: list }));
-            } else {
-                // API.createLog("list is empty", req, res, 400, logModule);
-                res.status(400).json(func.responseModel({ isSuccess: false, responseMessage: "Incorrect Pin." }));
-            }
+            res.status(200).json(func.responseModel({ data: list }));
         } else {
             res.status(200).json(
                 func.responseModel({

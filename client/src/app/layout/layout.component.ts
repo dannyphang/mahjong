@@ -1,6 +1,8 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService, UserDto } from '../core/services/auth.service';
+import { Router } from '@angular/router';
+import { ToastService } from '../core/services/toast.service';
 
 @Component({
   selector: 'app-layout',
@@ -14,7 +16,9 @@ export class LayoutComponent {
 
   constructor(
     private translateService: TranslateService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router,
+    private toastService: ToastService
   ) {
 
   }
@@ -23,6 +27,8 @@ export class LayoutComponent {
     this.authService.getCurrentAuthUser().then(user => {
       this.authService.setUser(user);
       this.user = user;
+    }).catch(error => {
+      this.router.navigate(['/login']);
     })
   }
 

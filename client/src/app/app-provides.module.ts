@@ -14,6 +14,8 @@ import { BaseMultiselectComponent } from './core/shared/components/multiselect/m
 import { BaseRadioComponent } from './core/shared/components/radio/radio.component';
 import { BaseTextareaComponent } from './core/shared/components/textarea/textarea.component';
 import { MATERIAL_SANITY_CHECKS } from '@angular/material/core';
+import { ToastService } from './core/services/toast.service';
+import { MessageService } from 'primeng/api';
 
 export const allBaseUIForm = {
     [CONTROL_TYPE.Textbox]: BaseInputComponent,
@@ -43,4 +45,6 @@ export const providers = [
         },
     },
     { provide: MATERIAL_SANITY_CHECKS, useValue: false }, // disable material theme checking
+    MessageService,
+    ToastService
 ];

@@ -1,13 +1,14 @@
 import { Component, isDevMode, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SocketioService } from '../../core/services/socketIo.service';
-import { GameService, MahjongActionDto, MahjongGroupDto, PlayerDto } from '../../core/services/game.service';
+import { GameService, PlayerDto } from '../../core/services/game.service';
 import { BaseCoreAbstract } from '../../core/shared/base/base-core.abstract';
 import { MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { EventService } from '../../core/services/event.service';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService, UserDto } from '../../core/services/auth.service';
+import { ToastService } from '../../core/services/toast.service';
+import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -16,176 +17,174 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class HomeComponent extends BaseCoreAbstract implements OnInit {
   roomIdFormControl: FormControl = new FormControl(isDevMode() ? '123456' : "");
-  usernameFormControl: FormControl = new FormControl('');
-  pinFormControl: FormControl<number> = new FormControl();
+  user: UserDto | null = null;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private router: Router,
     private socketIoService: SocketioService,
     private gameService: GameService,
-    protected override messageService: MessageService,
     private translateService: TranslateService,
-    private eventService: EventService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastService: ToastService,
+    protected override messageService: MessageService,
   ) {
     super(messageService);
   }
 
   ngOnInit() {
-    this.authService.user$.subscribe(user => {
-      if (user) {
-        this.usernameFormControl.setValue(user.displayName);
-      }
-    });
+    this.authService.user$
+      .pipe(
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(user => {
+        if (user) {
+          this.user = user;
+          if (!user.displayName) {
+            this.toastService.addMultiple([{
+              severity: 'warn',
+              message: this.translateService.instant('INPUT.PROFILE_INCOMPLETE'),
+              key: 'profileIncompleteWarn',
+            },]);
+          }
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   createGame() {
-    if (this.usernameFormControl.value) {
-      if (this.pinFormControl.value) {
-        this.popMessage(this.translateService.instant('ACTION.MESSAGE.CREATING_ROOM'), "info");
-        this.gameService.getPlayerByName(this.usernameFormControl.value, this.pinFormControl.value).subscribe({
-          next: res => {
-            if (res.isSuccess) {
-              this.socketIoService.currentPlayer = res.data[0];
-
-              this.eventService.createEventLog("room", "Player created room", `${res.data[0].playerName} created a room`);
-              this.eventService.createEventLog("room", "Player join room", `${res.data[0].playerName} joined the room`);
-
-              this.navigateToRoom(true);
-            }
-            else {
-              this.gameService.createPlayer({
-                userUid: this.authService.userC.uid,
-                playerName: this.usernameFormControl.value,
-                pin: this.pinFormControl.value,
-                statusId: 1,
-                mahjong: {
-                  handTiles: {
-                    mahjongTile: [],
-                    point: 0
-                  },
-                  publicTiles: [{ mahjongTile: [] }],
-                  flowerTiles: {
-                    mahjongTile: [],
-                    point: 0
-                  }
-                },
-                direction: 0,
-                action: {
-                  isPongable: false,
-                  isKongable: false,
-                  isChowable: false,
-                  isWinnable: false,
-                  isSelfKongable: false
-                },
-                drawAction: {
-                  isDrawFlower: false,
-                  isDrawKong: false,
-                  isDrawSecondKong: false,
-                  isDrawLastTile: false,
-                  isGetKong: false,
-                  isGetPong: false,
-                  isKaLong: false,
-                  isSoloPong: false,
-                  isStealKong: false,
-                  isSoloDraw: false,
-                },
-                profileImage: this.authService.userC?.profilePhotoUrl ?? "",
-              } as PlayerDto).subscribe(res3 => {
-                if (res3.isSuccess) {
-                  this.socketIoService.player = res3.data;
-
-                  this.eventService.createEventLog("player", "New player", `New player created, ${res.data[0].playerName}`);
-                  this.eventService.createEventLog("room", "Player join room", `${res.data[0].playerName} joined the room`);
-
-                  this.navigateToRoom(true);
-                }
-              });
-            }
-          },
-          error: (error) => {
-            this.popMessage(this.translateService.instant('ACTION.MESSAGE.INCORRECT_PIN'), "error");
+    if (this.user?.displayName) {
+      this.gameService.getPlayerByUserId(this.user.uid!).subscribe({
+        next: res => {
+          if (res.isSuccess) {
+            this.socketIoService.currentPlayer = res.data[0];
+            this.navigateToRoom(true);
           }
-        });
-      }
-      else {
-        this.popMessage(this.translateService.instant('ACTION.MESSAGE.MUST_ENTER_PIN'), "info");
-      }
+          else {
+            this.gameService.createPlayer({
+              userUid: this.authService.userC.uid,
+              playerName: this.user?.displayName,
+              statusId: 1,
+              mahjong: {
+                handTiles: {
+                  mahjongTile: [],
+                  point: 0
+                },
+                publicTiles: [{ mahjongTile: [] }],
+                flowerTiles: {
+                  mahjongTile: [],
+                  point: 0
+                }
+              },
+              direction: 0,
+              action: {
+                isPongable: false,
+                isKongable: false,
+                isChowable: false,
+                isWinnable: false,
+                isSelfKongable: false
+              },
+              drawAction: {
+                isDrawFlower: false,
+                isDrawKong: false,
+                isDrawSecondKong: false,
+                isDrawLastTile: false,
+                isGetKong: false,
+                isGetPong: false,
+                isKaLong: false,
+                isSoloPong: false,
+                isStealKong: false,
+                isSoloDraw: false,
+              },
+              profileImage: this.authService.userC?.profilePhotoUrl ?? "",
+            } as PlayerDto).subscribe(res3 => {
+              if (res3.isSuccess) {
+                this.socketIoService.player = res3.data;
+
+                this.navigateToRoom(true);
+              }
+            });
+          }
+        }
+      })
     }
     else {
-      this.popMessage(this.translateService.instant('ACTION.MESSAGE.MUST_ENTER_PIN'), "error")
+      this.toastService.addSingle({
+        severity: 'error',
+        message: this.translateService.instant('INPUT.PROFILE_INCOMPLETE'),
+        key: 'profileIncomplete',
+      });
     }
   }
 
   enterRoom() {
-    if (this.usernameFormControl.value) {
-      if (this.pinFormControl.value) {
-        this.popMessage(this.translateService.instant('ACTION.MESSAGE.ENTERING_ROOM'), "info");
-        this.gameService.getPlayerByName(this.usernameFormControl.value, this.pinFormControl.value).subscribe({
-          next: res => {
-            if (res.isSuccess) {
-              this.socketIoService.player = res.data[0];
-              this.eventService.createEventLog("room", "Player join room", `${res.data[0].playerName} joined the room`);
-              this.navigateToRoom();
-            }
-            else {
-              this.gameService.createPlayer({
-                userUid: this.authService.userC.uid,
-                playerName: this.usernameFormControl.value,
-                pin: this.pinFormControl.value,
-                statusId: 1,
-                mahjong: {
-                  handTiles: {
-                    mahjongTile: [],
-                    point: 0
-                  },
-                  publicTiles: [{ mahjongTile: [] }],
-                  flowerTiles: {
-                    mahjongTile: [],
-                    point: 0
-                  }
-                },
-                direction: 0,
-                action: {
-                  isPongable: false,
-                  isKongable: false,
-                  isChowable: false,
-                  isWinnable: false,
-                  isSelfKongable: false
-                },
-                drawAction: {
-                  isDrawFlower: false,
-                  isDrawKong: false,
-                  isDrawSecondKong: false,
-                  isDrawLastTile: false,
-                  isGetKong: false,
-                  isGetPong: false,
-                  isKaLong: false,
-                  isSoloPong: false,
-                  isStealKong: false,
-                  isSoloDraw: false,
-                },
-                profileImage: this.authService.userC?.profilePhotoUrl ?? "",
-              } as PlayerDto).subscribe(res => {
-                if (res.isSuccess) {
-                  this.socketIoService.player = res.data;
-
-                  this.navigateToRoom();
-                }
-              });
-            }
-          },
-          error: (error) => {
-            this.popMessage(this.translateService.instant('ACTION.MESSAGE.INCORRECT_PIN'), "error");
+    if (this.user?.displayName) {
+      this.gameService.getPlayerByUserId(this.user.uid!).subscribe({
+        next: res => {
+          if (res.isSuccess) {
+            this.socketIoService.currentPlayer = res.data[0];
+            this.navigateToRoom();
           }
-        });
-      }
-      else {
-        this.popMessage(this.translateService.instant('ACTION.MESSAGE.MUST_ENTER_PIN'), "info");
-      }
+          else {
+            this.gameService.createPlayer({
+              userUid: this.authService.userC.uid,
+              playerName: this.user?.displayName,
+              statusId: 1,
+              mahjong: {
+                handTiles: {
+                  mahjongTile: [],
+                  point: 0
+                },
+                publicTiles: [{ mahjongTile: [] }],
+                flowerTiles: {
+                  mahjongTile: [],
+                  point: 0
+                }
+              },
+              direction: 0,
+              action: {
+                isPongable: false,
+                isKongable: false,
+                isChowable: false,
+                isWinnable: false,
+                isSelfKongable: false
+              },
+              drawAction: {
+                isDrawFlower: false,
+                isDrawKong: false,
+                isDrawSecondKong: false,
+                isDrawLastTile: false,
+                isGetKong: false,
+                isGetPong: false,
+                isKaLong: false,
+                isSoloPong: false,
+                isStealKong: false,
+                isSoloDraw: false,
+              },
+              profileImage: this.authService.userC?.profilePhotoUrl ?? "",
+            } as PlayerDto).subscribe(res3 => {
+              if (res3.isSuccess) {
+                this.socketIoService.player = res3.data;
+
+                this.navigateToRoom();
+              }
+            });
+          }
+        }
+      })
     }
     else {
-      this.popMessage(this.translateService.instant('ACTION.MESSAGE.USERNAME_CANNOT_EMPTY'), "error")
+      // this.toastService.clear('profileIncomplete')
+      this.toastService.addSingle({
+        severity: 'error',
+        message: this.translateService.instant('INPUT.PROFILE_INCOMPLETE'),
+        key: 'profileIncomplete',
+      });
     }
   }
 
@@ -205,7 +204,11 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
           }
         },
         error: error => {
-          this.popMessage(this.translateService.instant('ROOM.NOT_FOUND'), "error");
+          this.toastService.addSingle({
+            severity: 'error',
+            message: this.translateService.instant('ROOM.NOT_FOUND'),
+            key: 'roomNotFound',
+          })
         }
       });
     }
@@ -218,12 +221,20 @@ export class HomeComponent extends BaseCoreAbstract implements OnInit {
               this.router.navigate(['/room', this.roomIdFormControl.value]);
             }
             else {
-              this.popMessage(this.translateService.instant('ACTION.MESSAGE.ROOM_MAX_PLAYER'), "error")
+              this.toastService.addSingle({
+                severity: 'error',
+                message: this.translateService.instant('ACTION.MESSAGE.ROOM_MAX_PLAYER'),
+                key: 'roomMaxPlayer',
+              });
             }
           }
         },
         error: error => {
-          this.popMessage(this.translateService.instant('ROOM.NOT_FOUND'), "error");
+          this.toastService.addSingle({
+            severity: 'error',
+            message: this.translateService.instant('ROOM.NOT_FOUND'),
+            key: 'roomNotFound',
+          })
         }
       });
     }

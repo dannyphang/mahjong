@@ -11,7 +11,16 @@ export class ToastService {
         private translateService: TranslateService,
     ) { }
 
-    addSingle(toastConfig: MessageModel) {
+    addSingle(toastConfig: MessageModel, delayAfterClearMs: number = 0) {
+        // Optionally delay before adding
+        if (delayAfterClearMs > 0) {
+            setTimeout(() => this.addSingleInternal(toastConfig), delayAfterClearMs);
+        } else {
+            this.addSingleInternal(toastConfig);
+        }
+    }
+
+    private addSingleInternal(toastConfig: MessageModel) {
         // Set default values for severity and icon
         switch (toastConfig.severity) {
             case 'success':
@@ -24,6 +33,9 @@ export class ToastService {
                 break;
             case 'info':
                 toastConfig.icon = 'pi pi-info-circle';
+                break;
+            case 'warn':
+                toastConfig.icon = 'pi pi-exclamation-triangle';
                 break;
         }
 
@@ -42,8 +54,8 @@ export class ToastService {
                         }, {})
                     ) || toastConfig.message
                     : '',
-            key: 'tr',
-            sticky: toastConfig.isLoading,
+            key: toastConfig.key,
+            sticky: toastConfig.isLoading || toastConfig.sticky,
             icon: toastConfig.isLoading ? 'pi pi-spin pi-spinner' : toastConfig.icon,
         });
     }
@@ -76,16 +88,16 @@ export class ToastService {
                 return {
                     severity: i.severity,
                     detail: this.translateService.instant(i.message),
-                    key: 'tr',
-                    sticky: i.isLoading,
+                    key: i.key,
+                    sticky: i.isLoading || i.sticky,
                     icon: i.isLoading ? "pi pi-spin pi-spinner" : undefined,
                 };
             }),
         );
     }
 
-    clear(key?: string | string[]) {
-        this.messageService.clear()
+    clear(key: string) {
+        this.messageService.clear(key)
         // if (key) {
         //     if (typeof key === 'string') {
         //         this.messageService.clear(key);
@@ -99,9 +111,10 @@ export class ToastService {
 
 export class MessageModel {
     message: string;
-    severity?: 'success' | 'info' | 'error';
-    key?: string;
+    severity?: 'success' | 'info' | 'error' | 'warn';
+    key: string;
     icon?: string;
     isLoading?: boolean;
     messageData?: any[];
+    sticky?: boolean;
 }
