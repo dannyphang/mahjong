@@ -44,10 +44,9 @@ export class GameService {
         return this.http.put<ResponseModel<PlayerDto>>(apiConfig.baseUrl + '/player', { player }).pipe();
     }
 
-    getPlayerByName(name: string, pin: number): Observable<ResponseModel<PlayerDto[]>> {
+    getPlayerByUserId(userUid: string): Observable<ResponseModel<PlayerDto[]>> {
         let header: HttpHeaders = new HttpHeaders({
-            name: name,
-            pin: pin
+            userUid: userUid,
         });
         return this.http.get<ResponseModel<PlayerDto[]>>((apiConfig.baseUrl + '/player'), { headers: header }).pipe();
     }
@@ -85,7 +84,6 @@ export class PlayerDto {
     mahjong: MahjongGroupDto;
     action: MahjongActionDto;
     drawAction: MahjongDrawActionDto;
-    pin: number;
     profileImage?: string;
 }
 

@@ -51,6 +51,7 @@
     "EMAIL": "Email",
     "PASSWORD": "Password",
     "CONFIRM_PASSWORD": "Confirm Password",
-    "DISPLAY_NAME": "Display Name"
+    "DISPLAY_NAME": "Display Name",
+    "PROFILE_INCOMPLETE": "Profile incomplete"
   }
 }

@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { inject } from '@vercel/analytics';
 import { AuthService } from './core/services/auth.service';
+import { ToastComponent } from './core/shared/components/toast/toast.component';
+import { ToastService } from './core/services/toast.service';
 
 @Component({
   selector: 'app-root',
@@ -9,14 +10,15 @@ import { AuthService } from './core/services/auth.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'angular-setup-base';
+  title = 'Mahjong';
 
   constructor(
     private translateService: TranslateService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastService: ToastService
   ) {
-    inject();
-    this.translateService.use('zh');
+    // inject();
+    this.translateService.use('en');
 
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
       const newColorScheme = event.matches ? "dark" : "light";
